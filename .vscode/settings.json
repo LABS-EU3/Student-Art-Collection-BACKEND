@@ -1,0 +1,10 @@
+{
+    "deepcode.review.results.hideInformationIssues": false,
+    "cSpell.ignoreWords": [
+        "eval",
+        "mongodb",
+        "mydb",
+        "petar",
+        "test"
+    ]
+}
