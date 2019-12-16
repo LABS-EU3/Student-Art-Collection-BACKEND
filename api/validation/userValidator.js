@@ -37,7 +37,31 @@ function validatePassword(req, res, next) {
   return next();
 }
 
+async function validateUserOnSignup(req, res, next) {
+  const validator = new Validator(req.body, {
+    password: "required|min:8",
+    email: "required|email"
+  });
+
+  if (validator.fails()) {
+    res.status(400).json({
+      errors: validator.errors.all()
+    });
+  }
+  try {
+    // await Find user
+    // if (!user) {
+    //   return next();
+    // }
+    return res.status(400).json({
+      error: "User already registered with username or email provided"
+    });
+  } catch (error) {
+    return next({ message: "Error validating user signup" });
+  }
+}
 module.exports = {
   validateUserEmail,
-  validatePassword
+  validatePassword,
+  validateUserOnSignup
 };
