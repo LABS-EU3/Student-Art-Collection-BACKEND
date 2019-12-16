@@ -1,12 +1,12 @@
 const bcrypt = require("bcryptjs");
-const models = require("../../models/user")
+const models = require("../../models/user");
 
 const { generateToken } = require("../helpers/jwt");
 
 module.exports = {
   async createUser(req, res) {
     try {
-     const hash = bcrypt.hashSync(req.body.password, 10);
+      const hash = bcrypt.hashSync(req.body.password, 10);
       const createUser = {
         ...req.body,
         email: req.body.email.toLowerCase(),
@@ -15,8 +15,7 @@ module.exports = {
       const user = await models.create(createUser);
       if (user) {
         const newUser = {
-          password: user.password,
-          username: user.username,
+          username: user.name,
           email: user.email,
           id: user.id
         };
