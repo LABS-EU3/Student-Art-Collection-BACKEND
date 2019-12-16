@@ -17,9 +17,11 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(errorController.get404);
 
+const db = require('./config/keys').mongoURL
+
 mongoose
   .connect(
-    "mongodb+srv://petar:admin@artfunder-iayl7.mongodb.net/artfunder?retryWrites=true&w=majority",
+    db,
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => {
