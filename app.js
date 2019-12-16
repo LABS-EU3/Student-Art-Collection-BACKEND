@@ -40,7 +40,6 @@ app.post('/upload', (req, res, next) => {
 		console.log('file uploaded to server');
 		console.log(req.file);
 
-		// SEND FILE TO CLOUDINARY
 		cloudinary.config({
 			cloud_name: 'petar',
 			api_key: '171419394947841',
@@ -54,11 +53,9 @@ app.post('/upload', (req, res, next) => {
 			path,
 			{ public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
 			function (error, image){
-				if (err) return res.send(err);
+				if (err) return res.send(error);
 				console.log('file uploaded to Cloudinary');
-				// remove file from server
 				fs.unlinkSync(path);
-				// return image details
 				res.json(image);
 			},
 		);
