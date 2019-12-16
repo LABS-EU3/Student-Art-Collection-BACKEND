@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 
-router.get('/admin', (req, res) => res.json({ msg: 'Welcome admin' }));
+router.get('/', (req, res) => res.json({ msg: 'Welcome admin' }));
 
 
 module.exports = router;
