@@ -51,7 +51,7 @@ app.post('/upload', (req, res, next) => {
 
 		cloudinary.uploader.upload(
 			path,
-			{ public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+			{ public_id: `blog/${uniqueFilename}`, tags: `blog` }, 
 			function (error, image){
 				if (err) return res.send(error);
 				console.log('file uploaded to Cloudinary');
