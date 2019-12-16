@@ -1,31 +1,32 @@
-// const bcrypt = require("bcryptjs");
+const bcrypt = require("bcryptjs");
+const models = require("../../models/user")
 
-// const jwt = require("../helpers/jwt");
+const { generateToken } = require("../helpers/jwt");
 
 module.exports = {
   async createUser(req, res) {
     try {
-      //  const hash = bcrypt.hashSync(user.password, 10);
-      //   const createUser = {
-      //     ...req.body,
-      //     email: req.body.email.toLowerCase(),
-      //     password: hash
-      //   };
-      //   const user = await models.Users.create(createUser);
-      //   if (user) {
-      //     const newUser = {
-      //       password: user.password,
-      //       username: user.username,
-      //       email: user.email,
-      //       id: user.id
-      //     };
+     const hash = bcrypt.hashSync(req.body.password, 10);
+      const createUser = {
+        ...req.body,
+        email: req.body.email.toLowerCase(),
+        password: hash
+      };
+      const user = await models.create(createUser);
+      if (user) {
+        const newUser = {
+          password: user.password,
+          username: user.username,
+          email: user.email,
+          id: user.id
+        };
 
-      //     const token = await jwt.generateToken(newUser);
-      //     res.status(201).json({
-      //       user: newUser,
-      //       token
-      //     });
-      //   }
+        const token = await generateToken(newUser);
+        res.status(201).json({
+          user: newUser,
+          token
+        });
+      }
       res.status(400).json({
         error: "Could not create Profile"
       });
