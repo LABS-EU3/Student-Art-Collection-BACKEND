@@ -24,5 +24,9 @@ module.exports = {
     "prettier/prettier":0,
     "prettier/prettier":0,
     "prefer-destructuring":0,
+    "import/prefer-default-export":0,
+    "func-names":0,
+    "consistent-return":0
+
   }
 };
