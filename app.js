@@ -42,7 +42,6 @@ app.post('/upload/:id', (req, res, next) => {
 		if (err) {
 			return res.send(err);
 		}
-		console.log(cloudinaryConfig(), 'hhhhhhh');
 		cloudinary.config({
 			cloud_name: cloudinaryConfig().cloud_name,
 			api_key: cloudinaryConfig().api_key,
