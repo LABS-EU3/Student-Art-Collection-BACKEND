@@ -31,7 +31,9 @@ module.exports = {
   async validateUserOnSignup(req, res, next) {
     const validator = new Validator(req.body, {
       password: "required|min:8",
-      email: "required|email"
+      email: "required|email",
+      name: "required",
+      username: "required|min:2"
     });
 
     if (validator.fails()) {
@@ -40,7 +42,7 @@ module.exports = {
       });
     }
     try {
-      const user = await models.findOne({ email: req.body.email });
+      const user = await models.findOne({ email: req.body.email }).exec();
       if (!user) {
         return next();
       }
@@ -52,7 +54,7 @@ module.exports = {
     }
   }
 };
-// eslint-disable-next-line func-names
-process.on('unhandledRejection', function(err) {
-  console.log(err);
-});
+// // eslint-disable-next-line func-names
+// process.on('unhandledRejection', function(err) {
+//   console.log(err);
+// });
