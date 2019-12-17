@@ -1,38 +1,21 @@
-const bcrypt = require("bcryptjs");
 const models = require("../../models/user");
 
 const { generateToken } = require("../helpers/jwt");
+const { successResponse, errorHelper } = require("../helpers/response");
 
 module.exports = {
-  async createUser(req, res) {
+  async createUser(req, res, next) {
     try {
-      const hash = bcrypt.hashSync(req.body.password, 10);
-      const createUser = {
-        ...req.body,
-        email: req.body.email.toLowerCase(),
-        password: hash
-      };
-      const user = await models.create(createUser);
+      const user = await models.create(req.body);
       if (user) {
-        const newUser = {
-          username: user.name,
-          email: user.email,
-          id: user.id
-        };
-
-        const token = await generateToken(newUser);
-        res.status(201).json({
-          user: newUser,
-          token
-        });
+        const token = await generateToken(user);
+        return successResponse(res, 201, {msg: 'Usercreated', token})
       }
-      res.status(400).json({
+      return errorHelper(res,400, {
         error: "Could not create Profile"
       });
     } catch (error) {
-      res.status(500).json({
-        error: error.message
-      });
+      return next(error.message)
     }
   }
 };

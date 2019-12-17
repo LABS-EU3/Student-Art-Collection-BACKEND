@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const db = require('./config/db');
 const UserauthRoute = require('./api/routes/authroute')
 
-const Port = process.env.PORT 
+const Port = process.env.PORT || 9000
 
 const app = express();
 
@@ -23,8 +23,14 @@ app.use(express.json());
 // eslint-disable-next-line no-console
 db()
 	.then(() => {
-		app.listen(Port, () => console.log(`Server running on port ${Port}`));
+		console.log('database is connected')
 	})
 	.catch((err) => {
 		console.log(err);
 	});
+
+app.use(function errors(err, req, res, next) {
+	return res.status(500).json({ err });
+})
+
+app.listen(Port, () => console.log(`Server running on port ${Port}`));
