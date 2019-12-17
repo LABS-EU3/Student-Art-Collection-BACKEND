@@ -1,4 +1,3 @@
-
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -8,10 +7,10 @@ const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
 
 const storage = multerUploads.diskStorage({
-	destination (req, file, cb){
+	destination (req, file, cb) {
 		cb(null, 'uploads/');
 	},
-	filename (req, file, cb){
+	filename (req, file, cb) {
 		console.log(file);
 		cb(null, file.originalname);
 	},
@@ -37,8 +36,6 @@ app.post('/upload', (req, res, next) => {
 		if (err) {
 			return res.send(err);
 		}
-		console.log('file uploaded to server');
-		console.log(req.file);
 
 		cloudinary.config({
 			cloud_name: 'petar',
@@ -49,16 +46,14 @@ app.post('/upload', (req, res, next) => {
 		const path = req.file.path;
 		const uniqueFilename = new Date().toISOString();
 
-		cloudinary.uploader.upload(
-			path,
-			{ public_id: `blog/${uniqueFilename}`, tags: `blog` }, 
-			function (error, image){
-				if (err) return res.send(error);
-				console.log('file uploaded to Cloudinary');
-				fs.unlinkSync(path);
-				res.json(image);
-			},
-		);
+		cloudinary.uploader.upload(path, { public_id: `blog/${uniqueFilename}`, tags: `blog` }, function (
+			error,
+			image,
+		){
+			if (err) return res.send(error);
+			fs.unlinkSync(path);
+			res.json(image);
+		});
 	});
 });
 
