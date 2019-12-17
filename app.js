@@ -10,8 +10,6 @@ const User = require('./models/user');
 
 const { config, cloudinaryConfig, uploader } = require('./config/cloudinaryConfig');
 
-console.dir(config);
-
 const storage = multerUploads.diskStorage({
 	destination (req, file, cb) {
 		cb(null, 'uploads/');
