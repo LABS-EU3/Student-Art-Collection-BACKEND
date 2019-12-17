@@ -13,6 +13,7 @@ const transporter = nodemailer.createTransport({
     }
   });
 async function sendEmailConfirmAccount(user, token, url) {
+    console.log(url, token, user)
     const mailGenerator = new Mailgen({
         theme: 'default',
         product: {
@@ -22,7 +23,7 @@ async function sendEmailConfirmAccount(user, token, url) {
       });
       const mail = {
         body: {
-          name: user.username,
+          name: user.emai,
           intro:
             'You have received this email because you just signup at ArtFinder',
           action: {
@@ -48,13 +49,9 @@ async function sendEmailConfirmAccount(user, token, url) {
         html: emailBody,
         text: emailText
       };
-    
-      try {
-        const passwordMail = await transporter.sendMail(mailOption);
-        return passwordMail;
-      } catch (error) {
-        return error.message;
-      }
+
+        const confirmMail = await transporter.sendMail(mailOption);
+        return confirmMail;
 }
 
 module.exports = {sendEmailConfirmAccount}

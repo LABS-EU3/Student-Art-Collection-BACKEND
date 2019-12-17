@@ -1,6 +1,6 @@
 const { merge } = require('lodash');
 
-const models = require("../../models/user");
+const models = require("../../models");
 
 const { generateToken, decodeToken } = require("../helpers/jwt");
 const { successResponse, errorHelper } = require("../helpers/response");
@@ -9,8 +9,15 @@ const { sendEmailConfirmAccount } = require('../helpers/mail');
 module.exports = {
   async createUser(req, res, next) {
     try {
-      const user = await models.create(req.body);
+      const user = await models.User.create(req.body);
       if (user) {
+        const newUserType = {...req.body, userId: user.id}
+        // this checks the user type and create that user type
+        if (user.type === 'school')  {
+          await models.School.create(newUserType)
+        }else {
+          await models.Buyer.create(newUserType)
+        }
         const token = await generateToken(user);
         await sendEmailConfirmAccount(user, token,'frontend url')
         return successResponse(res, 201, {msg: 'Usercreated', token})
@@ -19,6 +26,7 @@ module.exports = {
         error: "Could not create Profile"
       });
     } catch (error) {
+      console.error(error)
       return next(error.message)
     }
   },

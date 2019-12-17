@@ -26,7 +26,7 @@ async function decodeToken(token) {
     if(!user) throw Error('no such user');
     return user;
   } catch (error) {
-    return error
+    return null
   }
 }
 module.exports = {
