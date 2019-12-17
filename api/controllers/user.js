@@ -1,6 +1,8 @@
+const { merge } = require('lodash');
+
 const models = require("../../models/user");
 
-const { generateToken } = require("../helpers/jwt");
+const { generateToken, decodeToken } = require("../helpers/jwt");
 const { successResponse, errorHelper } = require("../helpers/response");
 const { sendEmailConfirmAccount } = require('../helpers/mail');
 
@@ -18,6 +20,20 @@ module.exports = {
       });
     } catch (error) {
       return next(error.message)
+    }
+  },
+
+  async activateUser(req, res, next) {
+    try {
+      const user = await decodeToken(req.body.token);
+      if(!user) {
+        return errorHelper(res, 400, 'invalid token for user')
+      }
+      merge(user, {confirmed:true})
+      user.save()
+      return successResponse(res, 200, `${user.email} successfully confirmed`)
+    } catch (error) {
+      return next(error);
     }
   }
 };
