@@ -43,6 +43,6 @@ module.exports = {
         error: 'invalid credentials'
       });
     }
-    return {...login, token: generateToken(login)};
+    return res.status(200).json({user:login, token: generateToken(login)})
   }
 };
