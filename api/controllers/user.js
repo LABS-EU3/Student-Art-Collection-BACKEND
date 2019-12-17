@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const models = require("../../models/user");
-
 const { generateToken } = require("../helpers/jwt");
+const User = require('../../models/user');
 
 module.exports = {
   async createUser(req, res) {
@@ -34,5 +34,15 @@ module.exports = {
         error: error.message
       });
     }
+  },
+  async loginUser (req, res) {
+    const user = await User.findOne({ email: req.body.email }).exec();
+    const login = user.comparePassword(req.body.password);
+    if(!login) {
+      res.status(404).json({
+        error: 'invalid credentials'
+      });
+    }
+    return {...login, token: generateToken(login)};
   }
 };
