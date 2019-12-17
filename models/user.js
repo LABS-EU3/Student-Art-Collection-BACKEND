@@ -33,6 +33,11 @@ const userSchema = new Schema({
     },
     location:{
         type: String
+    },
+    type: {
+        type: String,
+        required: true,
+        enum: ['school', 'buyer']
     }
 }, {timestamps: true});
 
