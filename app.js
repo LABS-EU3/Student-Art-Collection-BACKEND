@@ -1,10 +1,16 @@
+const fs = require('fs');
+const cloudinary = require('cloudinary').v2;
+const multerUploads = require('multer');
+
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const multerUploads = require('multer');
-const cloudinary = require('cloudinary').v2;
-const fs = require('fs');
+const User = require('./models/user');
+
+const { config, cloudinaryConfig, uploader } = require('./config/cloudinaryConfig');
+
+console.dir(config);
 
 const storage = multerUploads.diskStorage({
 	destination (req, file, cb) {
@@ -30,29 +36,30 @@ app.use(helmet());
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.post('/upload', (req, res, next) => {
+app.post('/upload/:id', (req, res, next) => {
 	const upload = multerUploads({ storage }).single('name-of-input-key');
 	upload(req, res, function (err){
 		if (err) {
 			return res.send(err);
 		}
-
+		console.log(cloudinaryConfig(), 'hhhhhhh');
 		cloudinary.config({
-			cloud_name: 'petar',
-			api_key: '171419394947841',
-			api_secret: 'oekllQlFBDo17MAA2t54w5r4nBQ',
+			cloud_name: cloudinaryConfig().cloud_name,
+			api_key: cloudinaryConfig().api_key,
+			api_secret: cloudinaryConfig().api_secret,
 		});
 
 		const path = req.file.path;
 		const uniqueFilename = new Date().toISOString();
 
-		cloudinary.uploader.upload(path, { public_id: `blog/${uniqueFilename}`, tags: `blog` }, function (
+		cloudinary.uploader.upload(path, { public_id: `blog/${uniqueFilename}`, tags: `blog` }, async function (
 			error,
 			image,
 		){
 			if (err) return res.send(error);
 			fs.unlinkSync(path);
-			res.json(image);
+			const user = await User.findByIdAndUpdate('id', { profile_picture: image.url }, { new: true }).exec();
+			res.json(user);
 		});
 	});
 });
