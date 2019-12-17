@@ -6,7 +6,7 @@ const userValidators = require('../validation/userValidator');
 const router = express.Router();
 // eslint-disable-next-line no-unused-vars
 router.post("/signup",[userValidators.validateUserOnSignup], controller.createUser);
-router.post("/login")
+router.post("/login", controller.loginUser);
 
 
 module.exports = router;
