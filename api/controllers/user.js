@@ -14,7 +14,6 @@ module.exports = {
       const user = await models.User.create(req.body);
       if (user) {
         const newUserType = {...req.body, userId: user.id}
-        console.log(newUserType, 'hello new user')
         // this checks the user type and create that user type
         if (user.type === 'school')  {
           await models.School.create(newUserType)
