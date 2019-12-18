@@ -55,7 +55,6 @@ module.exports = {
   },
 
   async validateUserBuyerSchool(req, res, next) {
-    console.log('helloooo')
     switch (req.body.type) {
       case('school'): {
         const validator = new Validator(req.body, {
@@ -64,7 +63,6 @@ module.exports = {
         if(validator.fails()) {
           return errorHelper(res, 400, validator.errors.all())
         }
-        console.log(validator.fails(), 'my validator')
         return next();
       }
       case('buyer'): {
