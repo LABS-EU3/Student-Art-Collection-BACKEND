@@ -17,6 +17,9 @@
       "pre-push": "npm test"
     }
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "author": "",
   "license": "ISC",
   "bugs": {
