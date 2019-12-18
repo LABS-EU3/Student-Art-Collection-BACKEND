@@ -1,3 +1,4 @@
+
 const bcrypt = require('bcryptjs');
 
 const fs = require('fs');
@@ -6,8 +7,8 @@ const multerUploads = require('multer');
 const models = require('../../models/user');
 
 
-const { config, cloudinaryConfig, uploader } = require('./config/cloudinaryConfig');
-const User = require('./models/user');
+const { config, cloudinaryConfig, uploader } = require('../../config/cloudinaryConfig');
+const User = require('../../models/user');
 
 const { generateToken } = require('../helpers/jwt');
 
@@ -58,7 +59,7 @@ module.exports = {
 
 	photoUpload (req, res, next) {
 		const upload = multerUploads({ storage }).single('name-of-input-key');
-		upload(req, res, function (err){
+		upload(req, res,  (err) =>{
 			if (err) {
 				return res.send(err);
 			}
@@ -74,7 +75,7 @@ module.exports = {
 			return cloudinary.uploader.upload(
 				path,
 				{ public_id: `blog/${uniqueFilename}`, tags: `blog` },
-				async function (error, image){
+				async (error, image) =>{
 					if (err) return res.send(error);
 					fs.unlinkSync(path);
 					const user = await User.findByIdAndUpdate(
@@ -86,5 +87,31 @@ module.exports = {
 				},
 			);
 		});
-	},
-};
+
+  }
+
+}
+
+
+// const models = require("../../models/user");
+
+// const { generateToken } = require("../helpers/jwt");
+// const { successResponse, errorHelper } = require("../helpers/response");
+
+// module.exports = {
+//   async createUser(req, res, next) {
+//     try {
+//       const user = await models.create(req.body);
+//       if (user) {
+//         const token = await generateToken(user);
+//         return successResponse(res, 201, {msg: 'Usercreated', token})
+//       }
+//       return errorHelper(res,400, {
+//         error: "Could not create Profile"
+//       });
+//     } catch (error) {
+//       return next(error.message)
+//     }
+//   }
+
+// };
