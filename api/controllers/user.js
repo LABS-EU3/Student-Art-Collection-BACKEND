@@ -48,12 +48,12 @@ module.exports = {
   async loginUser (req, res, next) {
     try{
     const user = await models.User.findOne({ email: req.body.email }).exec();
-    const login = user.comparePassword(req.body.password);
-    if(!login) {
-      return errorHelper(res, 404, 'Invalid credentials');
+    
+    if(!user || !user.comparePassword(req.body.password)) {
+      return errorHelper(res, 401, 'Invalid credentials');
     }
-    const token = await generateToken(login);
-    if(!login.confirmed) {
+    const token = await generateToken(user);
+    if(!user.confirmed) {
       await sendEmailConfirmAccount (user, token,`${secret.FRONTEND}/success`)
       return successResponse(res, 200, {message: 'please check your email address to confirm account'})
     }
