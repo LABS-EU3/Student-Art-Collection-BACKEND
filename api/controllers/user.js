@@ -1,6 +1,5 @@
 const { merge } = require('lodash');
-const models = require("../../models/user");
-const User = require('../../models/user');
+const models = require("../../models");
 const secret = require('../../config/keys')
 
 
@@ -15,6 +14,7 @@ module.exports = {
       const user = await models.User.create(req.body);
       if (user) {
         const newUserType = {...req.body, userId: user.id}
+        console.log(newUserType, 'hello new user')
         // this checks the user type and create that user type
         if (user.type === 'school')  {
           await models.School.create(newUserType)
@@ -48,7 +48,7 @@ module.exports = {
   },
   async loginUser (req, res, next) {
     try{
-    const user = await User.findOne({ email: req.body.email }).exec();
+    const user = await models.User.findOne({ email: req.body.email }).exec();
     const login = user.comparePassword(req.body.password);
     if(!login) {
       return errorHelper(res, 404, 'Invalid credentials');
