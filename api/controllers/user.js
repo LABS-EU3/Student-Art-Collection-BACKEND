@@ -67,7 +67,7 @@ module.exports = {
   }
   },
   async updateUserProfile(req, res, next) {
-    const {username} = req.params;
+    const { userId } = req.params;
     const {profilePicture, Location} = req.body;
     try {
       const updateUser = await models.Users.update (
@@ -75,7 +75,7 @@ module.exports = {
           profile_picture: profilePicture,
           location: Location
         },
-        {where: {username}, returning: true}
+        {where: { userId }, returning: true}
       );
       return successResponse(res, 200, updateUser);
     } catch (error) {
