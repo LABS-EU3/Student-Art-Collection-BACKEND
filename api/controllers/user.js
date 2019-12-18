@@ -6,6 +6,7 @@ const multerUploads = require('multer');
 const { merge } = require('lodash');
 
 
+
 const { config, cloudinaryConfig, uploader } = require('../../config/cloudinaryConfig');
 
 const User = require('../../models/user');
@@ -69,7 +70,7 @@ module.exports = {
   },
   async loginUser (req, res, next) {
     try{
-    const user = await User.findOne({ email: req.body.email }).exec();
+    const user = await models.User.findOne({ email: req.body.email }).exec();
     const login = user.comparePassword(req.body.password);
     if(!login) {
       return errorHelper(res, 404, 'Invalid credentials');
@@ -84,7 +85,7 @@ module.exports = {
 	return next({ message: 'Error logging in user' });
   };
   },
-  
+
   	photoUpload (req, res, next) {
 		const {id} = req.params
 		const upload = multerUploads({ storage }).single('name-of-input-key');
