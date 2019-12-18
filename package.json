@@ -21,9 +21,6 @@
       "pre-push": "npm test"
     }
   },
-  "jest": {
-    "testEnvironment": "node"
-  },
   "author": "",
   "license": "ISC",
   "bugs": {
@@ -62,7 +59,6 @@
     "mongoose": "^5.8.1",
     "supertest": "^4.0.2",
     "nodemailer": "^6.4.2",
-    "supertest": "^4.0.2",
     "validatorjs": "^3.18.1"
   }
 }
