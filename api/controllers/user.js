@@ -63,6 +63,7 @@ module.exports = {
 	},
 
 	photoUpload (req, res, next) {
+		const {id} = req.params
 		const upload = multerUploads({ storage }).single('name-of-input-key');
 		upload(req, res, (err) => {
 			if (err) {
@@ -84,7 +85,7 @@ module.exports = {
 					if (err) return res.send(error);
 					fs.unlinkSync(path);
 					const user = await User.findByIdAndUpdate(
-						'id',
+						id,
 						{ profile_picture: image.url },
 						{ new: true },
 					).exec();
