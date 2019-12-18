@@ -7,7 +7,7 @@ const router = express.Router();
 // eslint-disable-next-line no-unused-vars
 router.post("/signup",[userValidators.validateUserOnSignup, userValidators.validateUserBuyerSchool], controller.createUser);
 router.post("/login", controller.loginUser);
-router.post("/upload", controller.photoUpload)
+router.post("/upload/:id", controller.photoUpload)
 router.patch("/confirm", controller.activateUser);
 
 
