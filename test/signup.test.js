@@ -8,7 +8,6 @@ const server = require("../api/routes/index");
 const userData = {
   name: "Oloruntobi",
   email: "Male@gmail.com",
-  username: "Toski",
   password: "123456789",
   type: "school"
 };
@@ -23,9 +22,8 @@ describe("User Model Test", () => {
 
     // eslint-disable-next-line no-underscore-dangle
     expect(savedUser._id).toBeDefined();
-    expect(savedUser.name).toBe(userData.name);
     expect(savedUser.email).toBe(userData.email);
-    expect(savedUser.username).toBe(userData.username);
+   
   });
 
   // it('insert user successfully, but the field does not defined in schema should be undefined', async () => {
