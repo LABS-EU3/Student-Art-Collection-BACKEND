@@ -6,7 +6,7 @@ const buyerSchema = new mongoose.Schema({
         required: [true, 'Buyer must have a firstname'],
         trim: true
     },
-    lasstname: {
+    lastname: {
         type: String,
         required: [true, 'Buyer must have a lasstname'],
         trim: true

@@ -18,6 +18,9 @@
       "pre-push": "npm test"
     }
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "author": "",
   "license": "ISC",
   "bugs": {
@@ -54,6 +57,7 @@
     "lodash": "^4.17.15",
     "mailgen": "^2.0.10",
     "mongoose": "^5.8.1",
+    "supertest": "^4.0.2",
     "nodemailer": "^6.4.2",
     "validatorjs": "^3.18.1"
   }
