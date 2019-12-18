@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const db = require('./config/db');
 const UserauthRoute = require('./api/routes/authroute')
 
-const Port = process.env.PORT || 3000
+const Port = process.env.PORT || 9000
 
 const app = express();
 
