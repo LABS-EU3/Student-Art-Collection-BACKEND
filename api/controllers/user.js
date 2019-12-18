@@ -65,5 +65,21 @@ module.exports = {
   } catch(error) {
     return next({ message: 'Error logging in user' });
   }
+  },
+  async updateUserProfile(req, res, next) {
+    const {username} = req.params;
+    const {profilePicture, Location} = req.body;
+    try {
+      const updateUser = await models.Users.update (
+        {
+          profile_picture: profilePicture,
+          location: Location
+        },
+        {where: {username}, returning: true}
+      );
+      return successResponse(res, 200, updateUser);
+    } catch (error) {
+      return next({ message: 'Error updating profile'})
+    }
   }
 };
