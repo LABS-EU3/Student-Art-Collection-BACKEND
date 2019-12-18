@@ -46,14 +46,24 @@ module.exports = {
       return next(error);
     }
   },
-  async loginUser (req, res) {
+  async loginUser (req, res, next) {
+    try{
     const user = await User.findOne({ email: req.body.email }).exec();
+    if(!user) {
+      return errorHelper(res, 401, `The email address ${req.body.email} is not associated with any account. Double-check your email address and try again.`);
+    }
     const login = user.comparePassword(req.body.password);
     if(!login) {
-      res.status(404).json({
-        error: 'invalid credentials'
-      });
+      return errorHelper(res, 404, 'Invalid credentials');
     }
-    return res.status(200).json({user:login, token: generateToken(login)})
+    const token = await generateToken(login);
+    if(!login.confirmed) {
+      await sendEmailConfirmAccount (user, token,'')
+      return successResponse(res, 200, {message: 'please check your email address to confirm account'})
+    }
+    return successResponse(res, 200, {message: `${req.body.email} successfully logged in`, token })
+  } catch(error) {
+    return next({ message: 'Error logging in user' });
+  }
   }
 };
