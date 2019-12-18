@@ -1,4 +1,3 @@
-const bcrypt = require('bcryptjs');
 const { merge } = require('lodash');
 const models = require("../../models/user");
 const User = require('../../models/user');
@@ -49,9 +48,6 @@ module.exports = {
   async loginUser (req, res, next) {
     try{
     const user = await User.findOne({ email: req.body.email }).exec();
-    if(!user) {
-      return errorHelper(res, 401, 'The email address is not associated with any account. Double-check your email address and try again.');
-    }
     const login = user.comparePassword(req.body.password);
     if(!login) {
       return errorHelper(res, 404, 'Invalid credentials');
