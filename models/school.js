@@ -8,7 +8,8 @@ const schoolSchema = new mongoose.Schema({
 	},
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user'
+        ref: 'user',
+        unique: true
     },
     description: {
         type: String

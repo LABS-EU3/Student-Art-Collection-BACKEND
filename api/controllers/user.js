@@ -26,7 +26,6 @@ module.exports = {
         error: "Could not create Profile"
       });
     } catch (error) {
-      console.error(error)
       return next(error.message)
     }
   },

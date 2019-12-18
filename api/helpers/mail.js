@@ -6,14 +6,15 @@ const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
     secure: true,
-    // requireTLS: true
+    requireTLS: true,
     auth: {
+      type: "login",
       user: secret.USER_MAIL,
       pass: secret.PASSWORD_MAIL
     }
   });
 async function sendEmailConfirmAccount(user, token, url) {
-    console.log(url, token, user)
+  
     const mailGenerator = new Mailgen({
         theme: 'default',
         product: {
@@ -23,7 +24,7 @@ async function sendEmailConfirmAccount(user, token, url) {
       });
       const mail = {
         body: {
-          name: user.emai,
+          name: user.email,
           intro:
             'You have received this email because you just signup at ArtFinder',
           action: {
