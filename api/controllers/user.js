@@ -1,6 +1,7 @@
 const { merge } = require('lodash');
 const models = require("../../models/user");
 const User = require('../../models/user');
+const secret = require('../../config/keys')
 
 
 
@@ -21,7 +22,7 @@ module.exports = {
           await models.Buyer.create(newUserType)
         }
         const token = await generateToken(user);
-        await sendEmailConfirmAccount(user, token,'frontend url')
+        await sendEmailConfirmAccount(user, token,`${secret.FRONTEND}/success`)
         return successResponse(res, 201, {msg: 'Usercreated', token})
       }
       return errorHelper(res,400, {
@@ -54,7 +55,7 @@ module.exports = {
     }
     const token = await generateToken(login);
     if(!login.confirmed) {
-      await sendEmailConfirmAccount (user, token,'')
+      await sendEmailConfirmAccount (user, token,`${secret.FRONTEND}/success`)
       return successResponse(res, 200, {message: 'please check your email address to confirm account'})
     }
     return successResponse(res, 200, {message: 'successfully logged in', token })
