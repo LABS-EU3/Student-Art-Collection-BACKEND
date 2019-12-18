@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "jest": {
+    "testEnvironment": "node"
+  },
   "scripts": {
     "start": "node index",
     "start:dev": "nodemon index",
@@ -55,6 +58,7 @@
     "mailgen": "^2.0.10",
     "mongoose": "^5.8.1",
     "nodemailer": "^6.4.2",
+    "supertest": "^4.0.2",
     "validatorjs": "^3.18.1"
   }
 }
