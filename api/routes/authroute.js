@@ -8,6 +8,6 @@ const router = express.Router();
 router.post("/signup",[userValidators.validateUserOnSignup], controller.createUser);
 router.post("/login", controller.loginUser);
 router.patch("/confirm", controller.activateUser);
-
+router.patch("/updateprofile", controller.updateUserProfile);
 
 module.exports = router;
