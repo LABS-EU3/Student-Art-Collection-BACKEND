@@ -4,20 +4,10 @@ const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-	name: {
-		type: String,
-        required: [true, 'User must have a name'],
-        trim: true
-	},
 	email: {
 		type: String,
         required: [true, 'User must have a email'],
         unique: true,
-        trim: true
-    },
-    username:{
-        type: String,
-        required: [true, 'User must have a username'],
         trim: true
     },
     password: {
@@ -25,7 +15,8 @@ const userSchema = new Schema({
         required: [true, 'User must have a password'],
     },
     confirmed: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     profile_picture: {
         type: String,
@@ -40,6 +31,12 @@ const userSchema = new Schema({
         enum: ['school', 'buyer']
     }
 }, {timestamps: true});
+
+userSchema.methods.comparePassword = (password) => {
+    const user = bcrypt.compareSync(password, this.password);
+    return user ? this : null;
+  };
+
 
 
 userSchema.pre('save', (next) => {

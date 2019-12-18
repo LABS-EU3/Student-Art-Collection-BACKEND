@@ -7,7 +7,5 @@ module.exports = {
     mongoURL: "mongodb+srv://petar:admin@artfunder-iayl7.mongodb.net/artfunder?retryWrites=true&w=majority",
     USER_MAIL: process.env.USER_MAIL,
     PASSWORD_MAIL: process.env.PASSWORD_MAIL,
-    cloud_name: process.env.CLOUD_NAME,
-	api_key: process.env.API_KEY,
-	api_secret: process.env.API_SECRET,
+    FRONTEND: process.env.FRONT_END
 }

@@ -1,6 +1,7 @@
 /* eslint-disable object-shorthand */
 const Validator = require("validatorjs");
 const models = require("../../models/user");
+const {errorHelper} = require('../helpers/response');
 
 module.exports = {
   async validateUserEmail(req, res, next) {
@@ -32,8 +33,7 @@ module.exports = {
     const validator = new Validator(req.body, {
       password: "required|min:8",
       email: "required|email",
-      name: "required",
-      username: "required|min:2"
+      type: "required"
     });
 
     if (validator.fails()) {
@@ -47,14 +47,36 @@ module.exports = {
         return next();
       }
       return res.status(400).json({
-        error: "User already registered with username or email provided"
+        error: "User already registered with email provided"
       });
     } catch (error) {
       return next({ message: "Error validating user signup" });
     }
+  },
+
+  async validateUserBuyerSchool(req, res, next) {
+    switch (req.body.type) {
+      case('school'): {
+        const validator = new Validator(req.body, {
+          name: "required|min:2"
+        });
+        if(validator.fails()) {
+          return errorHelper(res, 400, validator.errors.all())
+        }
+        return next();
+      }
+      case('buyer'): {
+         const validator = new Validator(req.body, {
+          firstname:"required|min:2",
+          lastname:"required|min:2"
+        });
+        if(validator.fails()) {
+          return errorHelper(res, 400, validator.errors.all())
+        }
+        return next();
+      }
+      default:
+        return next('error')
+    }
   }
 };
-// // eslint-disable-next-line func-names
-// process.on('unhandledRejection', function(err) {
-//   console.log(err);
-// });
