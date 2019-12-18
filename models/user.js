@@ -42,7 +42,7 @@ const userSchema = new Schema({
 }, {timestamps: true});
 
 
-userSchema.pre('save', function(next) {
+userSchema.pre('save', (next) => {
     const hashPassword = bcrypt.hashSync(this.password, 10);
     this.password = hashPassword
     next()
