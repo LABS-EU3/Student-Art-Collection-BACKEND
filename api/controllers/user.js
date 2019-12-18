@@ -50,7 +50,7 @@ module.exports = {
     try{
     const user = await User.findOne({ email: req.body.email }).exec();
     if(!user) {
-      return errorHelper(res, 401, `The email address ${req.body.email} is not associated with any account. Double-check your email address and try again.`);
+      return errorHelper(res, 401, 'The email address is not associated with any account. Double-check your email address and try again.');
     }
     const login = user.comparePassword(req.body.password);
     if(!login) {
@@ -61,7 +61,7 @@ module.exports = {
       await sendEmailConfirmAccount (user, token,'')
       return successResponse(res, 200, {message: 'please check your email address to confirm account'})
     }
-    return successResponse(res, 200, {message: `${req.body.email} successfully logged in`, token })
+    return successResponse(res, 200, {message: 'successfully logged in', token })
   } catch(error) {
     return next({ message: 'Error logging in user' });
   }
