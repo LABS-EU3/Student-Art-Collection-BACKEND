@@ -19,7 +19,7 @@ async function callbackStrategy(profile, cb) {
 
   try {
     // eslint-disable-next-line object-shorthand
-    const existingUser = await models.User.findOne({ email: email})
+    const existingUser = await (await models.User.findOne({ email: email})).exec()
     if (!existingUser) {
       const newUser = await models.User.create({auth_id: profile.id, email, password: ''});
       if (!newUser) {
@@ -38,7 +38,7 @@ function facebookStrategy() {
     {
       clientID: keys.FACEBOOK_APP_ID,
       clientSecret: keys.FACEBOOK_APP_SECRET,
-      callbackURL: "/api/auth/facebook/callback",
+      callbackURL: "/url",
       profileFields: ["id", "last_name", "first_name", "email"]
     },
     (accessToken, refreshToken, profile, cb) => {
