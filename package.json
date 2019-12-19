@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "jest": {
+    "testEnvironment": "node"
+  },
   "scripts": {
     "start": "node index",
     "start:dev": "nodemon index",
@@ -17,9 +20,6 @@
       "pre-commit": "lint-staged",
       "pre-push": "npm test"
     }
-  },
-  "jest": {
-    "testEnvironment": "node"
   },
   "author": "",
   "license": "ISC",
