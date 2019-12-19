@@ -16,14 +16,14 @@ const { connectDB, cleanDB } = require("./db");
 describe("User Model Test", () => {
   beforeAll(() => connectDB());
 
-  it("create & save user successfully", async () => {
+  it("create & save user successfully", async (done) => {
     const validUser = new UserModel(userData);
     const savedUser = await validUser.save();
 
     // eslint-disable-next-line no-underscore-dangle
     expect(savedUser._id).toBeDefined();
     expect(savedUser.email).toBe(userData.email);
-   
+    done()
   });
 
   // it('insert user successfully, but the field does not defined in schema should be undefined', async () => {
@@ -35,7 +35,7 @@ describe("User Model Test", () => {
   //     expect(savedUserWithInvalidField.nickkname).toBeUndefined();
   // });
 
-  it("create user without required field should failed", async () => {
+  it("create user without required field should failed", async (done) => {
     const userWithoutRequiredField = new UserModel({ name: "TekLoon" });
     let err;
     try {
@@ -46,13 +46,15 @@ describe("User Model Test", () => {
     }
     expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
     expect(err.errors.email).toBeDefined();
+    done()
   });
   describe("Users route", () => {
-    it("[POST /signup] - should return 400 because body was not provided", async () => {
+    it("[POST /signup] - should return 400 because body was not provided", async (done) => {
       const expectedStatusCode = 400;
 
       const response = await request(server).post("/signup");
       expect(response.status).toEqual(expectedStatusCode);
+      done()
     });
 
     // it("[POST /signup] - should return 201 because request was successful", async () => {
