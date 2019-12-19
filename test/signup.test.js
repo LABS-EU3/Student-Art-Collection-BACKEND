@@ -14,11 +14,16 @@ const userData = {
 const { connectDB, cleanDB } = require("./db");
 
 describe("User Model Test", () => {
-  beforeAll(() => connectDB());
+  beforeAll((done) => {
+    connectDB()
+    done()
+  });
+describe('', () => {
 
-  it("create & save user successfully", async (done) => {
-    const validUser = new UserModel(userData);
-    const savedUser = await validUser.save();
+  xit("create & save user successfully", async (done) => {
+    const savedUser = await UserModel.create(userData)
+    // const validUser = new UserModel(userData);
+    // const savedUser = await validUser.save();
 
     // eslint-disable-next-line no-underscore-dangle
     expect(savedUser._id).toBeDefined();
@@ -48,6 +53,7 @@ describe("User Model Test", () => {
     expect(err.errors.email).toBeDefined();
     done()
   });
+})
   describe("Users route", () => {
     it("[POST /signup] - should return 400 because body was not provided", async (done) => {
       const expectedStatusCode = 400;
