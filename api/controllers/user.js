@@ -83,11 +83,12 @@ module.exports = {
     const token = await generateToken(user);
     if(!user.confirmed) {
        sendEmailConfirmAccount (user, token,`${secret.FRONTEND}/success`)
-      return successResponse(res, 200, {message: 'please check your email address to confirm account'})
-    }
-    return successResponse(res, 200, {message: 'successfully logged in', token })
+       return successResponse(res, 200, {message: 'please check your email address to confirm account'})
+      }
+      user.password = ''
+    return successResponse(res, 200, {message: 'successfully logged in', token, user})
   } catch(error) {
-	return next({ message: 'Error logging in user' });
+	    return next({ message: 'Error logging in user' });
   };
   },
 
