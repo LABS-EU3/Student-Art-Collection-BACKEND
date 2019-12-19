@@ -9,6 +9,14 @@ const { successResponse, errorHelper } = require("../helpers/response");
 const { sendEmailConfirmAccount } = require('../helpers/mail');
 
 module.exports = {
+  /**
+   *
+   *
+   * @param {*} req
+   * @param {*} res
+   * @param {*} next
+   * @returns a message user created and a token
+   */
   async createUser(req, res, next) {
     try {
       const user = await models.User.create(req.body);
