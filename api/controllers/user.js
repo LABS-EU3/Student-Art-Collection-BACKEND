@@ -1,10 +1,11 @@
-const bcrypt = require('bcryptjs');
-
 const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
 const multerUploads = require('multer');
 const { merge } = require('lodash');
 
+const { generateToken, decodeToken } = require('../helpers/jwt');
+const { successResponse, errorHelper } = require('../helpers/response');
+const { sendEmailConfirmAccount } = require('../helpers/mail');
 
 
 const { config, cloudinaryConfig, uploader } = require('../../config/cloudinaryConfig');
@@ -26,10 +27,6 @@ const storage = multerUploads.diskStorage({
 		cb(null, file.originalname);
 	},
 });
-
-const { generateToken, decodeToken } = require('../helpers/jwt');
-const { successResponse, errorHelper } = require('../helpers/response');
-const { sendEmailConfirmAccount } = require('../helpers/mail');
 
 module.exports = {
   /**
