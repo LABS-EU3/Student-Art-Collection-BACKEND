@@ -9,7 +9,7 @@ const mongoConnection = () =>{
     } else {
         mongoUrl =DATA_DB
     }
-    return mongoose.connect(mongoUrl, {useNewUrlParser: true, useUnifiedTopology: true})
+    return mongoose.connect(mongoUrl, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
 }
 
 module.exports = mongoConnection;

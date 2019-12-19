@@ -9,7 +9,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  models.Users.findByPk(id, (err, user) => {
+  models.User.findById(id, (err, user) => {
     done(err, user);
   });
 });
@@ -18,16 +18,10 @@ async function callbackStrategy(profile, cb) {
   const email = profile.emails[0].value;
 
   try {
-    const existingUser = await models.Users.findOne({ where: { email } });
+    // eslint-disable-next-line object-shorthand
+    const existingUser = await models.User.findOne({ email: email})
     if (!existingUser) {
-      const newUser = await models.Users.findOrCreate({
-        where: { auth_id: profile.id },
-        defaults: {
-          username: profile.username,
-          email,
-          password: " "
-        }
-      });
+      const newUser = await models.User.create({auth_id: profile.id, email, password: ''});
       if (!newUser) {
         return new Error();
       }
@@ -48,13 +42,6 @@ function facebookStrategy() {
       profileFields: ["id", "last_name", "first_name", "email"]
     },
     (accessToken, refreshToken, profile, cb) => {
-      // Make sure there is a username, needed to create a new user
-      if (!profile.username) {
-        const newUsername = `${profile.name.familyName}${profile.name.givenName}`;
-        // eslint-disable-next-line no-param-reassign
-        profile = { ...profile, username: newUsername };
-      }
-      console.log(profile.username);
       return callbackStrategy(profile, cb);
     }
   );
