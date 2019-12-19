@@ -38,7 +38,7 @@ function facebookStrategy() {
     {
       clientID: keys.FACEBOOK_APP_ID,
       clientSecret: keys.FACEBOOK_APP_SECRET,
-      callbackURL: "/url",
+      callbackURL: "https://tobi-server.herokuapp.com/facebook/callback",
       profileFields: ["id", "last_name", "first_name", "email"]
     },
     (accessToken, refreshToken, profile, cb) => {
