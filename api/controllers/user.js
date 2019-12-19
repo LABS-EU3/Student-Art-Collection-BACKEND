@@ -61,6 +61,7 @@ module.exports = {
       return errorHelper(res, 401, 'Invalid credentials');
     }
     const token = await generateToken(user);
+    
     if(!user.confirmed) {
        sendEmailConfirmAccount (user, token,`${secret.FRONTEND}/success`)
       return successResponse(res, 200, {message: 'please check your email address to confirm account'})

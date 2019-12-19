@@ -32,9 +32,13 @@ const userSchema = new Schema({
     }
 }, {timestamps: true});
 
-userSchema.methods.comparePassword = function (password) {
-    const user = bcrypt.compareSync(password, this.password);
-    return user ? this : null;
+userSchema.methods.comparePassword = async function (password) {
+    try {
+        const user = await bcrypt.compare(password, this.password);
+        return user ? this : null;
+    } catch (error) {
+        return null
+    }
   };
 
 
