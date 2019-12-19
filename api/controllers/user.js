@@ -33,6 +33,7 @@ const { sendEmailConfirmAccount } = require('../helpers/mail');
 
 module.exports = {
   async createUser(req, res, next) {
+   console.log(req.body);
     try {
       const user = await models.User.create(req.body);
       if (user) {
@@ -43,6 +44,7 @@ module.exports = {
         }else {
           await models.Buyer.create(newUserType)
         }
+        console.log(user);
         const token = await generateToken(user);
          sendEmailConfirmAccount(user, token,`${secret.FRONTEND}/success`)
         return successResponse(res, 201, {msg: 'Usercreated', token})
