@@ -7,7 +7,7 @@ module.exports = {
 	USER_MAIL: process.env.USER_MAIL,
 	PASSWORD_MAIL: process.env.PASSWORD_MAIL,
 	FRONTEND: process.env.FRONT_END,
-	CLOUD_NAME: 'petar',
-	API_KEY: '171419394947841',
-	API_SECRET: 'oekllQlFBDo17MAA2t54w5r4nBQ',
+	CLOUD_NAME: process.env.CLOUD_NAME,
+	API_KEY: process.env.API_KEY,
+	API_SECRET: process.env.API_SECRET,
 };
