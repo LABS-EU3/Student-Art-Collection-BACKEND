@@ -11,7 +11,7 @@ const { config, cloudinaryConfig, uploader } = require('../../config/cloudinaryC
 
 const User = require('../../models/user');
 
-const models = require("../../models/user");
+const models = require("../../models");
 
 const secret = require('../../config/keys')
 
@@ -71,7 +71,7 @@ module.exports = {
   async loginUser (req, res, next) {
     try{
     const user = await models.User.findOne({ email: req.body.email }).exec();
-    
+
     if(!user || !user.comparePassword(req.body.password)) {
       return errorHelper(res, 401, 'Invalid credentials');
     }
