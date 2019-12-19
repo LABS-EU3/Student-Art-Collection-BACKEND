@@ -23,6 +23,10 @@ const userSchema = new Schema(
 			type: String,
 			trim: true,
 		},
+		public_id: {
+			type: String,
+			trim: true,
+		},
 		location: {
 			type: String,
 		},
@@ -35,12 +39,12 @@ const userSchema = new Schema(
 	{ timestamps: true },
 );
 
-userSchema.methods.comparePassword = (password) => {
+userSchema.methods.comparePassword = function(password) {
 	const user = bcrypt.compareSync(password, this.password);
 	return user ? this : null;
 };
 
-userSchema.pre('save', (next) => {
+userSchema.pre('save', function(next){
 	const hashPassword = bcrypt.hashSync(this.password, 10);
 	this.password = hashPassword;
 	next();

@@ -2,6 +2,7 @@
 const Validator = require("validatorjs");
 const models = require("../../models/user");
 const {errorHelper} = require('../helpers/response');
+const { decodeToken } = require('../helpers/jwt');
 
 module.exports = {
   async validateUserEmail(req, res, next) {
@@ -78,5 +79,39 @@ module.exports = {
       default:
         return next('error')
     }
+  },
+
+  loginCredentials(req,res,next) {
+    const validator = new Validator(req.body, {
+      password: "required|min:8",
+      email: "required|email"
+    });
+
+    if (validator.fails()) {
+    return  errorHelper(res, 400, validator.errors.all())
+    }
+    return next()
+  },
+
+  async validateUser(req, res, next) {
+    const {authorization} = req.headers;
+    if(!authorization) {
+      return errorHelper(res, 401, 'token required')
+    }
+    const user = await decodeToken(authorization)
+    if(!user) {
+      return errorHelper(res, 401, 'invalid user token')
+    }
+    req.user = user;
+    return next()
+  },
+
+  validateUserTokenRequest(req, res, next) {
+    const { id } = req.params;
+    // eslint-disable-next-line eqeqeq
+    if(req.user.id  !=  id ) {
+      return errorHelper(res, 401, 'you cannot continue with this operation')
+    }
+    return next()
   }
 };

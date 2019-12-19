@@ -38,7 +38,6 @@ module.exports = {
    * @returns a message user created and a token
    */
   async createUser(req, res, next) {
-   console.log(req.body);
     try {
       const user = await models.User.create(req.body);
       if (user) {
@@ -49,7 +48,6 @@ module.exports = {
         }else {
           await models.Buyer.create(newUserType)
         }
-        console.log(user);
         const token = await generateToken(user);
          sendEmailConfirmAccount(user, token,`${secret.FRONTEND}/success`)
         return successResponse(res, 201, {msg: 'Usercreated', token})
@@ -93,38 +91,14 @@ module.exports = {
   };
   },
 
-  	photoUpload (req, res, next) {
-		const {id} = req.params
-		const upload = multerUploads({ storage }).single('name-of-input-key');
-		upload(req, res, (err) => {
-			if (err) {
-				return res.send(err);
-			}
-			cloudinary.config({
-				cloud_name: cloudinaryConfig().cloud_name,
-				api_key: cloudinaryConfig().api_key,
-				api_secret: cloudinaryConfig().api_secret,
-			});
-
-			const path = req.file.path;
-			const uniqueFilename = new Date().toISOString();
-
-			return cloudinary.uploader.upload(
-				path,
-				{ public_id: `blog/${uniqueFilename}`, tags: `blog` },
-				async (error, image) => {
-					if (err) return res.send(error);
-					fs.unlinkSync(path);
-					const user = await User.findByIdAndUpdate(
-						id,
-						{ profile_picture: image.url },
-						{ new: true },
-					).exec();
-					return res.json(user);
-				},
-			);
-		});
-	},
-
-
+  photoUpload (req, res, next) {
+    const {file, user} = req
+    try {
+      merge(user, {profile_picture:file.secure_url, public_id: file.public_id });
+      user.save();
+      return successResponse(res, 200, user)
+    } catch (error) {
+      return next(error.message)
+    }
+  }
 };
