@@ -1,4 +1,5 @@
 const { merge } = require('lodash');
+const bcrypt = require('bcryptjs');
 
 const { generateToken, decodeToken } = require('../helpers/jwt');
 const { successResponse, errorHelper } = require('../helpers/response');
@@ -80,11 +81,31 @@ module.exports = {
   },
   async updateProfile(req, res, next) {
     try{
-      const updatedUser = await models.User.findByIdAndUpdate({ userId: req.body.userId }).exec();
-      if (updatedUser) {
-        return {updatedUser, userId: updatedUser.id };
+      console.log(req.user);
+      const {user} = req;
+      const {password} = req.body
+      if(password) {
+        req.body.password = bcrypt.hashSync(password, 10)
       }
-      return errorHelper(res, 304, 'Could not update user');
+      merge(user, req.body);
+      user.save();
+      let updatedUser =  null
+      switch(user.type) {
+        case('school') : {
+          updatedUser = await models.School.findOneAndUpdate({userId: user.id}, req.body, {new:true})
+              .lean().populate('user').exec()
+              return successResponse(res, 200, updatedUser);
+        }
+        case('buyer') : {
+          updatedUser = await models.Buyer.findOneAndUpdate({ userId: user.id }, req.body, {new:true})
+            .lean().populate('user').exec()
+            return successResponse(res, 200, updatedUser);
+        }
+        default : {
+          return successResponse(res, 200, updatedUser);
+        }
+      }
+      
     } catch(error) {
       return next({ message: 'Error updating user profile'})
 

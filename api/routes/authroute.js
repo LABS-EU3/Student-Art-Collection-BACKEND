@@ -10,6 +10,6 @@ router.post("/signup",[userValidators.validateUserOnSignup, userValidators.valid
 router.post("/login", [userValidators.loginCredentials],controller.loginUser);
 router.post("/upload/:id", [userValidators.validateUser, userValidators.validateUserTokenRequest],[cloudinary.uploadImage('image'),cloudinary.deleteCloudImage],controller.photoUpload)
 router.patch("/confirm", controller.activateUser);
-router.patch("/updateProfile", controller.updateProfile);
+router.put("/updateProfile/:id", [userValidators.validateUser, userValidators.validateUserTokenRequest],controller.updateProfile);
 
 module.exports = router;
