@@ -166,22 +166,20 @@ module.exports = {
       switch(user.type) {
         case('school') : {
           updatedUser = await models.School.findOneAndUpdate({userId: user.id}, req.body, {new:true})
-              .lean().populate('user').exec()
-              return successResponse(res, 200, updatedUser);
+            .populate('user').exec()
+              return successResponse(res, 200, merge(user,updatedUser));
         }
         case('buyer') : {
           updatedUser = await models.Buyer.findOneAndUpdate({ userId: user.id }, req.body, {new:true})
-            .lean().populate('user').exec()
-            return successResponse(res, 200, updatedUser);
+            .populate('user').exec()
+            return successResponse(res, 200, merge(user,updatedUser));
         }
         default : {
-          return successResponse(res, 200, updatedUser);
+          return next('unable to update user');
         }
-      }
-      
+      } 
     } catch(error) {
       return next({ message: 'Error updating user profile'})
-
   };
   },
 
@@ -194,6 +192,21 @@ module.exports = {
     } catch (error) {
       return next(error.message)
 
+    }
+  },
+
+  async getAuser(req, res, next) {
+    const { user } = req;
+    let userDetails = null
+    switch(user.type) {
+      case('school') : 
+        userDetails = await models.School.findOne({userId:user.id}).populate('user').exec()
+        return successResponse(res, 200, merge(user,userDetails));
+      case('buyer') : 
+        userDetails = await models.Buyer.findOne({userId:user.id}).populate('user').exec()
+        return successResponse(res, 200, merge(user,userDetails));
+      default:
+        return next('error getting user')
     }
   }
 };
