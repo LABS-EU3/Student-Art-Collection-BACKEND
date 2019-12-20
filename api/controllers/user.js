@@ -73,7 +73,7 @@ module.exports = {
   },
   async updateProfile(req, res, next) {
     try{
-      const updatedUser = await models.findByIdAndUpdate({ userId: req.body.userId }).exec();
+      const updatedUser = await models.User.findByIdAndUpdate({ userId: req.body.userId }).exec();
       if (updatedUser) {
         return {updatedUser, userId: updatedUser.id };
       }
