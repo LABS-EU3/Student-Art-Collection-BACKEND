@@ -78,5 +78,15 @@ module.exports = {
       default:
         return next('error')
     }
-  }
+  },
+  validatePassword(req, res, next) {
+    const { body } = req;
+    const validator = new Validator(body, {
+      password: 'required|min:8'
+    });
+    if (validator.fails()) {
+      return errorHelper(res, 400, 'Password must be at least 5 characters');
+    }
+    return next();
+  },
 };
