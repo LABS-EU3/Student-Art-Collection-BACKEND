@@ -2,6 +2,7 @@
 const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
 const { merge } = require("lodash");
+
 const models = require("../../models");
 const secret = require("../../config/keys");
 
@@ -128,7 +129,7 @@ module.exports = {
       return response.successResponse(res, 200, "Password reset was succesful");
     } catch (error) {
       return next({ message: error.message });
-=======
+    }},
   async loginUser (req, res, next) {
     try{
     const user = await models.User.findOne({ email: req.body.email }).exec();
