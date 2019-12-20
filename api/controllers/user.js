@@ -81,7 +81,6 @@ module.exports = {
   },
   async updateProfile(req, res, next) {
     try{
-      console.log(req.user);
       const {user} = req;
       const {password} = req.body
       if(password) {
