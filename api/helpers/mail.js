@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 const Mailgen = require('mailgen');
 const secret = require('../../config/keys');
+const { type, intro, instructions, button, outro, subject  } = require('./mailText')
 
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -8,7 +9,7 @@ const transporter = nodemailer.createTransport({
     secure: true,
     requireTLS: true,
     auth: {
-      type: "login",
+      type: type.FirstType,
       user: secret.USER_MAIL,
       pass: secret.PASSWORD_MAIL
     }
@@ -26,17 +27,17 @@ async function sendEmailConfirmAccount(user, token, url) {
         body: {
           name: user.email,
           intro:
-            'You have received this email because you just signup at ArtFinder',
+           intro.first,
           action: {
-            instructions: 'Click the button below to confrim your account',
+            instructions: instructions.first,
             button: {
-              color: '#22BC66',
-              text: 'Confirm your account',
+              color: button.color,
+              text: button.text.first,
               link: `${url}?token=${token}`
             }
           },
-          outro:
-            'If you did not signup to ArtFinder, no further action is required on your part.'
+          outro: outro.first,
+            
         }
       };
       const emailBody = mailGenerator.generate(mail);
@@ -46,7 +47,7 @@ async function sendEmailConfirmAccount(user, token, url) {
     const mailOption = {
         from: 'studentartcollectionlabseu3@gmail.com',
         to: user.email,
-        subject: "Confirm your email",
+        subject: subject.first,
         html: emailBody,
         text: emailText
       };
