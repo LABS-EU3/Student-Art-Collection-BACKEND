@@ -45,8 +45,10 @@ userSchema.methods.comparePassword = function(password) {
 };
 
 userSchema.pre('save', function(next){
-	const hashPassword = bcrypt.hashSync(this.password, 10);
-	this.password = hashPassword;
+	if(!this.confirmed) {
+		const hashPassword = bcrypt.hashSync(this.password, 10);
+		this.password = hashPassword;
+	}
 	next();
 });
 
