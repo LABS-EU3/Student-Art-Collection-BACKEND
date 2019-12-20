@@ -71,20 +71,15 @@ module.exports = {
     return next({ message: 'Error logging in user' });
   }
   },
-  async updateUserProfile(req, res, next) {
-    const { userId } = req.params;
-    const {profilePicture, Location} = req.body;
-    try {
-      const updateUser = await models.Users.update (
-        {
-          profile_picture: profilePicture,
-          location: Location
-        },
-        {where: { userId }, returning: true}
-      );
-      return successResponse(res, 200, updateUser);
-    } catch (error) {
-      return next({ message: 'Error updating profile'})
+  async updateProfile(req, res, next) {
+    try{
+      const updatedUser = await models.findByIdAndUpdate({ userId: req.body.userId }).exec();
+      if (updatedUser) {
+        return {updatedUser, userId: updatedUser.id };
+      }
+      return errorHelper(res, 304, 'Could not update user');
+    } catch(error) {
+      return next({ message: 'Error updating user profile'})
     }
   }
 };
