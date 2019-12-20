@@ -94,11 +94,11 @@ module.exports = {
     let userDetails = null
     switch(user.type) {
       case('school') : 
-        userDetails = await models.School.findOne({userId:user.id}).lean().populate('user').exec()
-        return successResponse(res, 200, userDetails);
+        userDetails = await models.School.findOne({userId:user.id}).populate('user').exec()
+        return successResponse(res, 200, merge(user,userDetails));
       case('buyer') : 
-        userDetails = await models.Buyer.findOne({userId:user.id}).lean().populate('user').exec()
-        return successResponse(res, 200, userDetails);
+        userDetails = await models.Buyer.findOne({userId:user.id}).populate('user').exec()
+        return successResponse(res, 200, merge(user,userDetails));
       default:
         return next('error getting user')
     }
