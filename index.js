@@ -6,12 +6,6 @@ const db = require('./config/db');
 const Port = process.env.PORT || 9000
 
 
-
-
-
-
-
-
 // eslint-disable-next-line no-console
 db()
 	.then(() => {
