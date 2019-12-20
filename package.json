@@ -61,5 +61,8 @@
     "passport-facebook": "^3.0.0",
     "supertest": "^4.0.2",
     "validatorjs": "^3.18.1"
+  },
+  "engines": {
+    "node": "10.15.0"
   }
 }
