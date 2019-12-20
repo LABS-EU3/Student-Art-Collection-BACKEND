@@ -1,4 +1,5 @@
 const { merge } = require('lodash');
+const bcrypt = require('bcryptjs');
 
 const { generateToken, decodeToken } = require('../helpers/jwt');
 const { successResponse, errorHelper } = require('../helpers/response');
@@ -67,6 +68,7 @@ module.exports = {
       return errorHelper(res, 401, 'Invalid credentials');
     }
     const token = await generateToken(user);
+    
     if(!user.confirmed) {
        sendEmailConfirmAccount (user, token,`${secret.FRONTEND}/success`)
        return successResponse(res, 200, {message: 'please check your email address to confirm account'})
@@ -74,7 +76,38 @@ module.exports = {
       user.password = ''
     return successResponse(res, 200, {message: 'successfully logged in', token, user})
   } catch(error) {
-	    return next({ message: 'Error logging in user' });
+    return next({ message: 'Error logging in user' });
+  }
+  },
+  async updateProfile(req, res, next) {
+    try{
+      const {user} = req;
+      const {password} = req.body
+      if(password) {
+        req.body.password = bcrypt.hashSync(password, 10)
+      }
+      merge(user, req.body);
+      user.save();
+      let updatedUser =  null
+      switch(user.type) {
+        case('school') : {
+          updatedUser = await models.School.findOneAndUpdate({userId: user.id}, req.body, {new:true})
+              .lean().populate('user').exec()
+              return successResponse(res, 200, updatedUser);
+        }
+        case('buyer') : {
+          updatedUser = await models.Buyer.findOneAndUpdate({ userId: user.id }, req.body, {new:true})
+            .lean().populate('user').exec()
+            return successResponse(res, 200, updatedUser);
+        }
+        default : {
+          return successResponse(res, 200, updatedUser);
+        }
+      }
+      
+    } catch(error) {
+      return next({ message: 'Error updating user profile'})
+
   };
   },
 
