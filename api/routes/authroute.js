@@ -8,6 +8,12 @@ const router = express.Router();
 router.post("/signup",[userValidators.validateUserOnSignup, userValidators.validateUserBuyerSchool], controller.createUser);
 router.post("/login", controller.loginUser);
 router.patch("/confirm", controller.activateUser);
+router.post(
+  '/resetpassword',
+  [userValidators.validateUserEmail],
+  controller.sendPasswordMail
+);
+
 
 
 module.exports = router;
