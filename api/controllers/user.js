@@ -77,7 +77,11 @@ module.exports = {
     try{
     const user = await models.User.findOne({ email: req.body.email }).exec();
 
-    if(!user || !user.comparePassword(req.body.password)) {
+    if(!user) {
+      return errorHelper(res, 401, 'Invalid credentials');
+    }
+    const confirm  = user.comparePassword(req.body.password)
+    if(!confirm) {
       return errorHelper(res, 401, 'Invalid credentials');
     }
     const token = await generateToken(user);
