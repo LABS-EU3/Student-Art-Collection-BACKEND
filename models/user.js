@@ -3,41 +3,42 @@ const bcrypt = require('bcryptjs');
 
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema(
-	{
-		email: {
-			type: String,
-			required: [ true, 'User must have a email' ],
-			unique: true,
-			trim: true,
-		},
-		password: {
-			type: String,
-			required: [ true, 'User must have a password' ],
-		},
-		confirmed: {
-			type: Boolean,
-			default: false,
-		},
-		profile_picture: {
-			type: String,
-			trim: true,
-		},
-		public_id: {
-			type: String,
-			trim: true,
-		},
-		location: {
-			type: String,
-		},
-		type: {
-			type: String,
-			required: true,
-			enum: [ 'school', 'buyer' ],
-		},
-	},
-	{ timestamps: true },
-);
+
+const userSchema = new Schema({
+	email: {
+		type: String,
+        required: [true, 'User must have a email'],
+        unique: true,
+        trim: true
+    },
+    password: {
+        type: String,
+        required: [true, 'User must have a password'],
+    },
+    confirmed: {
+        type: Boolean, 
+        default: false
+    },
+    profile_picture: {
+        type: String,
+        trim: true
+    },
+    location:{
+        type: String
+    },
+    type: {
+        type: String,
+        required: true,
+        enum: ['school', 'buyer']
+    },
+    reset_password_token: {
+        type: String
+    },
+    reset_password_expires: {
+        type: Number
+    }
+}, {timestamps: true});
+
 
 userSchema.methods.comparePassword = function(password) {
 	const user = bcrypt.compareSync(password, this.password);
