@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 const Mailgen = require('mailgen');
 const secret = require('../../config/keys');
-
+const { type, intro, instructions, button, outro, subject  } = require('./mailText')
 
 
 async function passwordResetMail(url, token, email, name) {
@@ -17,17 +17,17 @@ async function passwordResetMail(url, token, email, name) {
     body: {
       name,
       intro:
-        'You have received this email because a password reset request for your account was received.',
+        intro.second,
       action: {
-        instructions: 'Click the button below to reset your password:',
+        instructions: instructions.second,
         button: {
-          color: '#22BC66',
-          text: 'Reset your password',
+          color: button.color,
+          text: button.text.second,
           link: `${url}?token=${token}`
         }
       },
       outro:
-        'If you did not request a password reset, no further action is required on your part.'
+        outro.second
     }
   };
   const emailBody = mailGenerator.generate(mail);
@@ -47,7 +47,7 @@ async function passwordResetMail(url, token, email, name) {
   const mailOption = {
     from: 'studentartcollectionlabseu3@gmail.com',
     to: email,
-    subject: 'Password Reset',
+    subject: subject.second,
     html: emailBody,
     text: emailText
   };
