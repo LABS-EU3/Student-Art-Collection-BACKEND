@@ -1,6 +1,3 @@
-const fs = require('fs');
-const cloudinary = require('cloudinary').v2;
-const multerUploads = require('multer');
 const { merge } = require('lodash');
 
 const { generateToken, decodeToken } = require('../helpers/jwt');
@@ -8,25 +5,10 @@ const { successResponse, errorHelper } = require('../helpers/response');
 const { sendEmailConfirmAccount } = require('../helpers/mail');
 
 
-const { config, cloudinaryConfig, uploader } = require('../../config/cloudinaryConfig');
-
-const User = require('../../models/user');
-
 const models = require("../../models");
 
 const secret = require('../../config/keys')
 
-
-
-
-const storage = multerUploads.diskStorage({
-	destination (req, file, cb) {
-		cb(null, 'uploads/');
-	},
-	filename (req, file, cb) {
-		cb(null, file.originalname);
-	},
-});
 
 module.exports = {
   /**
