@@ -87,5 +87,20 @@ module.exports = {
     } catch (error) {
       return next(error.message)
     }
+  },
+
+  async getAuser(req, res, next) {
+    const { user } = req;
+    let userDetails = null
+    switch(user.type) {
+      case('school') : 
+        userDetails = await models.School.findOne({userId:user.id}).lean().exec()
+        return successResponse(res, 200, userDetails);
+      case('buyer') : 
+        userDetails = await models.Buyer.findOne({userId:user.id}).lean().exec()
+        return successResponse(res, 200, userDetails);
+      default:
+        return next('error getting user')
+    }
   }
 };
