@@ -80,7 +80,7 @@ module.exports = {
 
   async sendPasswordMail(req, res, next) {
     const token = await crypto.randomBytes(20).toString("hex");
-    const expiringDate = Date.now() + 3600;
+    const expiringDate = Date.now() + 3600000;
     try {
       const sendMail = await mail.passwordResetMail(
         secret.frontEndUrl,
@@ -125,11 +125,9 @@ module.exports = {
         );
       }
       const savedDate = user.reset_password_expires
-      console.log(savedDate)
       const date = Date.now() - savedDate;
-      console.log(Date.now())
-      console.log(date)
-      if (date < 0) {
+     
+      if (date > 0) {
         return response.errorHelper(res, 400, "Password reset have expired");
       }
       const hash = await bcrypt.hash(req.body.password, 14);
@@ -141,7 +139,7 @@ module.exports = {
           reset_password_token: ""
         }, {new: true}
       ).exec();
-      console.log(newUserPassword)
+      
       if (!newUserPassword) {
         return response.errorHelper(res, 404, "User not found");
       }
