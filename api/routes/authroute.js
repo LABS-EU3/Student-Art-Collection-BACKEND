@@ -13,7 +13,7 @@ router.post(
   [userValidators.validateUserEmail],
   controller.sendPasswordMail
 );
-
+router.patch('/newpassword', controller.resetPassword)
 
 
 module.exports = router;

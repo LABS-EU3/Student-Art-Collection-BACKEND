@@ -96,15 +96,58 @@ module.exports = {
         {
           reset_password_token: token,
           reset_password_expires: expiringDate
-        }, { new: true}
+        },
+        { new: true }
       );
-      if(!hasUpdated){
-        return response.errorHelper(res, 400, "Server error")
+      if (!hasUpdated) {
+        return response.errorHelper(res, 400, "Server error");
       }
-      return response.successResponse(res, 200, `Email sent to ${req.userEmail.email}`);
+      return response.successResponse(
+        res,
+        200,
+        `Email sent to ${req.userEmail.email}`
+      );
     } catch (error) {
       return next({ message: "Error sending mail tryagain" });
     }
   },
- 
+  async resetPassword(req, res, next) {
+    const { token } = req.query;
+    try {
+      const user = await models.User.findOne({
+        reset_password_token: token
+      }).exec();
+      if (!user) {
+        return response.errorHelper(
+          res,
+          401,
+          "Invalid token to reset password"
+        );
+      }
+      const savedDate = user.reset_password_expires
+      console.log(savedDate)
+      const date = Date.now() - savedDate;
+      console.log(Date.now())
+      console.log(date)
+      if (date < 0) {
+        return response.errorHelper(res, 400, "Password reset have expired");
+      }
+      const hash = await bcrypt.hash(req.body.password, 14);
+      const newUserPassword = await models.User.findOneAndUpdate(
+        // eslint-disable-next-line no-underscore-dangle
+        { email: user.email },
+        {
+          password: hash,
+          reset_password_token: ""
+        }, {new: true}
+      ).exec();
+      console.log(newUserPassword)
+      if (!newUserPassword) {
+        return response.errorHelper(res, 404, "User not found");
+      }
+      return response.successResponse(res, 200, "Password reset was succesful");
+    } catch (error) {
+      return next({ message: error.message });
+    }
+  }
 };
