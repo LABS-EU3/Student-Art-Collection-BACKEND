@@ -21,7 +21,7 @@ async function callbackStrategy(profile, cb) {
     // eslint-disable-next-line object-shorthand
     const existingUser = await (await models.User.findOne({ email: email})).exec()
     if (!existingUser) {
-      const newUser = await models.User.create({auth_id: profile.id, email, password: ''});
+      const newUser = await models.User.create({_id: profile.id, email, password: ''});
       if (!newUser) {
         return new Error();
       }
