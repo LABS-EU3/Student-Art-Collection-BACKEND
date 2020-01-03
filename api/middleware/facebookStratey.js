@@ -38,7 +38,7 @@ function facebookStrategy() {
     {
       clientID: keys.FACEBOOK_APP_ID,
       clientSecret: keys.FACEBOOK_APP_SECRET,
-      callbackURL: "http://localhost:4000/facebook/callback",
+      callbackURL: "http://localhost:4000/auth/facebook/callback",
       profileFields: ["id", "last_name", "first_name", "email"]
     },
     (accessToken, refreshToken, profile, cb) => {
