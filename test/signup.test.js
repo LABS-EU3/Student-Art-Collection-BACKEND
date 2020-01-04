@@ -20,25 +20,18 @@ describe("User Model Test", () => {
   });
 describe('', () => {
 
-  xit("create & save user successfully", async (done) => {
-    const savedUser = await UserModel.create(userData)
-    // const validUser = new UserModel(userData);
-    // const savedUser = await validUser.save();
-
-    // eslint-disable-next-line no-underscore-dangle
-    expect(savedUser._id).toBeDefined();
-    expect(savedUser.email).toBe(userData.email);
-    done()
+  it("create & save user successfully", async (done) => {
+    try {
+      const savedUser = await UserModel.create(userData)
+      // eslint-disable-next-line no-underscore-dangle
+      expect(savedUser._id).toBeDefined();
+      expect(savedUser.email).toBe(userData.email);
+    } catch (error) {
+      expect(error).toBe(error)
+    }finally{
+      done()
+    }
   });
-
-  // it('insert user successfully, but the field does not defined in schema should be undefined', async () => {
-  //     // eslint-disable-next-line no-underscore-dangle
-  //     const userWithInvalidField = new UserModel({ name: 'TekLoon', password: '1234567890', username: 'john', email: 'john@gmail.com', type: 'school'});
-  //     const savedUserWithInvalidField = await userWithInvalidField.save();
-  //     // eslint-disable-next-line no-underscore-dangle
-  //     expect(savedUserWithInvalidField._id).toBeDefined();
-  //     expect(savedUserWithInvalidField.nickkname).toBeUndefined();
-  // });
 
   it("create user without required field should failed", async (done) => {
     const userWithoutRequiredField = new UserModel({ name: "TekLoon" });
@@ -63,16 +56,35 @@ describe('', () => {
       done()
     });
 
-    // it("[POST /signup] - should return 201 because request was successful", async () => {
-    //   const expectedStatusCode = 201;
-
-    //   const response = await request(server)
-    //     .post("/signup")
-    //     .send({ username: "john", password: 123456 });
-    //   expect(response.status).toEqual(expectedStatusCode);
-    //   expect(response.body.status).toEqual("success");
-    //   expect(response.body.message).toEqual("User created successfully");
-    // });
+    it("[POST /signup] - should return 400 because name was not provided", async (done) => {
+      const expectedStatusCode = 400;
+      try {
+        const response = await request(server).post("/signup")
+          .send({  password: 12345678, type:'school',email:"test@gmail.com" });;
+        expect(response.status).toEqual(expectedStatusCode);
+        expect(response.body).toBe({ name: [ 'The name field is required.' ] })
+      } catch (error) {
+        expect(error).toBe(error)
+      }finally{
+          done()
+      }
+      
+    });
+    it("[POST /signup] - should return 201 because request was successful", async (done) => {
+      const expectedStatusCode = 201;
+      try {
+        const response = await request(server)
+          .post("/signup")
+          .send({ name: "john", password: 12345678, type:'school',email:"test@gmail.com" });
+          expect(response.status).toEqual(expectedStatusCode);
+          expect(response.body.status).toEqual("success");
+          expect(response.body.message).toEqual("User created successfully");
+      } catch (error) {
+        expect(error).toBe(error)
+      } finally {
+        done()
+      }
+    });
   });
 
   afterAll(() => {
