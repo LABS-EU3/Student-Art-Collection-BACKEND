@@ -34,17 +34,17 @@ async function callbackStrategy(profile, cb) {
 }
 
 function facebookStrategy() {
-  return new FaceBookStrategy(
+  return passport.use(new FaceBookStrategy(
     {
       clientID: keys.FACEBOOK_APP_ID,
       clientSecret: keys.FACEBOOK_APP_SECRET,
-      callbackURL: "https://tobi-server.herokuapp.com/auth/facebook/callback",
+      callbackURL: "/auth/facebook/callback",
       profileFields: ["id", "last_name", "first_name", "email"]
     },
     (accessToken, refreshToken, profile, cb) => {
       return callbackStrategy(profile, cb);
     }
-  );
+  ));
 }
 
 module.exports = {
