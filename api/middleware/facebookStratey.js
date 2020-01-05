@@ -42,7 +42,7 @@ function facebookStrategy() {
       profileFields: ["id", "last_name", "first_name", "email"]
     },
     (accessToken, refreshToken, profile, cb) => {
-      return callbackStrategy(profile, cb);
+      return cb(null, profile);
     }
   ));
 }
