@@ -6,6 +6,8 @@ const userValidators = require('../validation/userValidator');
 const Oauthcontroller = require('../controllers/Oauth');
 const cloudinary = require('../middleware/cloudinary');
 const keys = require("../../config/keys");
+const callBackStrategy = require("../middleware/facebookStratey")
+const models = require("../../models");
 
 
 
@@ -13,7 +15,8 @@ const keys = require("../../config/keys");
 passport.use(new Strategy({
   clientID: keys.FACEBOOK_APP_ID,
   clientSecret: keys.FACEBOOK_APP_SECRET,
-  callbackURL: '/auth/facebook/callback'
+  callbackURL: '/auth/facebook/callback',
+  profileFields: ["id", "last_name", "first_name", "email"]
 },
 function(accessToken, refreshToken, profile, cb) {
   // In this example, the user's Facebook profile is supplied as the user
@@ -21,17 +24,18 @@ function(accessToken, refreshToken, profile, cb) {
   // be associated with a user record in the application's database, which
   // allows for account linking and authentication with other identity
   // providers.
-  return cb(null, profile);
+  return callBackStrategy(profile, cb);
 }));
 
-passport.serializeUser(function(user, cb) {
-  cb(null, user);
-});
-
-passport.deserializeUser(function(obj, cb) {
-  cb(null, obj);
-});
-
+passport.serializeUser((user, done) => {
+   done(null, user.id);
+ });
+  
+ passport.deserializeUser((id, done) => {
+   models.User.findById(id, (err, user) => {
+     done(err, user);
+   });
+ });
 
 const router = express.Router();
 // eslint-disable-next-line no-unused-vars

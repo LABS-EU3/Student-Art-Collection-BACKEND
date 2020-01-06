@@ -1,7 +1,7 @@
 // const passport = require("passport");
 // const FaceBookStrategy = require("passport-facebook").Strategy;
 
-// const models = require("../../models");
+ const models = require("../../models");
 // const keys = require("../../config/keys");
 
 // passport.serializeUser((user, done) => {
@@ -14,24 +14,24 @@
 //   });
 // });
 
-// async function callbackStrategy(profile, cb) {
-//   const email = profile.emails[0].value;
+ async function callbackStrategy(profile, cb) {
+   const email = profile.emails[0].value;
 
-//   try {
-//     // eslint-disable-next-line object-shorthand
-//     const existingUser = await (await models.User.findOne({ email: email})).exec()
-//     if (!existingUser) {
-//       const newUser = await models.User.create({_id: profile.id, email, password: ''});
-//       if (!newUser) {
-//         return new Error();
-//       }
-//       return cb(null, newUser);
-//     }
-//     return cb(null, existingUser);
-//   } catch (error) {
-//     return cb(error, null);
-//   }
-// }
+   try {
+     // eslint-disable-next-line object-shorthand
+     const existingUser = await (await models.User.findOne({ email: email})).exec()
+     if (!existingUser) {
+       const newUser = await models.User.create({_id: profile.id, email, password: ''});
+       if (!newUser) {
+         return new Error();
+       }
+       return cb(null, newUser);
+     }
+     return cb(null, existingUser);
+   } catch (error) {
+     return cb(error, null);
+   }
+ }
 
 // function facebookStrategy() {
 //   return passport.use(new FaceBookStrategy(
@@ -47,6 +47,6 @@
 //   ));
 // }
 
-// module.exports = {
-//   facebookStrategy
-// };
+ module.exports = {
+ callbackStrategy
+ };
