@@ -183,7 +183,7 @@ module.exports = {
   };
   },
 
-  photoUpload (req, res, next) {
+  async photoUpload (req, res, next) {
     const {file, user} = req
     try {
       merge(user, {profile_picture:file.secure_url, public_id: file.public_id });

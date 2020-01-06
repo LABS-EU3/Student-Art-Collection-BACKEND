@@ -9,9 +9,9 @@ const model = {
     user : User
 };
 
-const cleanDB = async () => {
+const cleanDB =  () => {
     // drop all database here
-    await model.user.remove({})
+    return model.user.deleteMany({})
 }
 
 const connectDB =  async () => {
@@ -24,11 +24,35 @@ const connectDB =  async () => {
 }
 
 const disconnectDB = async () => {
-    await mongoose.disconnect()
+    try {
+        const disconnect = await mongoose.disconnect()
+        return disconnect
+    } catch (error) {
+        return console.error(error)
+    }
+}
+
+const userData = {
+    name: "user1",
+    email: `user1@gmail.com`,
+    password: "123456789",
+    type: "school"
+  };
+
+const createUser = ()=> {
+      return model.user.create(userData)
+};
+
+const getUser = async ()=>{
+    const user = await model.user.findOne({email: "user1@gmail.com"}).exec();
+    return user
 }
 
 module.exports = {
     cleanDB,
     connectDB,
-    disconnectDB
+    disconnectDB,
+    createUser,
+    userData,
+    getUser
 }

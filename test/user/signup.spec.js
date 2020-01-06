@@ -1,8 +1,10 @@
+
 const mongoose = require("mongoose");
 const request = require("supertest");
-const UserModel = require("../models/user");
-const server = require("../api/routes/index");
 
+const UserModel = require("../../models/user");
+const server = require("../../api/routes/index");
+const mail = require('../../api/helpers/mail'); 
 
 
 const userData = {
@@ -11,12 +13,13 @@ const userData = {
   password: "123456789",
   type: "school"
 };
-const { connectDB, cleanDB } = require("./db");
+const { connectDB, disconnectDB } = require("../db");
 
 describe("User Model Test", () => {
+
   beforeAll((done) => {
     connectDB()
-    done()
+    return done()
   });
 describe('', () => {
 
@@ -27,7 +30,7 @@ describe('', () => {
       expect(savedUser._id).toBeDefined();
       expect(savedUser.email).toBe(userData.email);
     } catch (error) {
-      expect(error).toBe(error)
+      expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
     }finally{
       done()
     }
@@ -62,9 +65,9 @@ describe('', () => {
         const response = await request(server).post("/signup")
           .send({  password: 12345678, type:'school',email:"test@gmail.com" });;
         expect(response.status).toEqual(expectedStatusCode);
-        expect(response.body).toBe({ name: [ 'The name field is required.' ] })
+        expect(response.body.name).toEqual( [ 'The name field is required.' ] )
       } catch (error) {
-        expect(error).toBe(error)
+        expect(error).toHaveProperty('status',500)
       }finally{
           done()
       }
@@ -72,22 +75,22 @@ describe('', () => {
     });
     it("[POST /signup] - should return 201 because request was successful", async (done) => {
       const expectedStatusCode = 201;
+      jest.spyOn(mail,"sendEmailConfirmAccount").mockResolvedValue({ success: true });
       try {
         const response = await request(server)
           .post("/signup")
-          .send({ name: "john", password: 12345678, type:'school',email:"test@gmail.com" });
+          .send({ name: "johning", password: 12345678, type:'school',email:"testing@gmail.com" });
           expect(response.status).toEqual(expectedStatusCode);
-          expect(response.body.status).toEqual("success");
-          expect(response.body.message).toEqual("User created successfully");
+          expect(response.body).toHaveProperty("msg","Usercreated");
       } catch (error) {
-        expect(error).toBe(error)
+        expect(error).toHaveProperty('status',500)
       } finally {
         done()
       }
     });
   });
 
-  afterAll(() => {
-    return cleanDB();
+  afterAll( () => {
+    return disconnectDB();
   });
 });
