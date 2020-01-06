@@ -1,9 +1,37 @@
 const express = require("express");
 const passport = require('passport');
+const Strategy = require('passport-facebook').Strategy;
 const controller = require('../controllers/user');
 const userValidators = require('../validation/userValidator');
 const Oauthcontroller = require('../controllers/Oauth');
 const cloudinary = require('../middleware/cloudinary');
+const keys = require("../../config/keys");
+
+
+
+
+passport.use(new Strategy({
+  clientID: keys.FACEBOOK_APP_ID,
+  clientSecret: keys.FACEBOOK_APP_SECRET,
+  callbackURL: '/auth/facebook/callback'
+},
+function(accessToken, refreshToken, profile, cb) {
+  // In this example, the user's Facebook profile is supplied as the user
+  // record.  In a production-quality application, the Facebook profile should
+  // be associated with a user record in the application's database, which
+  // allows for account linking and authentication with other identity
+  // providers.
+  return cb(null, profile);
+}));
+
+passport.serializeUser(function(user, cb) {
+  cb(null, user);
+});
+
+passport.deserializeUser(function(obj, cb) {
+  cb(null, obj);
+});
+
 
 const router = express.Router();
 // eslint-disable-next-line no-unused-vars
