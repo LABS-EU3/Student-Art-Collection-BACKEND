@@ -66,7 +66,7 @@ module.exports = {
     const expiringDate = Date.now() + 3600000;
     try {
       const sendMail = await mail.passwordResetMail(
-        secret.frontEndUrl,
+        `${secret.FRONTEND}/resetpassword`,
         token,
         req.userEmail.email,
         req.userEmail.name
