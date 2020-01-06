@@ -9,6 +9,9 @@ module.exports = {
     PASSWORD_MAIL: process.env.PASSWORD_MAIL,
     FRONTEND: process.env.FRONT_END,
     FACEBOOK_APP_SECRET: process.env.FACEBOOK_APP_SECRET,
-    FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID
+    FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    FRONTEND_BASE_URL: process.env.FRONTEND_BASE_URL
 
 }
