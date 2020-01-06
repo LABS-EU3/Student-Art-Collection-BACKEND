@@ -54,7 +54,9 @@ router.patch("/confirm", controller.activateUser);
 router.get(
    '/auth/facebook/callback',
    passport.authenticate('facebook', { failureRedirect: '/login' }),
-   Oauthcontroller.socialAuthlogin
+   function(req, res) {
+    res.redirect('/');
+  }
  );
 
  router.post(
