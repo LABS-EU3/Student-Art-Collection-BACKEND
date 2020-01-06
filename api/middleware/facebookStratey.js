@@ -33,16 +33,20 @@ async function callbackStrategy(profile, cb) {
   }
 }
 
-passport.use(new FaceBookStrategy(
+function facebookStrategy() {
+  return passport.use(new FaceBookStrategy(
     {
       clientID: keys.FACEBOOK_APP_ID,
       clientSecret: keys.FACEBOOK_APP_SECRET,
       callbackURL: "/auth/facebook/callback",
       profileFields: ["id", "last_name", "first_name", "email"]
     },
-    function (accessToken, refreshToken, profile, cb) {
+    (accessToken, refreshToken, profile, cb) => {
       return callbackStrategy(profile, cb);
     }
   ));
+}
 
-
+module.exports = {
+  facebookStrategy
+};

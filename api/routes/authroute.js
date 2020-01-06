@@ -16,11 +16,8 @@ router.patch("/confirm", controller.activateUser);
 
 
  // Facebook
- router.get('/auth/facebook', [
-     passport.authenticate('facebook', {
-       scope: ['email']
-     })
-   ]);
+ router.get('/auth/facebook',
+ passport.authenticate('facebook'));
   
 router.get(
    '/auth/facebook/callback',
