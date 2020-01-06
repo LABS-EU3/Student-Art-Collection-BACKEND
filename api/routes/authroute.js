@@ -15,7 +15,7 @@ const models = require("../../models");
 passport.use(new Strategy({
   clientID: keys.FACEBOOK_APP_ID,
   clientSecret: keys.FACEBOOK_APP_SECRET,
-  callbackURL: 'https://tobi-server.herokuapp.com/auth/facebook/callback/',
+  callbackURL: '/auth/facebook/callback',
   profileFields: ["id", "last_name", "first_name", "email"]
 },
 function(accessToken, refreshToken, profile, cb) {
