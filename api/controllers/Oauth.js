@@ -8,7 +8,7 @@ module.exports = {
 
     try {
       const token = await generateToken(user);
-      res.redirect(`${keys.FRONTEND_BASE_URL}/auth/social?token=${token}`);
+      res.redirect(`${keys.FRONTEND}/myaccount?token=${token}`);
     } catch (error) {
       return next({ message: `${error.message}` });
     }
