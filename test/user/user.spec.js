@@ -32,7 +32,6 @@ describe('test for user endpoint', () =>{
             // eslint-disable-next-line no-underscore-dangle
             try {
                 const userInfo = await getUser();
-                console.log(userInfo, 'llllllll')
                 const token = await generateToken(userInfo);
                 const user = await request(server).post(`/upload/${userInfo.id}`)
                     .set("authorization", token)
@@ -77,5 +76,23 @@ describe('test for user endpoint', () =>{
         }finally {
             done()
         }
+    });
+
+    describe('PATCH /confirm', () => {
+        it('should return an error if invalid token', async(done) =>{
+            const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0IjoiNWUxMzAxYjY4NDgyMjYwZmYzZDNjYzFlIiwiaWF0IjoxNTc4MzAzOTI2LCJleHAiOjE1Nzg3MzU5MjZ9.n3achHIHlIbL06LzZuRfT4rb-81c_90TMrZJFTpPHXx'
+            const response = await request(server).patch('/confirm').send({token});
+            expect(response.status).toBe(400);
+            expect(response.body).toBe("invalid token for user")
+            done()
+        });
+
+        it('should succesfully confirm user account', async(done) =>{
+            const userInfo = await getUser();
+            const token = await generateToken(userInfo);
+            const response = await request(server).patch('/confirm').send({token});
+            expect(response.status).toBe(200);
+            done()
+        })
     })
 })
