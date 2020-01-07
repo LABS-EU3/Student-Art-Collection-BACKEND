@@ -12,6 +12,8 @@ module.exports = {
     FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-    FRONTEND_BASE_URL: process.env.FRONTEND_BASE_URL
-
+    FRONTEND_BASE_URL: process.env.FRONTEND_BASE_URL,
+    CLOUD_NAME: process.env.CLOUD_NAME,
+	API_KEY: process.env.API_KEY,
+	API_SECRET: process.env.API_SECRET,
 }
