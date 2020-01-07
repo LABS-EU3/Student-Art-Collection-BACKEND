@@ -94,5 +94,7 @@ describe('test for user endpoint', () =>{
             expect(response.status).toBe(200);
             done()
         })
-    })
+    });
+
+    // describe()
 })
