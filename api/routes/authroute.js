@@ -9,6 +9,7 @@ const cloudinary = require("../middleware/cloudinary");
 const keys = require("../../config/keys");
 const callBackStrategy = require("../middleware/facebookStratey");
 const models = require("../../models");
+const {authCallbackStrategy} = require('../middleware/googleStrategy')
 
 // passport.use(
 //   new Strategy(
@@ -25,17 +26,7 @@ const models = require("../../models");
 //   )
 // );
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
 
-passport.deserializeUser((id, done) => {
-  models.User.findById(id)
-    .then(user => {
-      done(null, user.id);
-    })
-    .catch(err => console.log(err));
-});
 
 passport.use(
   new GoogleStrategy(
@@ -45,30 +36,10 @@ passport.use(
       callbackURL: "/auth/google/callback",
       passReqToCallback: true
     },
-    (request, accessToken, refreshToken, profile, cb) => {
-      models.User.findOne({ email: profile.emails[0].value })
-        .then(existingUser => {
-          if (existingUser) {
-            cb(null, existingUser);
-          } else {
-            new models.User({
-              email: profile.emails[0].value,
-              type: "buyer",
-              confirmed: true,
-              firstname: profile.name.givenName,
-              lastname: profile.name.familyName,
-              auth_id: profile.id
-            })
-              .save()
-              .then(newUser => {
-                cb(null, newUser);
-              });
-          }
-        })
-        .catch(err => console.log(err));
-    }
+     (_, __, ___, profile, cb) => authCallbackStrategy(profile, cb)
   )
 );
+
 
 const router = express.Router();
 // eslint-disable-next-line no-unused-vars

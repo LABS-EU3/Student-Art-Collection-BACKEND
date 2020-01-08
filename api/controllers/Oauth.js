@@ -5,10 +5,10 @@ const keys = require("../../config/keys");
 module.exports = {
   async socialAuthlogin(req, res, next) {
     const { user } = req;
-
+    console.log('hiiiii')
     try {
       const token = await generateToken(user);
-      res.redirect(`${keys.FRONTEND}/myaccount?token=${token}`);
+      return res.redirect(`${keys.FRONTEND}/myaccount?token=${token}`);
     } catch (error) {
       return next({ message: `${error.message}` });
     }
