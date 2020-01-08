@@ -66,7 +66,7 @@ module.exports = {
     const expiringDate = Date.now() + 3600000;
     try {
       const sendMail = await mail.passwordResetMail(
-        secret.frontEndUrl,
+        `${secret.FRONTEND}/resetpassword`,
         token,
         req.userEmail.email,
         req.userEmail.name
@@ -147,8 +147,26 @@ module.exports = {
        sendEmailConfirmAccount (user, token,`${secret.FRONTEND}/success`)
        return successResponse(res, 200, {message: 'please check your email address to confirm account'})
       }
-      user.password = ''
-    return successResponse(res, 200, {message: 'successfully logged in', token, user})
+      user.password = '';
+      let userDetails = null
+      switch(user.type) {
+        case('school') : 
+          userDetails = await models.School.findOne({userId:user.id}).populate('user').exec()
+          return successResponse(res, 200, {
+            message: 'successfully logged in', 
+            token, 
+            user: merge(user,userDetails)}
+            );
+        case('buyer') : 
+          userDetails = await models.Buyer.findOne({userId:user.id}).populate('user').exec()
+          return successResponse(res, 200, {
+            message: 'successfully logged in', 
+            token, 
+            user: merge(user,userDetails)}
+            );
+        default:
+          return next('error getting user')
+      }
   } catch(error) {
     return next({ message: 'Error logging in user' });
   }
