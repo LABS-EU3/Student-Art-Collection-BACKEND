@@ -6,7 +6,7 @@ const passport = require("passport");
 
 const UserauthRoute = require('./authroute');
 const models = require('../../models')
-
+const {authCallbackStrategy} = require('../middleware/googleStrategy');
 
 
 const app = express();
@@ -28,6 +28,7 @@ passport.serializeUser((user, done) => {
 	  .catch(err => console.log(err));
   });
 
+  authCallbackStrategy();
 
 app.use('/', UserauthRoute)
 

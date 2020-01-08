@@ -1,15 +1,13 @@
 const express = require("express");
 const passport = require("passport");
 const Strategy = require("passport-facebook").Strategy;
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const controller = require("../controllers/user");
 const userValidators = require("../validation/userValidator");
 const Oauthcontroller = require("../controllers/Oauth");
 const cloudinary = require("../middleware/cloudinary");
 const keys = require("../../config/keys");
 const callBackStrategy = require("../middleware/facebookStratey");
-const models = require("../../models");
-const {authCallbackStrategy} = require('../middleware/googleStrategy')
+
 
 // passport.use(
 //   new Strategy(
@@ -28,17 +26,7 @@ const {authCallbackStrategy} = require('../middleware/googleStrategy')
 
 
 
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: keys.GOOGLE_CLIENT_ID,
-      clientSecret: keys.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/auth/google/callback",
-      passReqToCallback: true
-    },
-     (_, __, ___, profile, cb) => authCallbackStrategy(profile, cb)
-  )
-);
+
 
 
 const router = express.Router();
