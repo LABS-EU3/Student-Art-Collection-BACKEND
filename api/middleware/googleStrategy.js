@@ -24,8 +24,6 @@ module.exports = {
                       email: profile.emails[0].value,
                       type: "buyer",
                       confirmed: true,
-                      // firstname: profile.name.givenName,
-                      // lastname: profile.name.familyName,
                       auth_id: profile.id
                     })
                       .then(newUser => newUser)
