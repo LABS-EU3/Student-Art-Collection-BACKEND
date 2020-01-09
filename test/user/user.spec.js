@@ -27,7 +27,7 @@ describe('test for user endpoint', () =>{
 
     describe('POST /uploade/:id', () =>{
         it('should upload a user photo', async (done) =>{
-            jest.setTimeout(10000);
+            jest.setTimeout(20000);
             jest.spyOn(cloudinary,"uploadImage").mockResolvedValue({ success: true });
             // eslint-disable-next-line no-underscore-dangle
             try {
@@ -47,12 +47,12 @@ describe('test for user endpoint', () =>{
         })
     });
 
-    describe('GET /:id',  () =>{
+    describe('GET /profile/:id',  () =>{
         it('should return return 401 if user dont match token', async (done)=>{
             try {
                 const userInfo = await getUser();
                 const token = await generateToken(userInfo);
-                const response = await request(server).get('/1234567')
+                const response = await request(server).get('/profile/1234567')
                 .set("authorization", token)
                 expect(response.body).toBe("you cannot continue with this operation")
                 expect(response.status).toBe(401)
@@ -68,7 +68,7 @@ describe('test for user endpoint', () =>{
         try {
             const userInfo = await getUser();
             const token = await generateToken(userInfo);
-            const response = await request(server).get(`/${userInfo.id}`)
+            const response = await request(server).get(`/profile/${userInfo.id}`)
                 .set("authorization", token)
             expect(response.status).toBe(200)
         } catch (error) {
@@ -96,5 +96,39 @@ describe('test for user endpoint', () =>{
         })
     });
 
-    // describe()
+    describe('/POST/resetpassword', () =>{
+        it('should return a 400 error if email field is invalid', async (done) =>{
+            const response = await request(server).post('/resetpassword').send({email: 'fakeemail'});
+            expect(response.status).toBe(400)
+            expect(response.body).toBe("Input a valid email")
+            done()
+        });
+        it('should return a 404 if email dont exists', async (done) =>{
+            const response = await request(server).post('/resetpassword').send({email: 'fakeemail@t.com'});
+            expect(response.status).toBe(404)
+            expect(response.body).toBe("User not found")
+            done()
+        });
+        it('should send an email to resend password', async(done) =>{
+            const response = await request(server).post('/resetpassword').send({email: userData.email});
+            expect(response.status).toBe(200)
+            expect(response.body).toBe(`Email sent to ${userData.email}`)
+            done()
+        })
+    });
+
+    describe('/PATCH/newpassword', () => {
+        it('should return a 400 if password length is below 8', async (done) =>{
+            const response = await request(server).patch('/newpassword').send({password: "email"});
+            expect(response.status).toBe(400)
+            expect(response.body).toBe("Password must be at least 8 characters")
+            done()
+        });
+        it('should return a 401', async(done) =>{
+            const response = await request(server).patch('/newpassword?token=12werertrrrrrr').send({password: "emailingme"});
+            expect(response.status).toBe(401)
+            expect(response.body).toBe("Invalid token to reset password")
+            done()
+        })
+    })
 })
