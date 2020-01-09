@@ -8,7 +8,7 @@ const buyerSchema = new mongoose.Schema({
     },
     lastname: {
         type: String,
-        required: [true, 'Buyer must have a lasstname'],
+        required: [true, 'Buyer must have a lastname'],
         trim: true
     },
     userId: {

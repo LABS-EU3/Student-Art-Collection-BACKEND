@@ -13,7 +13,7 @@ const userSchema = new Schema({
     },
     password: {
         type: String,
-        required: [true, 'User must have a password'],
+       
     },
     confirmed: {
         type: Boolean, 
@@ -36,7 +36,10 @@ const userSchema = new Schema({
     },
     reset_password_expires: {
         type: Number
-    }
+    },
+    auth_id: {
+        type: String
+    },
 }, {timestamps: true});
 
 

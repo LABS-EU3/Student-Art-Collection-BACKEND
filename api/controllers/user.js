@@ -11,6 +11,7 @@ const { successResponse, errorHelper } = require("../helpers/response");
 const { sendEmailConfirmAccount } = require("../helpers/mail");
 const mail = require("../helpers/ResetPassword");
 const response = require("../helpers/response");
+const { updateCompleteUserDetails, getCompleteUser } = require('../helpers/users');
 
 
 
@@ -66,7 +67,7 @@ module.exports = {
     const expiringDate = Date.now() + 3600000;
     try {
       const sendMail = await mail.passwordResetMail(
-        secret.frontEndUrl,
+        `${secret.FRONTEND}/resetpassword`,
         token,
         req.userEmail.email,
         req.userEmail.name
@@ -147,8 +148,13 @@ module.exports = {
        sendEmailConfirmAccount (user, token,`${secret.FRONTEND}/success`)
        return successResponse(res, 200, {message: 'please check your email address to confirm account'})
       }
-      user.password = ''
-    return successResponse(res, 200, {message: 'successfully logged in', token, user})
+      user.password = '';
+      const userDetails = await getCompleteUser(user, next, 'error getting user');
+      return successResponse(res, 200, {
+        message: 'successfully logged in', 
+        token, 
+        user: userDetails}
+        );
   } catch(error) {
     return next({ message: 'Error logging in user' });
   }
@@ -162,22 +168,8 @@ module.exports = {
       }
       merge(user, req.body);
       user.save();
-      let updatedUser =  null
-      switch(user.type) {
-        case('school') : {
-          updatedUser = await models.School.findOneAndUpdate({userId: user.id}, req.body, {new:true})
-            .populate('user').exec()
-              return successResponse(res, 200, merge(user,updatedUser));
-        }
-        case('buyer') : {
-          updatedUser = await models.Buyer.findOneAndUpdate({ userId: user.id }, req.body, {new:true})
-            .populate('user').exec()
-            return successResponse(res, 200, merge(user,updatedUser));
-        }
-        default : {
-          return next('unable to update user');
-        }
-      } 
+      const updatedUser =  await updateCompleteUserDetails(user, req,next,'unable to update user' )
+      return successResponse(res, 200, updatedUser);
     } catch(error) {
       return next({ message: 'Error updating user profile'})
   };
@@ -197,16 +189,7 @@ module.exports = {
 
   async getAuser(req, res, next) {
     const { user } = req;
-    let userDetails = null
-    switch(user.type) {
-      case('school') : 
-        userDetails = await models.School.findOne({userId:user.id}).populate('user').exec()
-        return successResponse(res, 200, merge(user,userDetails));
-      case('buyer') : 
-        userDetails = await models.Buyer.findOne({userId:user.id}).populate('user').exec()
-        return successResponse(res, 200, merge(user,userDetails));
-      default:
-        return next('error getting user')
-    }
+    const userDetails = await getCompleteUser(user, next, 'error getting user')
+    return successResponse(res, 200, merge(user,userDetails));
   }
 };
