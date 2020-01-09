@@ -9,7 +9,12 @@ const orderSchema = new mongoose.Schema(
     },
     address: {
       type: String
-    }
+    },
+    status: {
+        type: String,
+        required: true,
+        enum: ['sent', 'pending', 'Failed']
+    },
   },
   { timestamps: true }
 );
