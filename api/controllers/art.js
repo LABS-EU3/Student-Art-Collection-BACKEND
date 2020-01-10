@@ -15,7 +15,8 @@ module.exports = {
     return models.Products.create({
       ...req.body,
       userId: id,
-      picture: file.secure_url
+      picture: file.secure_url,
+      public_picture_id: file.public_id
     })
       .then(response => {
         return successResponse(res, 200, response);

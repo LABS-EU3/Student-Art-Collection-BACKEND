@@ -17,9 +17,13 @@ router.get('/test', artcontroller.testArt);
 
 // UPLOAD NEW ART
 router.post(
-  '/upload',
-  [userValidator.validateUser, artValidators.validateArtBody],
-  [cloudinary.uploadImage('image'), cloudinary.deleteCloudImage],
+  '/upload/:id',
+  [
+    userValidator.validateUser,
+    userValidator.validateUserTokenRequest,
+    artValidators.validateArtBody
+  ],
+  [cloudinary.uploadImage('image')],
   artcontroller.uploadArt
 );
 

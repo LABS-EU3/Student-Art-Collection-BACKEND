@@ -48,6 +48,10 @@ const productSchema = new mongoose.Schema(
     picture: {
       type: String,
       required: [true, 'Products must have a picture']
+    },
+    public_picture_id: {
+      type: String,
+      required: [true, 'Products must have a picture public id']
     }
   },
   { timestamps: true }
