@@ -14,8 +14,7 @@ module.exports = {
       height: 'required',
       width: 'required',
       quantity: 'required',
-      price: 'required',
-      picture: 'required'
+      price: 'required'
     });
     if (validator.fails()) {
       errorHelper(res, 401, { message: validator.errors.all() });

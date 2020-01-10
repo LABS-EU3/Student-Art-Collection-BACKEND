@@ -11,7 +11,12 @@ module.exports = {
 
   uploadArt(req, res) {
     const { id } = req.user;
-    return models.Products.create({ ...req.body, userId: id })
+    const { file } = req;
+    return models.Products.create({
+      ...req.body,
+      userId: id,
+      picture: file.secure_url
+    })
       .then(response => {
         return successResponse(res, 200, response);
       })

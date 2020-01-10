@@ -1,5 +1,6 @@
 // DEPENDENCIES
 const express = require('express');
+const cloudinary = require('../middleware/cloudinary');
 
 // MIDDLEWARE
 const artValidators = require('../validation/artValidation');
@@ -18,6 +19,7 @@ router.get('/test', artcontroller.testArt);
 router.post(
   '/upload',
   [userValidator.validateUser, artValidators.validateArtBody],
+  [cloudinary.uploadImage('image'), cloudinary.deleteCloudImage],
   artcontroller.uploadArt
 );
 
