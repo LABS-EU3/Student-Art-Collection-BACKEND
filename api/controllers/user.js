@@ -66,16 +66,13 @@ module.exports = {
     const token = await crypto.randomBytes(20).toString("hex");
     const expiringDate = Date.now() + 3600000;
     try {
-      const sendMail = await mail.passwordResetMail(
+      mail.passwordResetMail(
         `${secret.FRONTEND}/resetpassword`,
         token,
         req.userEmail.email,
         req.userEmail.name
       );
-      if (!sendMail) {
-        return response.errorHelper(res, 400, "Error sending mail try again");
-      }
-      const hasUpdated = await models.User.findOneAndUpdate(
+     await models.User.findOneAndUpdate(
         { email: req.userEmail.email },
         {
           reset_password_token: token,
@@ -83,9 +80,6 @@ module.exports = {
         },
         { new: true }
       );
-      if (!hasUpdated) {
-        return response.errorHelper(res, 400, "Server error");
-      }
       return response.successResponse(
         res,
         200,
@@ -115,7 +109,7 @@ module.exports = {
         return response.errorHelper(res, 400, "Password reset have expired");
       }
       const hash = await bcrypt.hash(req.body.password, 14);
-      const newUserPassword = await models.User.findOneAndUpdate(
+     await models.User.findOneAndUpdate(
         // eslint-disable-next-line no-underscore-dangle
         { email: user.email },
         {
@@ -123,10 +117,6 @@ module.exports = {
           reset_password_token: ""
         }, {new: true}
       ).exec();
-      
-      if (!newUserPassword) {
-        return response.errorHelper(res, 404, "User not found");
-      }
       return response.successResponse(res, 200, "Password reset was succesful");
     } catch (error) {
       return next({ message: error.message });
@@ -175,7 +165,7 @@ module.exports = {
   };
   },
 
-  photoUpload (req, res, next) {
+  async photoUpload (req, res, next) {
     const {file, user} = req
     try {
       merge(user, {profile_picture:file.secure_url, public_id: file.public_id });
