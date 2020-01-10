@@ -10,7 +10,7 @@ module.exports = {
   },
 
   uploadArt(req, res) {
-    const { id } = req.params;
+    const { id } = req.user;
     return models.Products.create({ ...req.body, userId: id })
       .then(response => {
         return successResponse(res, 200, response);

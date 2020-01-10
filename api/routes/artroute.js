@@ -3,6 +3,7 @@ const express = require('express');
 
 // MIDDLEWARE
 const artValidators = require('../validation/artValidation');
+const userValidator = require('../validation/userValidator');
 
 // CONTROLLERS
 const artcontroller = require('../controllers/art');
@@ -15,8 +16,8 @@ router.get('/test', artcontroller.testArt);
 
 // UPLOAD NEW ART
 router.post(
-  '/:id/upload',
-  [artValidators.validateArtBody],
+  '/upload',
+  [userValidator.validateUser, artValidators.validateArtBody],
   artcontroller.uploadArt
 );
 
