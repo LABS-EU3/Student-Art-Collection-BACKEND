@@ -36,8 +36,8 @@ async function sendContactMail({ name, email, message }) {
     });
 
     const mailOption = {
-        from: 'studentartcollectionlabseu3@gmail.com',
-        to: 'roryflintphoto+school@gmail.com',
+        from: process.env.USER_MAIL,
+        to: process.env.USER_MAIL,
         subject: subject.third,
         html: emailBody,
         text: emailText
