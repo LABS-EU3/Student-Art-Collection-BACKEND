@@ -92,4 +92,9 @@ router.get(
   controller.getAuser
 );
 
+router.post(
+  "/contactus",
+  controller.sendContactMessage
+)
+
 module.exports = router;
