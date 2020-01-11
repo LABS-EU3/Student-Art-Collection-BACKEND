@@ -5,7 +5,7 @@ let mongoUrl = null
 
 const mongoConnection = () =>{
     if (process.env.NODE_ENV === "test") {
-        mongoUrl = TEST_DB || 'mongodb://localhost/test'
+        mongoUrl = TEST_DB || 'mongodb://localhost/testing'
     } else {
         mongoUrl = DATA_DB
     }
