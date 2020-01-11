@@ -48,14 +48,14 @@ router.post(
 );
 router.patch("/confirm", controller.activateUser);
 
-// Facebook
-// router.get("/auth/facebook", passport.authenticate("facebook"));
+ // Facebook
+router.get("/auth/facebook", passport.authenticate("facebook"));
 
-// router.get(
-//   "/auth/facebook/callback",
-//   passport.authenticate("facebook", { failureRedirect: "/login" }),
-//   Oauthcontroller.socialAuthlogin
-// );
+router.get(
+  "/auth/facebook/callback",
+  passport.authenticate("facebook", { failureRedirect: "/login" }),
+  Oauthcontroller.socialAuthlogin
+);
 
 router.get(
   "/auth/google",
