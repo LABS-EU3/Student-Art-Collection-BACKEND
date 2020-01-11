@@ -3,7 +3,7 @@ const Mailgen = require("mailgen");
 const secret = require("../../config/keys");
 const { intro, instructions, outro, subject } = require("./mailText");
 
-async function artMail(url, email, name) {
+async function artMail(url, email, name, product) {
   const mailGenerator = new Mailgen({
     theme: "default",
     product: {
@@ -14,11 +14,28 @@ async function artMail(url, email, name) {
   const mail = {
     body: {
       name,
-      intro: intro.second,
-      action: {
-        instructions: instructions.second
+      intro: "Your order has been processed successfully.",
+      table: {
+        data: [
+          {
+            item: product.name,
+            description: product.description,
+            price: product.price
+          }
+        ],
+        columns: {
+          customWidth: {
+            item: "20%",
+            price: "15%"
+          },
+
+          customAlignment: {
+            price: "right"
+          }
+        }
       },
-      outro: outro.second
+     
+      outro: "Thank You for your purchase"
     }
   };
   const emailBody = mailGenerator.generate(mail);
@@ -51,4 +68,4 @@ async function artMail(url, email, name) {
   }
 }
 
-module.exports = { artMail };
+module.exports = artMail ;

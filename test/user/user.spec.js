@@ -25,27 +25,27 @@ describe('test for user endpoint', () =>{
          return disconnectDB()
     });
 
-    describe('POST /uploade/:id', () =>{
-        it('should upload a user photo', async (done) =>{
-            jest.setTimeout(20000);
-            jest.spyOn(cloudinary,"uploadImage").mockResolvedValue({ success: true });
-            // eslint-disable-next-line no-underscore-dangle
-            try {
-                const userInfo = await getUser();
-                const token = await generateToken(userInfo);
-                const user = await request(server).post(`/upload/${userInfo.id}`)
-                    .set("authorization", token)
-                    .set('Content-Type', 'multipart/form-data')
-                    .attach('image', path.join(__dirname, 'assests/image.png'))
-                expect(user.body.profile_picture).toBeDefined();
-                expect(user.status).toBe(200)
-            } catch(err) {
-                expect(err).toHaveProperty('status',500)
-            } finally{
-                done()
-            }
-        })
-    });
+     describe('POST /uploade/:id', () =>{
+         it('should upload a user photo', async (done) =>{
+             jest.setTimeout(20000);
+             jest.spyOn(cloudinary,"uploadImage").mockResolvedValue({ success: true });
+             // eslint-disable-next-line no-underscore-dangle
+             try {
+                 const userInfo = await getUser();
+                 const token = await generateToken(userInfo);
+                 const user = await request(server).post(`/upload/${userInfo.id}`)
+                     .set("authorization", token)
+                     .set('Content-Type', 'multipart/form-data')
+                     .attach('image', path.join(__dirname, 'assests/image.png'))
+                 expect(user.body.profile_picture).toBeDefined();
+                 expect(user.status).toBe(200)
+             } catch(err) {
+                 expect(err).toHaveProperty('status',500)
+             } finally{
+                 done()
+             }
+         })
+     });
 
     describe('GET /profile/:id',  () =>{
         it('should return return 401 if user dont match token', async (done)=>{
