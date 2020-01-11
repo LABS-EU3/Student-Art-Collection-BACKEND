@@ -2,6 +2,7 @@ const express = require("express");
 const passport = require("passport");
 const Strategy = require("passport-facebook").Strategy;
 const controller = require("../controllers/user");
+const artController = require('../controllers/art')
 const userValidators = require("../validation/userValidator");
 const Oauthcontroller = require("../controllers/Oauth");
 const cloudinary = require("../middleware/cloudinary");
@@ -92,4 +93,5 @@ router.get(
   controller.getAuser
 );
 
+router.get('/marker/mark', userValidators.validateUser,  artController.markArtAsCollected)
 module.exports = router;

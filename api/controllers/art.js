@@ -1,17 +1,20 @@
 const { successResponse, errorHelper } = require("../helpers/response");
 const models = require("../../models");
-const { sendEmailConfirmAccount } = require("../helpers/mail");
+
 
 module.exports = {
   async markArtAsCollected(req, res, next) {
+    const { user } = req;
+
     try {
-      const transaction = await models.order.findById(req.id).exec();
-      if (transaction) {
-        const newtransaction = { ...transaction, status: "completed" };
-        sendEmailConfirmAccount();
-        return newtransaction;
+      const order = await models.order
+        .findOneAndUpdate(user.id, { status: "completed" }, { new: true })
+        ;
+      console.log(order);
+      if (order) {
+        return successResponse(res, 200, order)
       }
-      return errorHelper(res, 500, "Transaction Not found")
+      return errorHelper(res, 500, "Transaction Not found");
     } catch (error) {
       return next(error.message);
     }
