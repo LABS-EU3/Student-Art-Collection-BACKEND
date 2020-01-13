@@ -7,12 +7,10 @@ const secret = require("../../config/keys");
 module.exports = {
   async markArtAsCollected(req, res, next) {
     const { user } = req;
-
-    const transactionid = req.params.id;
+    const { id } = req.params;
 
     try {
-      const objectId = mongoose.Types.ObjectId(transactionid.toString());
-
+      const objectId = mongoose.Types.ObjectId(id.toString());
       const transaction = await models.Transaction.findById(objectId)
         .populate("buyerId")
         .populate("productId");

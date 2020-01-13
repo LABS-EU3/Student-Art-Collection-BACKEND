@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 const Mailgen = require("mailgen");
 const secret = require("../../config/keys");
-const { intro, instructions, outro, subject } = require("./mailText");
+const { intro,  outro, subject } = require("./mailText");
 
 async function artMail(url, email, name, product) {
   const mailGenerator = new Mailgen({
@@ -14,7 +14,7 @@ async function artMail(url, email, name, product) {
   const mail = {
     body: {
       name,
-      intro: "Your order has been processed successfully.",
+      intro: intro.third,
       table: {
         data: [
           {
@@ -35,7 +35,7 @@ async function artMail(url, email, name, product) {
         }
       },
      
-      outro: "Thank You for your purchase"
+      outro: outro.third
     }
   };
   const emailBody = mailGenerator.generate(mail);
@@ -55,7 +55,7 @@ async function artMail(url, email, name, product) {
   const mailOption = {
     from: "studentartcollectionlabseu3@gmail.com",
     to: email,
-    subject: "Art Delivery",
+    subject: subject.third,
     html: emailBody,
     text: emailText
   };
