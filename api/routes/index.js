@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const passport = require("passport");
 
 const UserauthRoute = require('./authroute');
+
 const models = require('../../models')
 const {authCallbackStrategy} = require('../middleware/googleStrategy');
 
@@ -31,6 +32,8 @@ passport.serializeUser((user, done) => {
   authCallbackStrategy();
 
 app.use('/', UserauthRoute)
+
+
 
 app.use(function errors(err, req, res, next) {
 	return res.status(500).json({ err });

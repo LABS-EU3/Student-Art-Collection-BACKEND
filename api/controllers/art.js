@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const { successResponse, errorHelper } = require("../helpers/response");
 const models = require("../../models");
 const artMail = require("../helpers/artmail");
@@ -7,37 +8,28 @@ module.exports = {
   async markArtAsCollected(req, res, next) {
     const { user } = req;
 
+    const transactionid = req.params.id;
+
     try {
-      const User = await models.User.findById(user.id);
+      const objectId = mongoose.Types.ObjectId(transactionid.toString());
 
-      if (User.type === 'school') {
-        // eslint-disable-next-line no-underscore-dangle
-        const transaction = await models.Transaction.findOne({
-          // eslint-disable-next-line no-underscore-dangle
-          schoolId: User._id
-        });
+      const transaction = await models.Transaction.findById(objectId)
+        .populate("buyerId")
+        .populate("productId");
 
-        const buyer = await models.Buyer.findOne({ _id: transaction.buyerId });
+      const order = await models.order.findOneAndUpdate(
+        { transactionId: objectId },
+        { status: "completed" },
+        { new: true }
+      );
+      artMail(
+        secret.FRONTEND_BASE_URL,
+        user.email,
+        transaction.buyerId.firstname,
+        transaction.productId
+      );
 
-        const products = await models.Products.findOne({
-          _id: transaction.productId
-        });
-
-        const order = await models.order.findOneAndUpdate(
-          transaction.id,
-          { status: "completed" },
-          { new: true }
-        );
-        artMail(
-          secret.FRONTEND_BASE_URL,
-          User.email,
-          buyer.firstname,
-          products
-        );
-
-        return successResponse(res, 200, order);
-      }
-      return errorHelper(res, 500, "You aren't authorised");
+      return successResponse(res, 200, order);
     } catch (error) {
       return next(error.message);
     }

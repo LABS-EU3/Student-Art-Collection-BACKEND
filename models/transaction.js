@@ -14,7 +14,7 @@ const transactionSchema = new mongoose.Schema({
     },
     SchoolId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "",
+        ref: "school",
         unique: true
     },
 

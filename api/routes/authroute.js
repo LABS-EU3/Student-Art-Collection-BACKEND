@@ -1,34 +1,13 @@
 const express = require("express");
 const passport = require("passport");
-const Strategy = require("passport-facebook").Strategy;
+
 const controller = require("../controllers/user");
-const artController = require('../controllers/art')
+
+const artController = require("../controllers/art");
+
 const userValidators = require("../validation/userValidator");
 const Oauthcontroller = require("../controllers/Oauth");
 const cloudinary = require("../middleware/cloudinary");
-const keys = require("../../config/keys");
-const callBackStrategy = require("../middleware/facebookStratey");
-
-
-// passport.use(
-//   new Strategy(
-//     {
-//       clientID: keys.FACEBOOK_APP_ID,
-//       clientSecret: keys.FACEBOOK_APP_SECRET,
-//       callbackURL: "/auth/facebook/callback/",
-//       profileFields: ["id", "last_name", "first_name", "email"]
-//     },
-//     function(accessToken, refreshToken, profile, cb) {
-   
-//       return callBackStrategy(profile, cb);
-//     }
-//   )
-// );
-
-
-
-
-
 
 const router = express.Router();
 // eslint-disable-next-line no-unused-vars
@@ -48,7 +27,7 @@ router.post(
 );
 router.patch("/confirm", controller.activateUser);
 
- // Facebook
+// Facebook
 // router.get("/auth/facebook", passport.authenticate("facebook"));
 
 // router.get(
@@ -93,5 +72,10 @@ router.get(
   controller.getAuser
 );
 
-router.get('/profile/mark', userValidators.validateUser,  artController.markArtAsCollected)
+router.get(
+  "/profile/mark/:id",
+  userValidators.validateUser,
+  artController.markArtAsCollected
+);
+
 module.exports = router;
