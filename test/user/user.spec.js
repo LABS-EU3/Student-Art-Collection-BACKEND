@@ -25,7 +25,7 @@ describe('test for user endpoint', () =>{
          return disconnectDB()
     });
 
-     describe('POST /uploade/:id', () =>{
+     describe.only('POST /uploade/:id', () =>{
          it('should upload a user photo', async (done) =>{
              jest.setTimeout(20000);
              jest.spyOn(cloudinary,"uploadImage").mockResolvedValue({ success: true });
@@ -40,6 +40,7 @@ describe('test for user endpoint', () =>{
                  expect(user.body.profile_picture).toBeDefined();
                  expect(user.status).toBe(200)
              } catch(err) {
+                 console.log(err)
                  expect(err).toHaveProperty('status',500)
              } finally{
                  done()

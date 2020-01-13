@@ -12,6 +12,12 @@ const transactionSchema = new mongoose.Schema({
         ref: "buyer",
         unique: true
     },
+    SchoolId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "",
+        unique: true
+    },
+
     status: {
         type: String,
         required: true,
