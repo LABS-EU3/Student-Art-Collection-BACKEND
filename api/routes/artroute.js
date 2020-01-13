@@ -13,9 +13,6 @@ const router = express.Router();
 router.use(express.json());
 // const upload = multer({ storage });
 
-// DUMMY ENDPOINT FOR TESTING PURPOSES
-router.get('/test', artcontroller.testArt);
-
 // UPLOAD NEW ART
 router.post(
   '/upload/:id',
