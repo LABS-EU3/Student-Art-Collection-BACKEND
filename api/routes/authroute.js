@@ -93,5 +93,5 @@ router.get(
   controller.getAuser
 );
 
-router.get('/marker/mark', userValidators.validateUser,  artController.markArtAsCollected)
+router.get('/profile/mark', userValidators.validateUser,  artController.markArtAsCollected)
 module.exports = router;

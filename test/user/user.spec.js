@@ -25,7 +25,7 @@ describe('test for user endpoint', () =>{
          return disconnectDB()
     });
 
-     describe.only('POST /uploade/:id', () =>{
+     describe('POST /uploade/:id', () =>{
          it('should upload a user photo', async (done) =>{
              jest.setTimeout(20000);
              jest.spyOn(cloudinary,"uploadImage").mockResolvedValue({ success: true });
