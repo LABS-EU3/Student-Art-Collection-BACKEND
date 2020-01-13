@@ -22,6 +22,8 @@ module.exports = {
       });
     }
   },
+
+  // FETCH ALL ART
   async fetchArt(req, res) {
     try {
       const pagination = req.query.pagination
@@ -31,9 +33,9 @@ module.exports = {
       const art = await models.Products.find()
         .skip((page - 1) * pagination)
         .limit(pagination);
-      res.status(200).json(art);
+      return successResponse(res, 200, art);
     } catch (error) {
-      res.status(401).json(error.message);
+      return errorHelper(res, 401, error.message);
     }
   }
 };
