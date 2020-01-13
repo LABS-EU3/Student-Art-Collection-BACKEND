@@ -94,10 +94,4 @@ router.get(
   controller.getAuser
 );
 
-router.post(
-  "/contactus",
-  [contactValidators.validateContactForm],
-  contactController.sendContactMessage
-)
-
 module.exports = router;
