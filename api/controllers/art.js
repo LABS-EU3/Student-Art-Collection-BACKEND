@@ -21,5 +21,16 @@ module.exports = {
         message: `There was an error uploading your piece of art: ${error.message}`
       });
     }
+  },
+
+  async artPendingCollection(req, res, next) {
+    const { id } = req.params;
+    try {
+      const schoolOrders = await models.order.find({schoolId: id, status: 'pending'})
+        .populate('transactionId').populate('buyerId').exec();
+      return successResponse(res, 200, schoolOrders);
+    } catch (error) {
+      return next(error)
+    }
   }
 };
