@@ -11,14 +11,12 @@ module.exports = {
    * @param {*} next
    * @returns a message user created and a token
    */
- 
-  async sendContactMessage(req, res, next) {
+
+  sendContactMessage(req, res, next) {
 
     try {
-      const sendContactMail = await contact.sendContactMail(req.body);
-      if (!sendContactMail) {
-        return response.errorHelper(res, 400, "Error sending mail try again");
-      }
+      contact.sendContactMail(req.body);
+
       return response.successResponse(
         res,
         200,
