@@ -5,10 +5,6 @@ const models = require('../../models/index');
 const { successResponse, errorHelper } = require('../helpers/response');
 
 module.exports = {
-  testArt(req, res) {
-    return successResponse(res, 200, { message: 'hello from endpoint' });
-  },
-
   uploadArt(req, res) {
     const { id } = req.user;
     const { file } = req;
