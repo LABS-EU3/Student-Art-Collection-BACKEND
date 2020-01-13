@@ -25,4 +25,7 @@ router.post(
   artcontroller.uploadArt
 );
 
+// FETCH ALL ART WITH PAGINATION INCLUDED
+router.get('/', artcontroller.fetchArt);
+
 module.exports = router;

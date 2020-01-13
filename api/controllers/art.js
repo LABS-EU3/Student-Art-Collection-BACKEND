@@ -21,5 +21,19 @@ module.exports = {
         message: `There was an error uploading your piece of art: ${error.message}`
       });
     }
+  },
+  async fetchArt(req, res) {
+    try {
+      const pagination = req.query.pagination
+        ? parseInt(req.query.pagination, 10)
+        : 10;
+      const page = req.query.page ? parseInt(req.query.page, 10) : 1;
+      const art = await models.Products.find()
+        .skip((page - 1) * pagination)
+        .limit(pagination);
+      res.status(200).json(art);
+    } catch (error) {
+      res.status(401).json(error.message);
+    }
   }
 };
