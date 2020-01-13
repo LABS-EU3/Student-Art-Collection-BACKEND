@@ -11,6 +11,7 @@ const artcontroller = require('../controllers/art');
 
 const router = express.Router();
 router.use(express.json());
+// const upload = multer({ storage });
 
 // DUMMY ENDPOINT FOR TESTING PURPOSES
 router.get('/test', artcontroller.testArt);
@@ -18,12 +19,12 @@ router.get('/test', artcontroller.testArt);
 // UPLOAD NEW ART
 router.post(
   '/upload/:id',
+  [cloudinary.uploadImage('image')],
   [
     userValidator.validateUser,
     userValidator.validateUserTokenRequest,
     artValidators.validateArtBody
   ],
-  [cloudinary.uploadImage('image')],
   artcontroller.uploadArt
 );
 

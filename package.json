@@ -14,7 +14,7 @@
   "scripts": {
     "start": "node index",
     "start:dev": "nodemon index",
-    "test": "cross-env NODE_ENV=test jest --forceExit --runInBand"
+    "test": "cross-env NODE_ENV=test jest --forceExit --runInBand --verbose"
   },
   "repository": {
     "type": "git",
