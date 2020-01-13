@@ -10,7 +10,7 @@ module.exports = {
     try {
       const User = await models.User.findById(user.id);
 
-      if (User) {
+      if (User.type === 'school') {
         // eslint-disable-next-line no-underscore-dangle
         const transaction = await models.Transaction.findOne({
           // eslint-disable-next-line no-underscore-dangle
@@ -37,7 +37,7 @@ module.exports = {
 
         return successResponse(res, 200, order);
       }
-      return errorHelper(res, 500, "Transaction Not found");
+      return errorHelper(res, 500, "You aren't authorised");
     } catch (error) {
       return next(error.message);
     }
