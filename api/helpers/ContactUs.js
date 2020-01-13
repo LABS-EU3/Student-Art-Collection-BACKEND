@@ -36,8 +36,8 @@ async function sendContactMail({ name, email, message }) {
     });
 
     const mailOption = {
-        from: process.env.USER_MAIL,
-        to: process.env.USER_MAIL,
+        from: secret.USER_MAIL,
+        to: secret.USER_MAIL,
         subject: subject.third,
         html: emailBody,
         text: emailText

@@ -194,30 +194,7 @@ module.exports = {
     const { user } = req;
     const userDetails = await getCompleteUser(user, next, 'error getting user')
     return successResponse(res, 200, merge(user, userDetails));
-  },
-
-  async sendContactMessage(req, res, next) {
-
-    if (req.body.name && req.body.email && req.body.message) {
-      try {
-        const sendContactMail = await contact.sendContactMail(req.body);
-        if (!sendContactMail) {
-          return response.errorHelper(res, 400, "Error sending mail try again");
-        }
-        return response.successResponse(
-          res,
-          200,
-          `Message sent! `
-        );
-      }
-      catch (error) {
-        return next({ message: "Error sending mail tryagain" });
-      }
-    }
-    return next({ message: "Ensure all fields are present" });
-
   }
-
 };
 
 
