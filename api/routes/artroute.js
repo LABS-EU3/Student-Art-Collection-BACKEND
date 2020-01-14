@@ -34,13 +34,7 @@ router.get('/sold/order/:id', [userValidator.validateUser],artcontroller.artSold
 
 router.get(
   "/selling/:id",
-  [userValidators.validateUser, userValidators.validateUserTokenRequest],
-  getArtById
-)
-
-router.get(
-  "/selling/sold",
-  [userValidators.validateUser, userValidators.validateUserTokenRequest],
+  [userValidators.validateUser],
   getArtById
 )
 
