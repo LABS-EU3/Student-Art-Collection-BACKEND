@@ -21,9 +21,10 @@ module.exports = {
     } else next();
   },
   validateArtFilter(req, res, next) {
+    const fields = models.Products.schema.paths;
     const { filter } = req.query;
-    if (filter !== 'name' && filter !== 'description') {
-      return errorHelper(res, 200, { message: 'This filter does not exist' });
+    if (!fields[filter]) {
+      return errorHelper(res, 500, { message: 'This filter does not exist' });
     }
     return next();
   }
