@@ -7,24 +7,28 @@ const secret = require("../../config/keys");
 module.exports = {
   async markArtAsCollected(req, res, next) {
     const { user } = req;
-    const { id } = req.params;
+ 
+    const { id }  = req.params;
+
 
     try {
       const objectId = mongoose.Types.ObjectId(id.toString());
+     
       const transaction = await models.Transaction.findById(objectId)
         .populate("buyerId")
         .populate("productId");
-
+     
       const order = await models.order.findOneAndUpdate(
         { transactionId: objectId },
         { status: "completed" },
         { new: true }
       );
+      
       artMail(
         secret.FRONTEND_BASE_URL,
         user.email,
         transaction.buyerId.firstname,
-        transaction.productId
+        transaction.productId 
       );
 
       return successResponse(res, 200, order);
@@ -51,18 +55,14 @@ module.exports = {
     }
   },
 
-  async artSoldCollection(req, res, next) {
+  async artPendingCollection(req, res, next) {
     const { id } = req.params;
-    const {status} = req.query;
     try {
-      let schoolOrders = null;
-      if(status === 'all') {
-        schoolOrders = await  models.order.find({schoolId: id})
-        .populate('transactionId').populate('buyerId').exec();
-      }else {
-        schoolOrders = await models.order.find({schoolId: id, status})
-          .populate('transactionId').populate('buyerId').exec();
-      }
+      const schoolOrders = await models.order
+        .find({ schoolId: id, status: "pending" })
+        .populate("transactionId")
+        .populate("buyerId")
+        .exec();
       return successResponse(res, 200, schoolOrders);
     } catch (error) {
       return next(error);
