@@ -10,6 +10,7 @@ const { generateToken, decodeToken } = require("../helpers/jwt");
 const { successResponse, errorHelper } = require("../helpers/response");
 const { sendEmailConfirmAccount } = require("../helpers/mail");
 const mail = require("../helpers/ResetPassword");
+const contact = require("../helpers/ContactUs");
 const response = require("../helpers/response");
 const { updateCompleteUserDetails, getCompleteUser } = require('../helpers/users');
 
@@ -104,7 +105,7 @@ module.exports = {
       }
       const savedDate = user.reset_password_expires
       const date = Date.now() - savedDate;
-     
+
       if (date > 0) {
         return response.errorHelper(res, 400, "Password reset have expired");
       }
@@ -115,60 +116,62 @@ module.exports = {
         {
           password: hash,
           reset_password_token: ""
-        }, {new: true}
+        }, { new: true }
       ).exec();
       return response.successResponse(res, 200, "Password reset was succesful");
     } catch (error) {
       return next({ message: error.message });
-    }},
-  async loginUser (req, res, next) {
-    try{
-    const user = await models.User.findOne({ email: req.body.email }).exec();
+    }
+  },
+  async loginUser(req, res, next) {
+    try {
+      const user = await models.User.findOne({ email: req.body.email }).exec();
 
-    if(!user) {
-      return errorHelper(res, 401, 'Invalid credentials');
-    }
-    const confirm  = user.comparePassword(req.body.password)
-    if(!confirm) {
-      return errorHelper(res, 401, 'Invalid credentials');
-    }
-    const token = await generateToken(user);
-    
-    if(!user.confirmed) {
-       sendEmailConfirmAccount (user, token,`${secret.FRONTEND}/success`)
-       return successResponse(res, 200, {message: 'please check your email address to confirm account'})
+      if (!user) {
+        return errorHelper(res, 401, 'Invalid credentials');
+      }
+      const confirm = user.comparePassword(req.body.password)
+      if (!confirm) {
+        return errorHelper(res, 401, 'Invalid credentials');
+      }
+      const token = await generateToken(user);
+
+      if (!user.confirmed) {
+        sendEmailConfirmAccount(user, token, `${secret.FRONTEND}/success`)
+        return successResponse(res, 200, { message: 'please check your email address to confirm account' })
       }
       user.password = '';
       const userDetails = await getCompleteUser(user, next, 'error getting user');
       return successResponse(res, 200, {
-        message: 'successfully logged in', 
-        token, 
-        user: userDetails}
-        );
-  } catch(error) {
-    return next({ message: 'Error logging in user' });
-  }
+        message: 'successfully logged in',
+        token,
+        user: userDetails
+      }
+      );
+    } catch (error) {
+      return next({ message: 'Error logging in user' });
+    }
   },
   async updateProfile(req, res, next) {
-    try{
-      const {user} = req;
-      const {password} = req.body
-      if(password) {
+    try {
+      const { user } = req;
+      const { password } = req.body
+      if (password) {
         req.body.password = bcrypt.hashSync(password, 10)
       }
       merge(user, req.body);
       user.save();
-      const updatedUser =  await updateCompleteUserDetails(user, req,next,'unable to update user' )
+      const updatedUser = await updateCompleteUserDetails(user, req, next, 'unable to update user')
       return successResponse(res, 200, updatedUser);
-    } catch(error) {
-      return next({ message: 'Error updating user profile'})
-  };
+    } catch (error) {
+      return next({ message: 'Error updating user profile' })
+    };
   },
 
   async photoUpload (req, res, next) {
     const {file, user} = req
     try {
-      merge(user, {profile_picture:file.secure_url, public_id: file.public_id });
+      merge(user, { profile_picture: file.secure_url, public_id: file.public_id });
       user.save();
       return successResponse(res, 200, user)
     } catch (error) {
@@ -180,6 +183,8 @@ module.exports = {
   async getAuser(req, res, next) {
     const { user } = req;
     const userDetails = await getCompleteUser(user, next, 'error getting user')
-    return successResponse(res, 200, merge(user,userDetails));
+    return successResponse(res, 200, merge(user, userDetails));
   }
 };
+
+

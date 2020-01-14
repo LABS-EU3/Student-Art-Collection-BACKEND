@@ -7,9 +7,10 @@ const passport = require('passport');
 // ROUTES
 const UserauthRoute = require('./authroute');
 const ArtRoute = require('./artroute');
+const ContactRoute = require('./contactRoute');
+const models = require('../../models')
+const {authCallbackStrategy} = require('../middleware/googleStrategy');
 
-const models = require('../../models');
-const { authCallbackStrategy } = require('../middleware/googleStrategy');
 
 const app = express();
 
@@ -34,6 +35,7 @@ authCallbackStrategy();
 
 app.use('/', UserauthRoute);
 app.use('/art', ArtRoute);
+app.use('/', ContactRoute);
 
 app.use(function errors(err, req, res, next) {
   return res.status(500).json({ err });
