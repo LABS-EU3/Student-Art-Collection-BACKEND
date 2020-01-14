@@ -23,11 +23,18 @@ module.exports = {
     }
   },
 
-  async artPendingCollection(req, res, next) {
+  async artSoldCollection(req, res, next) {
     const { id } = req.params;
+    const {status} = req.query;
     try {
-      const schoolOrders = await models.order.find({schoolId: id, status: 'pending'})
+      let schoolOrders = null;
+      if(status === 'all') {
+        schoolOrders = await  models.order.find({schoolId: id})
         .populate('transactionId').populate('buyerId').exec();
+      }else {
+        schoolOrders = await models.order.find({schoolId: id, status})
+          .populate('transactionId').populate('buyerId').exec();
+      }
       return successResponse(res, 200, schoolOrders);
     } catch (error) {
       return next(error)

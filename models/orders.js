@@ -13,7 +13,7 @@ const orderSchema = new mongoose.Schema(
     status: {
         type: String,
         required: true,
-        enum: ['sent', 'pending', 'Failed']
+        enum: ['sent', 'pending', 'failed']
     },
     buyerId: {
       type: mongoose.Schema.Types.ObjectId,
