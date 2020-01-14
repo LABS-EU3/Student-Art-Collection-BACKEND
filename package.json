@@ -5,8 +5,8 @@
   "main": "index.js",
   "jest": {
     "testEnvironment": "node",
-    "testPathIgnorePatterns" : [
-      "<rootDir>/node_modules/" ,
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/",
       "<rootDir>/_test_",
       "<rootDir>/api/controllers/Oauth.js"
     ]

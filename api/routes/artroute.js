@@ -28,5 +28,7 @@ router.post(
 
 // FETCH ALL ART WITH PAGINATION INCLUDED
 router.get('/', artcontroller.fetchArt);
+router.get('/sold/order/:id', [userValidator.validateUser],artcontroller.artSoldCollection)
 
 module.exports = router;
+

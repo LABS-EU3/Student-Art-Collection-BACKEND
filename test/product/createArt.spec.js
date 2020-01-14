@@ -1,9 +1,11 @@
+/* eslint-disable no-underscore-dangle */
 const mongoose = require('mongoose');
 const request = require('supertest');
 
 const ProductModel = require('../../models/product');
 const server = require('../../api/routes/index');
-const { connectDB, disconnectDB, createUser } = require('../db');
+const { connectDB, disconnectDB, createUser, cleanDB, userData, getUser } = require('../db');
+const { generateToken } = require('../../api/helpers/jwt');
 
 const artData = {
   name: 'art',
@@ -18,6 +20,14 @@ describe('art model test', () => {
     connectDB();
     return done();
   });
+
+  beforeEach(() => {
+    return createUser();
+  });
+
+  afterEach(() => {
+    return cleanDB()
+  })
 
   describe('', () => {
     it('creates and saves art succesfully', async done => {
@@ -58,6 +68,19 @@ describe('art model test', () => {
       done();
     });
   });
+
+  describe('Pending ArtCollection', () => {
+    it('should return an empty art', async (done) =>{
+      const userInfo = await getUser();
+      const token = await generateToken(userInfo);
+      const response = await request(server).get(`/art/sold/order/${userInfo._id}?status=pending`)
+        .set("authorization", token)
+      expect(response.status).toBe(200)
+      expect(response.body).toHaveLength(0)
+      done()
+    })
+  })
+
   afterAll(() => {
     return disconnectDB();
   });

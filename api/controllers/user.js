@@ -66,7 +66,7 @@ module.exports = {
     const token = await crypto.randomBytes(20).toString("hex");
     const expiringDate = Date.now() + 3600000;
     try {
-      mail.passwordResetMail(
+     mail.passwordResetMail(
         `${secret.FRONTEND}/resetpassword`,
         token,
         req.userEmail.email,
