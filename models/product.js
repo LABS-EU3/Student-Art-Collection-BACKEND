@@ -6,6 +6,11 @@ const productSchema = new mongoose.Schema({
         required: [true, 'Product must have a name'],
         trim: true
     },
+    artistName: {
+        type: String,
+        required: [true, 'Product must have an Artist name'],
+        trim: true
+    },
     medium: {
         type: String
     },
@@ -43,7 +48,8 @@ const productSchema = new mongoose.Schema({
         unique: true
     },
     description: {
-        type: String
+        type: String,
+        required: [true, 'Product must have a description']
     },
    
 }, {timestamps: true});
