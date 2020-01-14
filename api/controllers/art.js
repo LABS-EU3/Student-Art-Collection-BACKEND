@@ -32,7 +32,8 @@ module.exports = {
         .sort({ _id: -1 })
         .skip((page - 1) * pagination)
         .limit(pagination);
-      return successResponse(res, 200, art);
+      const totalCount = await models.Products.countDocuments({});
+      return successResponse(res, 200, { totalCount, page, itemsInPage: pagination, art });
     } catch (error) {
       return errorHelper(res, 401, error.message);
     }
