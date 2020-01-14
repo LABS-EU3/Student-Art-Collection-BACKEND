@@ -2,12 +2,9 @@ const express = require("express");
 const passport = require("passport");
 const Strategy = require("passport-facebook").Strategy;
 const controller = require("../controllers/user");
-const contactController = require("../controllers/contact");
 const userValidators = require("../validation/userValidator");
-const contactValidators = require("../validation/contactFormValidator");
 const Oauthcontroller = require("../controllers/Oauth");
 const cloudinary = require("../middleware/cloudinary");
-const keys = require("../../config/keys");
 const callBackStrategy = require("../middleware/facebookStratey");
 
 
