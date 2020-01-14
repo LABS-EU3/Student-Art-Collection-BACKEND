@@ -8,7 +8,6 @@ const cloudinary = require("../middleware/cloudinary");
 const keys = require("../../config/keys");
 const callBackStrategy = require("../middleware/facebookStratey");
 
-
 // passport.use(
 //   new Strategy(
 //     {

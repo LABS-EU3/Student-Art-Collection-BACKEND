@@ -7,6 +7,7 @@ const passport = require("passport");
 const UserauthRoute = require('./authroute');
 const models = require('../../models')
 const {authCallbackStrategy} = require('../middleware/googleStrategy');
+const Artroute = require('./artroute')
 
 
 const app = express();
@@ -31,6 +32,7 @@ passport.serializeUser((user, done) => {
   authCallbackStrategy();
 
 app.use('/', UserauthRoute)
+app.use('/art', Artroute)
 
 app.use(function errors(err, req, res, next) {
 	return res.status(500).json({ err });
