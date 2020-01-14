@@ -25,5 +25,6 @@ module.exports = {
     subject : {
         first: "Confirm your email",
         second:  'Password Reset',
+        third: "Customer Query"
     }
 }
