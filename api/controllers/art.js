@@ -51,7 +51,9 @@ module.exports = {
     try {
       const { searchQuery } = req.query;
       const { filter } = req.query;
-      const art = await models.Products.find({ [filter]: searchQuery });
+      const art = await models.Products.find({
+        [filter]: { $regex: searchQuery, $options: 'i' }
+      });
       return successResponse(res, 200, art);
     } catch (error) {
       return next(error.message);
