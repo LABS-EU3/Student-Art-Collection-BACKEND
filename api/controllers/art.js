@@ -28,7 +28,8 @@ module.exports = {
         ? parseInt(req.query.pagination, 10)
         : 10;
       const page = req.query.page ? parseInt(req.query.page, 10) : 1;
-      const art = await models.Products.find()
+      const art = await models.Products.find({})
+        .sort({ _id: -1 })
         .skip((page - 1) * pagination)
         .limit(pagination);
       return successResponse(res, 200, art);
