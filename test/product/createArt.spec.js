@@ -76,7 +76,7 @@ describe('art model test', () => {
     it('should return an empty art', async (done) =>{
       const userInfo = await getUser();
       const token = await generateToken(userInfo);
-      const response = await request(server).get(`/art/sold/order/pending/${userInfo._id}`)
+      const response = await request(server).get(`/art/sold/order/${userInfo._id}?status=pending`)
         .set("authorization", token)
       expect(response.status).toBe(200)
       expect(response.body).toHaveLength(0)

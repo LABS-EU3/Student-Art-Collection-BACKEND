@@ -11,10 +11,20 @@ const orderSchema = new mongoose.Schema(
       type: String
     },
     status: {
-      type: String,
-      required: true,
-      enum: ["sent", "pending", "Failed"]
-    }
+        type: String,
+        required: true,
+        enum: ['sent', 'pending', 'failed']
+    },
+    buyerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "buyer",
+      unique: true
+    },
+    schoolId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "school",
+      unique: true
+    },
   },
   { timestamps: true }
 );
