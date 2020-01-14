@@ -19,5 +19,12 @@ module.exports = {
     if (validator.fails()) {
       errorHelper(res, 401, { message: validator.errors.all() });
     } else next();
+  },
+  validateArtFilter(req, res, next) {
+    const { filter } = req.query;
+    if (filter !== 'name' && filter !== 'description') {
+      return errorHelper(res, 200, { message: 'This filter does not exist' });
+    }
+    return next();
   }
 };
