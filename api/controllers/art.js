@@ -5,8 +5,8 @@ const models = require('../../models/index');
 const { successResponse, errorHelper } = require('../helpers/response');
 
 module.exports = {
-  async uploadArt(req, res) {
-    const { id } = req.user;
+  async uploadArt(req, res, next) {
+    const { id } = req.params;
     const { file } = req;
     try {
       const newArt = await models.Products.create({
@@ -17,9 +17,7 @@ module.exports = {
       });
       return successResponse(res, 200, newArt);
     } catch (error) {
-      return errorHelper(res, 401, {
-        message: `There was an error uploading your piece of art: ${error.message}`
-      });
+      return next(error.message);
     }
   },
 

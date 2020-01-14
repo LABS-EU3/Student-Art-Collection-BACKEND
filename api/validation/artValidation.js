@@ -17,7 +17,8 @@ module.exports = {
       price: 'required'
     });
     if (validator.fails()) {
-      errorHelper(res, 401, { message: validator.errors.all() });
-    } else next();
+      errorHelper(res, 400, { message: validator.errors.all() });
+    }
+    return next();
   }
 };
