@@ -35,7 +35,7 @@ authCallbackStrategy();
 
 app.use('/', UserauthRoute);
 app.use('/art', ArtRoute);
-app.use('/', ContactRoute);
+app.use('/contact', ContactRoute);
 
 
 
