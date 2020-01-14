@@ -3,7 +3,7 @@ const server = require("./api/routes/index")
 const db = require('./config/db');
 
 
-const Port = process.env.PORT || 9000
+const Port = process.env.PORT || 4000
 
 
 // eslint-disable-next-line no-console

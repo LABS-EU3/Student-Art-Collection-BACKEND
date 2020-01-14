@@ -5,7 +5,6 @@ const controller = require("../controllers/user");
 const userValidators = require("../validation/userValidator");
 const Oauthcontroller = require("../controllers/Oauth");
 const cloudinary = require("../middleware/cloudinary");
-const keys = require("../../config/keys");
 const callBackStrategy = require("../middleware/facebookStratey");
 
 // passport.use(
