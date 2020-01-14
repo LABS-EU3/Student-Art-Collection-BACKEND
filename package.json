@@ -5,8 +5,8 @@
   "main": "index.js",
   "jest": {
     "testEnvironment": "node",
-    "testPathIgnorePatterns" : [
-      "<rootDir>/node_modules/" ,
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/",
       "<rootDir>/_test_",
       "<rootDir>/api/controllers/Oauth.js"
     ]
@@ -14,7 +14,7 @@
   "scripts": {
     "start": "node index",
     "start:dev": "nodemon index",
-    "test": "cross-env NODE_ENV=test jest --forceExit --runInBand"
+    "test": "cross-env NODE_ENV=test jest --forceExit --runInBand --verbose"
   },
   "repository": {
     "type": "git",
@@ -39,7 +39,7 @@
     "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-import": "^2.19.1",
     "eslint-plugin-prettier": "^3.1.1",
-    "husky": "^4.0.0",
+    "husky": "^4.0.6",
     "lint-staged": "^9.5.0",
     "nodemon": "^2.0.2",
     "prettier": "1.19.1"

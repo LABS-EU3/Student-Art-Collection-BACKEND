@@ -55,7 +55,7 @@ async function artMail(url, email, name, product) {
   const mailOption = {
     from: "studentartcollectionlabseu3@gmail.com",
     to: email,
-    subject: subject.third,
+    subject: subject.Fourth,
     html: emailBody,
     text: emailText
   };
