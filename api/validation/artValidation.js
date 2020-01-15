@@ -23,6 +23,10 @@ module.exports = {
   validateArtFilter(req, res, next) {
     const fields = models.Products.schema.paths;
     const { filter } = req.query;
+    if (!filter) {
+      req.query.filter = !filter ? 'name' : filter;
+      return next();
+    }
     if (!fields[filter]) {
       return errorHelper(res, 404, { message: 'This filter does not exist' });
     }
