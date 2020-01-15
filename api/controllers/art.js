@@ -81,7 +81,6 @@ module.exports = {
   async deleteArt(req, res, next) {
     const { id } = req.params;
 
-    const { user } = req;
     try {
       const objectId = mongoose.Types.ObjectId(id.toString());
       const isArt = await models.Transaction.findOne({ productId: objectId });
@@ -90,14 +89,16 @@ module.exports = {
       }
 
       const remove = await models.Products.deleteOne({ _id: objectId });
-      return remove;
+      if (remove) {
+        return successResponse(res, 200, "Art has been deleted");
+      }
+      return errorHelper(res, 500, "Internal server error");
     } catch (error) {
       return next(error);
     }
   },
   async reduceArtQuantity(req, res, next) {
     const { id } = req.params;
-    const { user } = req;
     try {
       const objectId = mongoose.Types.ObjectId(id.toString());
       const product = await models.Products.findById(objectId);
@@ -109,8 +110,7 @@ module.exports = {
           { new: true }
         );
       }
-      errorHelper(res, 500, "Art is no longer for sale");
-      return user;
+      return errorHelper(res, 500, "Art is no longer for sale");
     } catch (error) {
       return next(error);
     }
