@@ -12,6 +12,8 @@ const artData = {
   height: '30',
   width: '30',
   quantity: 3,
+  artistName: 'John bellion',
+  description: "A very beautiful art",
   price: 299
 };
 
@@ -39,6 +41,7 @@ describe('art model test', () => {
         expect(savedArt.name).toBe(artData.name);
         expect(savedArt.quantity).toBe(artData.quantity);
         expect(savedArt.price).toBe(artData.price);
+        expect(savedArt.status).toBe(201)
       } catch (error) {
         expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
       } finally {
