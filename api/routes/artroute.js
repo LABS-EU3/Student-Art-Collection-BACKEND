@@ -32,6 +32,10 @@ router.get(
 );
 
 // SEARCH ART
-router.get('/search', artValidators.validateArtFilter, artcontroller.searchArt);
+router.get(
+  '/search',
+  [artValidators.validateArtFilter, artValidators.validateArtSortType],
+  artcontroller.searchArt
+);
 
 module.exports = router;
