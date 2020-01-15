@@ -35,7 +35,7 @@ module.exports = {
     }
   },
 
-  async uploadArt(req, res) {
+  async uploadArt(req, res, next) {
     const { id } = req.param;
     const { file } = req;
     try {
