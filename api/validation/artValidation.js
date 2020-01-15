@@ -41,5 +41,11 @@ module.exports = {
       return next();
     }
     return next();
+  },
+  addArtPagination(req, res, next) {
+    // checks if page and pagination are set in the query params
+    req.query.page = !req.query.page ? 1 : req.query.page;
+    req.query.pagination = !req.query.pagination ? 10 : req.query.pagination;
+    next();
   }
 };

@@ -34,7 +34,11 @@ router.get(
 // SEARCH ART
 router.get(
   '/search',
-  [artValidators.validateArtFilter, artValidators.validateArtSortType],
+  [
+    artValidators.validateArtFilter,
+    artValidators.validateArtSortType,
+    artValidators.addArtPagination
+  ],
   artcontroller.searchArt
 );
 

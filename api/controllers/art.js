@@ -1,34 +1,33 @@
-const mongoose = require("mongoose");
-const { successResponse, errorHelper } = require("../helpers/response");
-const models = require("../../models");
-const artMail = require("../helpers/artmail");
-const secret = require("../../config/keys");
+const mongoose = require('mongoose');
+const { successResponse, errorHelper } = require('../helpers/response');
+const models = require('../../models');
+const artMail = require('../helpers/artmail');
+const secret = require('../../config/keys');
 
 module.exports = {
   async markArtAsCollected(req, res, next) {
     const { user } = req;
- 
-    const { id }  = req.params;
 
+    const { id } = req.params;
 
     try {
       const objectId = mongoose.Types.ObjectId(id.toString());
-     
+
       const transaction = await models.Transaction.findById(objectId)
-        .populate("buyerId")
-        .populate("productId");
-     
+        .populate('buyerId')
+        .populate('productId');
+
       const order = await models.order.findOneAndUpdate(
         { transactionId: objectId },
-        { status: "completed" },
+        { status: 'completed' },
         { new: true }
       );
-      
+
       artMail(
         secret.FRONTEND_BASE_URL,
         user.email,
         transaction.buyerId.firstname,
-        transaction.productId 
+        transaction.productId
       );
 
       return successResponse(res, 200, order);
@@ -82,13 +81,22 @@ module.exports = {
   async searchArt(req, res, next) {
     try {
       const { searchQuery } = req.query;
-      const { filter, sortBy } = req.query;
+      const { filter, sortBy, page, pagination } = req.query;
       let { sortType } = req.query;
       sortType = sortType === 'asc' ? 1 : -1;
       const art = await models.Products.find({
         [filter]: { $regex: searchQuery, $options: 'i' }
-      }).sort({ [sortBy]: sortType });
-      return successResponse(res, 200, art);
+      })
+        .sort({ [sortBy]: sortType })
+        .skip((page - 1) * pagination)
+        .limit(pagination);
+      const totalCount = await models.Products.countDocuments({});
+      return successResponse(res, 200, {
+        totalCount,
+        page,
+        itemsInPage: pagination,
+        art
+      });
     } catch (error) {
       return next(error.message);
     }
