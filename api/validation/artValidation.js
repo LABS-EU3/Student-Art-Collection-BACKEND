@@ -17,6 +17,7 @@ module.exports = {
       price: 'required'
     });
     if (validator.fails()) {
+<<<<<<< HEAD
       errorHelper(res, 401, { message: validator.errors.all() });
     } else next();
   },
@@ -47,5 +48,10 @@ module.exports = {
     req.query.page = !req.query.page ? 1 : req.query.page;
     req.query.pagination = !req.query.pagination ? 10 : req.query.pagination;
     next();
+=======
+      errorHelper(res, 400, { message: validator.errors.all() });
+    }
+    return next();
+>>>>>>> 69183faf888876a87e50cc34d86b4322a4b253f9
   }
 };
