@@ -26,6 +26,7 @@ router.post(
 );
 
 router.get('/sold/order/:id', [userValidator.validateUser],artcontroller.artSoldCollection)
+router.delete('/:id', [userValidator.validateUser], artcontroller.deleteArt)
 
 module.exports = router;
 
