@@ -50,10 +50,12 @@ module.exports = {
   async searchArt(req, res, next) {
     try {
       const { searchQuery } = req.query;
-      const { filter } = req.query;
+      const { filter, sortBy } = req.query;
+      let { sortType } = req.query;
+      sortType = sortType === 'asc' ? 1 : -1;
       const art = await models.Products.find({
         [filter]: { $regex: searchQuery, $options: 'i' }
-      });
+      }).sort({ [sortBy]: sortType });
       return successResponse(res, 200, art);
     } catch (error) {
       return next(error.message);

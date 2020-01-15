@@ -24,7 +24,7 @@ module.exports = {
     const fields = models.Products.schema.paths;
     const { filter } = req.query;
     if (!fields[filter]) {
-      return errorHelper(res, 500, { message: 'This filter does not exist' });
+      return errorHelper(res, 404, { message: 'This filter does not exist' });
     }
     return next();
   }
