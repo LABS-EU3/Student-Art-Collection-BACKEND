@@ -120,17 +120,21 @@ module.exports = {
   async reduceArtQuantity(req, res, next) {
     const { id } = req.params;
     try {
+      let updatedModels = null
       const objectId = mongoose.Types.ObjectId(id.toString());
       const product = await models.Products.findById(objectId);
       const quantity = product.quantity;
+     
       if (quantity >= 1) {
-        return models.Products.findByIdAndUpdate(
+        updatedModels = await models.Products.findByIdAndUpdate(
           objectId,
           { quantity: quantity - 1 },
           { new: true }
         );
+      }else {
+        return errorHelper(res, 500, "Art is no longer for sale");
       }
-      return errorHelper(res, 500, "Art is no longer for sale");
+      return successResponse(res, 200, updatedModels);
     } catch (error) {
       return next(error);
     }
