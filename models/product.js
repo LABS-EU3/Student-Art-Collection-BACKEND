@@ -1,10 +1,15 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, 'Product must have a name'],
+      required: [true, "Product must have a name"],
+      trim: true
+    },
+    artistName: {
+      type: String,
+      required: [true, "Product must have an Artist name"],
       trim: true
     },
     medium: {
@@ -15,11 +20,11 @@ const productSchema = new mongoose.Schema(
     },
     height: {
       type: Number,
-      required: [true, 'Product must have a height']
+      required: [true, "Product must have a height"]
     },
     width: {
       type: Number,
-      required: [true, 'Product must have a width']
+      required: [true, "Product must have a width"]
     },
     style: {
       type: String
@@ -32,29 +37,32 @@ const productSchema = new mongoose.Schema(
     },
     quantity: {
       type: Number,
-      required: [true, 'Product must have a quantity']
+      required: [true, "Product must have a quantity"]
     },
     price: {
       type: Number,
-      required: [true, 'Product must have a price']
+      required: [true, "Product must have a price"]
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'user'
+      ref: "school",
+    
     },
     description: {
-      type: String
+      type: String,
+      required: [true, "Product must have a description"]
     },
+
     picture: {
       type: String,
-      required: [true, 'Products must have a picture']
+      required: [true, "Products must have a picture"]
     },
     public_picture_id: {
       type: String,
-      required: [true, 'Products must have a picture public id']
+      required: [true, "Products must have a picture public id"]
     }
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model('product', productSchema);
+module.exports = mongoose.model("product", productSchema);

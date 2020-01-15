@@ -35,7 +35,9 @@ authCallbackStrategy();
 
 app.use('/', UserauthRoute);
 app.use('/art', ArtRoute);
-app.use('/', ContactRoute);
+app.use('/contact', ContactRoute);
+
+
 
 app.use(function errors(err, req, res, next) {
   return res.status(500).json({ err });
