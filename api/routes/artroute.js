@@ -19,7 +19,6 @@ router.post(
   [cloudinary.uploadImage('image')],
   [
     userValidator.validateUser,
-    userValidator.validateUserTokenRequest,
     artValidators.validateArtBody
   ],
   artcontroller.uploadArt
