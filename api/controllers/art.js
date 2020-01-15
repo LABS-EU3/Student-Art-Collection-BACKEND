@@ -35,7 +35,7 @@ module.exports = {
     }
   },
 
-  async uploadArt(req, res) {
+  async uploadArt(req, res, next) {
     const { id } = req.user;
     const { file } = req;
     try {
@@ -54,10 +54,7 @@ module.exports = {
   // FETCH ALL ART
   async fetchArt(req, res) {
     try {
-      const pagination = req.query.pagination
-        ? parseInt(req.query.pagination, 10)
-        : 10;
-      const page = req.query.page ? parseInt(req.query.page, 10) : 1;
+      const { page, pagination } = req.query;
       const art = await models.Products.find({})
         .sort({ _id: -1 })
         .skip((page - 1) * pagination)
