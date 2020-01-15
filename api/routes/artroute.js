@@ -25,7 +25,7 @@ router.post(
   artcontroller.uploadArt
 );
 
-router.get('/sold/order/:id', [userValidator.validateUser],artcontroller.artPendingCollection)
+router.get('/sold/order/:id', [userValidator.validateUser],artcontroller.artSoldCollection)
 
 module.exports = router;
 
