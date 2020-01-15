@@ -1,13 +1,12 @@
-const mongoose = require("mongoose");
-const { successResponse, errorHelper } = require("../helpers/response");
-const models = require("../../models");
-const artMail = require("../helpers/artmail");
-const secret = require("../../config/keys");
+const mongoose = require('mongoose');
+const { successResponse, errorHelper } = require('../helpers/response');
+const models = require('../../models');
+const artMail = require('../helpers/artmail');
+const secret = require('../../config/keys');
 
 module.exports = {
   async markArtAsCollected(req, res, next) {
     const { user } = req;
-
     const { id } = req.params;
 
     try {
@@ -19,7 +18,7 @@ module.exports = {
 
       const order = await models.order.findOneAndUpdate(
         { transactionId: objectId },
-        { status: "completed" },
+        { status: 'completed' },
         { new: true }
       );
 
@@ -36,7 +35,7 @@ module.exports = {
     }
   },
 
-  async uploadArt(req, res) {
+  async uploadArt(req, res, next) {
     const { id } = req.user;
     const { file } = req;
     try {
@@ -48,9 +47,30 @@ module.exports = {
       });
       return successResponse(res, 200, newArt);
     } catch (error) {
-      return errorHelper(res, 401, {
-        message: `There was an error uploading your piece of art: ${error.message}`
+      return next(error.message);
+    }
+  },
+
+  // FETCH ALL ART
+  async fetchArt(req, res) {
+    try {
+      const pagination = req.query.pagination
+        ? parseInt(req.query.pagination, 10)
+        : 10;
+      const page = req.query.page ? parseInt(req.query.page, 10) : 1;
+      const art = await models.Products.find({})
+        .sort({ _id: -1 })
+        .skip((page - 1) * pagination)
+        .limit(pagination);
+      const totalCount = await models.Products.countDocuments({});
+      return successResponse(res, 200, {
+        totalCount,
+        page,
+        itemsInPage: pagination,
+        art
       });
+    } catch (error) {
+      return errorHelper(res, 401, error.message);
     }
   },
 
@@ -59,17 +79,17 @@ module.exports = {
     const { status } = req.query;
     try {
       let schoolOrders = null;
-      if (status === "all") {
+      if (status === 'all') {
         schoolOrders = await models.order
           .find({ schoolId: id })
-          .populate("transactionId")
-          .populate("buyerId")
+          .populate('transactionId')
+          .populate('buyerId')
           .exec();
       } else {
         schoolOrders = await models.order
           .find({ schoolId: id, status })
-          .populate("transactionId")
-          .populate("buyerId")
+          .populate('transactionId')
+          .populate('buyerId')
           .exec();
       }
       return successResponse(res, 200, schoolOrders);
