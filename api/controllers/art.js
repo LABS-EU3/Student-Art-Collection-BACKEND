@@ -62,7 +62,12 @@ module.exports = {
       let schoolOrders = null;
       if(status === 'all') {
         schoolOrders = await  models.order.find({schoolId: id})
-        .populate('transactionId').populate('buyerId').exec();
+        .populate({
+          path: 'transactionId',
+          populate : {
+            path: 'productId'
+          }
+        }).populate('buyerId').exec();
       }else {
         schoolOrders = await models.order.find({schoolId: id, status})
           .populate('transactionId').populate('buyerId').exec();
