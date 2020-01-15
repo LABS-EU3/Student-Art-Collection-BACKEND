@@ -7,7 +7,6 @@ const secret = require('../../config/keys');
 module.exports = {
   async markArtAsCollected(req, res, next) {
     const { user } = req;
-
     const { id } = req.params;
 
     try {
@@ -37,7 +36,7 @@ module.exports = {
   },
 
   async uploadArt(req, res) {
-    const { id } = req.user;
+    const { id } = req.param;
     const { file } = req;
     try {
       const newArt = await models.Products.create({
