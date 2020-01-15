@@ -28,16 +28,16 @@ describe("# Auth", () => {
     });
 
     describe("/login", () =>{
-        it('should return a 400 since body is not provided', async (done) =>{
-            try {
-                const errorUser = await request(server).post('/login');
-                expect(errorUser.status).toEqual(400)
-            } catch (error) {
-                expect(error).toBe(error)
-            }finally{
-                done()
-            }
-        });
+         it('should return a 400 since body is not provided', async (done) =>{
+             try {
+                 const errorUser = await request(server).post('/login');
+                 expect(errorUser.status).toEqual(400)
+             } catch (error) {
+                 expect(error).toBe(error)
+             }finally{
+                 done()
+             }
+         });
 
         it('should return a 401 if user dont exists', async(done) =>{
             try {

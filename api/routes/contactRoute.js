@@ -4,7 +4,6 @@ const contactController = require("../controllers/contact");
 const contactValidators = require("../validation/contactFormValidator");
 
 const router = express.Router();
-router.use(passport.initialize());
 
 router.post(
   "/contactus",
