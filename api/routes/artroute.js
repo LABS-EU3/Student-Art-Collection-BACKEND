@@ -27,7 +27,11 @@ router.post(
 );
 
 // FETCH ALL ART WITH PAGINATION INCLUDED
-router.get('/', [artValidators.addPagination], artcontroller.fetchArt);
+router.get(
+  '/',
+  [artValidators.addPagination, artValidators.addSort],
+  artcontroller.fetchArt
+);
 router.get(
   '/sold/order/:id',
   [userValidator.validateUser],

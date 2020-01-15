@@ -54,9 +54,9 @@ module.exports = {
   // FETCH ALL ART
   async fetchArt(req, res) {
     try {
-      const { page, pagination } = req.query;
+      const { page, pagination, filter, sortBy } = req.query;
       const art = await models.Products.find({})
-        .sort({ _id: -1 })
+        .sort({ [filter]: sortBy })
         .skip((page - 1) * pagination)
         .limit(pagination);
       const totalCount = await models.Products.countDocuments({});

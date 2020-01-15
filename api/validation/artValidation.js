@@ -30,5 +30,15 @@ module.exports = {
       req.query.pagination = 10;
     }
     return next();
+  },
+  addSort(req, res, next) {
+    const { filter, sortBy } = req.query;
+    req.query.filter = !filter ? '_id' : req.query.filter;
+    if (sortBy === 'asc') {
+      req.query.sortBy = 1;
+    } else {
+      req.query.sortBy = -1;
+    }
+    next();
   }
 };
