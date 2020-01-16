@@ -12,8 +12,6 @@ const {
   getUser,
   disconnectDB
 } = require("../db");
-const mail = require("../../api/helpers/mail");
-const cloudinary = require("../../api/middleware/cloudinary");
 const { generateToken } = require("../../api/helpers/jwt");
 
 describe("test for user endpoint", () => {

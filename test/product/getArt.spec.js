@@ -1,41 +1,48 @@
-const request = require("supertest");
-const UserModel = require("../../models/user");
-const server = require("../../api/routes/index");
-const { connectDB, cleanDB, userData, createUser, disconnectDB } = require("../db");
-const mail = require('../../api/helpers/mail'); 
+/* eslint-disable no-underscore-dangle */
+const mongoose = require('mongoose');
+const request = require('supertest');
 
-describe("# Art", () => {
-    beforeAll( () =>{
-        return connectDB();
+const ProductModel = require('../../models/product');
+const server = require('../../api/routes/index');
+const { connectDB, disconnectDB, createUser, cleanDB, userData, getUser } = require('../db');
+const { generateToken } = require('../../api/helpers/jwt');
+
+describe('art model test', () => {
+  beforeAll(done => {
+    connectDB();
+    return done();
+  });
+
+  beforeEach(() => {
+    return createUser();
+  });
+
+  afterEach(() => {
+    return cleanDB()
+  })
+
+  describe('Product route', () => {
+    it('[GET /art/selling/:userId] - should return 401 because token was not provided', async done => {
+      const expectedStatusCode = 401;
+      const response = await request(server).get('/art/selling/1234');
+      expect(response.status).toEqual(expectedStatusCode);
+      done();
     });
+  });
 
-    beforeEach( () =>{
-        return createUser()
+  describe('Pending ArtCollection', () => {
+    it('should return an empty art', async (done) =>{
+      const userInfo = await getUser();
+      const token = await generateToken(userInfo);
+      const response = await request(server).get(`/art/selling/${userInfo._id}?status=pending`)
+        .set("authorization", token)
+      expect(response.status).toBe(200)
+      expect(response.body).toHaveLength(0)
+      done()
     })
+  })
 
-    afterEach(() =>{
-        return cleanDB()
-    })
-
-    afterAll(() =>{
-        return disconnectDB()
-    });
-
-    describe("/login", () => {
-
-        it('should return a 200 if user exists', async (done) =>{
-            jest.spyOn(mail,"sendEmailConfirmAccount").mockResolvedValue({ success: true });
-            try {
-                const user = await request(server).post('/login')
-                    .send(userData)
-                expect(user.status).toBe(200);
-                expect(user.body).toHaveProperty("message", 'please check your email address to confirm account')
-                done()
-            } catch (error) {
-                expect(error).toHaveProperty('status',500)
-            }finally{
-                done()
-            }
-        })
-    })
-})
+  afterAll(() => {
+    return disconnectDB();
+  });
+});
