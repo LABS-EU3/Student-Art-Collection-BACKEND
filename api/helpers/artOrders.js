@@ -10,6 +10,7 @@ module.exports = {
                 path: 'productId'
               }
             }).populate(userType).exec();
+            return schoolOrders
         }
             schoolOrders = await model.find({...field, status})
             .populate({
