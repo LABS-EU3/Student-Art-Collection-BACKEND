@@ -83,8 +83,8 @@ const getUser = async () => {
 const createProduct = async () => {
   const artData = {
     name: 'art',
-    height: '30',
-    width: '30',
+    height: 30,
+    width: 30,
     quantity: 3,
     artistName: 'John bellion',
     description: 'A very beautiful art',

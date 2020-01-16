@@ -41,4 +41,7 @@ router.get(
   artcontroller.searchArt
 );
 
+router.post('/edit/:id', [userValidator.validateUser,artValidators.validateArtBody], artcontroller.editArt)
+
+
 module.exports = router;

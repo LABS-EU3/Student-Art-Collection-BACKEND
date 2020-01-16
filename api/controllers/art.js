@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
-const { successResponse, errorHelper } = require('../helpers/response');
-const models = require('../../models');
-const artMail = require('../helpers/artmail');
-const secret = require('../../config/keys');
+const mongoose = require("mongoose");
+const { successResponse, errorHelper } = require("../helpers/response");
+const models = require("../../models");
+const artMail = require("../helpers/artmail");
+const secret = require("../../config/keys");
 
 module.exports = {
   async markArtAsCollected(req, res, next) {
@@ -13,12 +13,12 @@ module.exports = {
       const objectId = mongoose.Types.ObjectId(id.toString());
 
       const transaction = await models.Transaction.findById(objectId)
-        .populate('buyerId')
-        .populate('productId');
+        .populate("buyerId")
+        .populate("productId");
 
       const order = await models.order.findOneAndUpdate(
         { transactionId: objectId },
-        { status: 'completed' },
+        { status: "completed" },
         { new: true }
       );
 
@@ -79,17 +79,17 @@ module.exports = {
     const { status } = req.query;
     try {
       let schoolOrders = null;
-      if (status === 'all') {
+      if (status === "all") {
         schoolOrders = await models.order
           .find({ schoolId: id })
-          .populate('transactionId')
-          .populate('buyerId')
+          .populate("transactionId")
+          .populate("buyerId")
           .exec();
       } else {
         schoolOrders = await models.order
           .find({ schoolId: id, status })
-          .populate('transactionId')
-          .populate('buyerId')
+          .populate("transactionId")
+          .populate("buyerId")
           .exec();
       }
       return successResponse(res, 200, schoolOrders);
@@ -98,25 +98,36 @@ module.exports = {
     }
   },
   async editArt(req, res, next) {
-       const { id } = req.params
-       
-       try {
-         const art = await models.Products.findOneAndUpdate({_id: id}, req.body, {new: true})
-        
-         return id
-       } catch(error) {
-         return next(error)
-       }
-      },
+    const { id } = req.params;
+
+    try {
+      const art = await models.Products.findOneAndUpdate(
+        { _id: id },
+        req.body,
+        { new: true }
+      );
+      if (art) {
+        return successResponse(res, 200, art);
+      }
+
+      return errorHelper(
+        res,
+        500,
+        "There was an error while trying to update this product"
+      );
+    } catch (error) {
+      return next(error);
+    }
+  },
 
   async searchArt(req, res, next) {
     try {
       const { searchQuery } = req.query;
       const { filter, sortBy, page, pagination } = req.query;
       let { sortType } = req.query;
-      sortType = sortType === 'asc' ? 1 : -1;
+      sortType = sortType === "asc" ? 1 : -1;
       const art = await models.Products.find({
-        [filter]: { $regex: searchQuery, $options: 'i' }
+        [filter]: { $regex: searchQuery, $options: "i" }
       })
         .sort({ [sortBy]: sortType })
         .skip((page - 1) * pagination)
