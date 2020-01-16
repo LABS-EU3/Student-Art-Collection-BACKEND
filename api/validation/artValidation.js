@@ -21,24 +21,38 @@ module.exports = {
     }
     return next();
   },
-  addPagination(req, res, next) {
-    const { page, pagination } = req.query;
-    if (!page) {
-      req.query.page = 1;
-    }
-    if (!pagination) {
-      req.query.pagination = 10;
+  validatePagination(req, res, next) {
+    req.query.page = !req.query.page ? 1 : req.query.page;
+    req.query.pagination = !req.query.pagination ? 10 : req.query.pagination;
+    return next();
+  },
+  validateSort(req, res, next) {
+    const fields = models.Products.schema.paths;
+    req.query.sortBy = !req.query.sortBy ? '_id' : req.query.sortBy;
+    req.query.sortType = req.query.sortType === 'asc' ? 1 : -1;
+    if (!fields[req.query.sortBy]) {
+      return errorHelper(res, 404, {
+        message: 'This sorting field does not exist'
+      });
     }
     return next();
   },
-  addSort(req, res, next) {
-    const { filter, sortBy } = req.query;
-    req.query.filter = !filter ? '_id' : req.query.filter;
-    if (sortBy === 'asc') {
-      req.query.sortBy = 1;
-    } else {
-      req.query.sortBy = -1;
+  validateFilter(req, res, next) {
+    const fields = models.Products.schema.paths;
+    const { filter } = req.query;
+    // if no filter is passed in the query string, we assign it to filter field name by default and we move on to the next.
+    req.query.filter = !filter ? 'name' : filter;
+
+    // if this piece of code executes, it means that filter had a value in the query string. Next we check if there is a column called like that in the schema model that we can filter on.
+    if (!fields[req.query.filter]) {
+      return errorHelper(res, 404, {
+        message: 'This filter option does not exist'
+      });
     }
-    next();
+    return next();
+  },
+  validateSearchQuery(req, res, next) {
+    req.query.searchQuery = !req.query.searchQuery ? '' : req.query.searchQuery;
+    return next();
   }
 };

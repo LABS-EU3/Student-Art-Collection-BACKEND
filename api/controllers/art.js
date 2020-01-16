@@ -54,12 +54,23 @@ module.exports = {
   // FETCH ALL ART
   async fetchArt(req, res) {
     try {
-      const { page, pagination, filter, sortBy } = req.query;
-      const art = await models.Products.find({})
-        .sort({ [filter]: sortBy })
+      const {
+        page,
+        pagination,
+        sortBy,
+        sortType,
+        searchQuery,
+        filter
+      } = req.query;
+      const art = await models.Products.find({
+        [filter]: { $regex: searchQuery, $options: 'i' }
+      })
+        .sort({ [sortBy]: sortType })
         .skip((page - 1) * pagination)
         .limit(pagination);
-      const totalCount = await models.Products.countDocuments({});
+      const totalCount = await models.Products.find({
+        [filter]: { $regex: searchQuery, $options: 'i' }
+      }).count();
       return successResponse(res, 200, {
         totalCount,
         page,

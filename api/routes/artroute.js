@@ -28,8 +28,13 @@ router.post(
 
 // FETCH ALL ART WITH PAGINATION INCLUDED
 router.get(
-  '/',
-  [artValidators.addPagination, artValidators.addSort],
+  '/search',
+  [
+    artValidators.validatePagination,
+    artValidators.validateSort,
+    artValidators.validateFilter,
+    artValidators.validateSearchQuery
+  ],
   artcontroller.fetchArt
 );
 router.get(
