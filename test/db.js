@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle */
-const mongoose = require("mongoose");
-const db = require("../config/db");
-const User = require("../models/user");
-const { Products, Transaction, order, Buyer } = require("../models/index");
+const mongoose = require('mongoose');
+const db = require('../config/db');
+const User = require('../models/user');
+const { Products, Transaction, order, Buyer } = require('../models/index');
 
 mongoose.Promise = global.Promise;
 
@@ -17,7 +17,13 @@ const cleanDB = async () => {
   const deleteProducts = await Products.deleteMany({});
   const deleteTransactions = await Transaction.deleteMany({});
   const deleteOrders = await order.deleteMany({});
-  return deleteUser && deleteProducts && deleteTransactions && deleteOrders && deleteBuyer;
+  return (
+    deleteUser &&
+    deleteProducts &&
+    deleteTransactions &&
+    deleteOrders &&
+    deleteBuyer
+  );
 };
 
 const connectDB = async () => {
@@ -39,16 +45,16 @@ const disconnectDB = async () => {
 };
 
 const userData = {
-  name: "user1",
+  name: 'user1',
   email: `user1@gmail.com`,
-  password: "123456789",
-  type: "school"
+  password: '123456789',
+  type: 'school'
 };
 
 const buyerData = {
-  email: "user2@gmail.com",
-  password: "123456789",
-  type: "buyer"
+  email: 'user2@gmail.com',
+  password: '123456789',
+  type: 'buyer'
 };
 
 const createUser = () => {
@@ -58,40 +64,40 @@ const createUser = () => {
 const createBuyer = () => {
   return model.user.create(buyerData).then(response => {
     return Buyer.create({
-      firstname: "Test",
-      lastname: "scenerio",
+      firstname: 'Test',
+      lastname: 'scenerio',
       userId: response._id
     });
   });
 };
 
 const getBuyer = async () => {
-  const buyer = await model.user.findOne({ email: "user2@gmail.com" });
+  const buyer = await model.user.findOne({ email: 'user2@gmail.com' });
   return buyer;
 };
 const getUser = async () => {
-  const user = await model.user.findOne({ email: "user1@gmail.com" }).exec();
+  const user = await model.user.findOne({ email: 'user1@gmail.com' }).exec();
   return user;
 };
 
 const createProduct = async () => {
   const artData = {
-    name: "art",
-    height: "30",
-    width: "30",
+    name: 'art',
+    height: '30',
+    width: '30',
     quantity: 3,
-    artistName: "John bellion",
-    description: "A very beautiful art",
+    artistName: 'John bellion',
+    description: 'A very beautiful art',
     price: 299,
     userId: await (await getUser()).id,
-    public_picture_id: "12345",
-    picture: "123456"
+    public_picture_id: '12345',
+    picture: '123456'
   };
   const product = await Products.create(artData);
   return product;
 };
 const getProduct = async () => {
-  const product = await Products.findOne({ name: "art" }).exec();
+  const product = await Products.findOne({ name: 'art' }).exec();
   return product;
 };
 
@@ -101,7 +107,7 @@ const createTransaction = async () => {
     productId: await (await getProduct()).id,
     buyerId: buyer._id,
     schoolId: await (await getUser()).id,
-    status: "completed",
+    status: 'completed',
     quantity: 1,
     totalAmount: 100
   };
@@ -110,14 +116,14 @@ const createTransaction = async () => {
 };
 
 const getTransaction = async () => {
-  const transaction = await Transaction.findOne({ status: "completed" }).exec();
+  const transaction = await Transaction.findOne({ status: 'completed' }).exec();
   return transaction;
 };
 const createOrders = async () => {
   const orderData = {
     transactionId: await (await getTransaction()).id,
-    status: "pending",
-    address: "112, ahmadu bello way victoria island, lagos"
+    status: 'pending',
+    address: '112, ahmadu bello way victoria island, lagos'
   };
   const orders = await order.create(orderData);
   return orders;
@@ -125,7 +131,7 @@ const createOrders = async () => {
 
 const getOrders = async () => {
   const Order = await order
-    .findOne({ address: "112, ahmadu bello way victoria island, lagos" })
+    .findOne({ address: '112, ahmadu bello way victoria island, lagos' })
     .exec();
   return getOrders;
 };
@@ -143,5 +149,6 @@ module.exports = {
   createTransaction,
   getTransaction,
   createOrders,
-  getOrders
+  getOrders,
+ 
 };

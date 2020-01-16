@@ -32,5 +32,15 @@ router.get('/sold/order/:id', [userValidator.validateUser],artcontroller.artSold
 router.delete('/product/:id', [userValidator.validateUser], artcontroller.deleteArt);
 router.put('/quantity/:id', [userValidator.validateUser], artcontroller.reduceArtQuantity)
 
-module.exports = router;
+// SEARCH ART
+router.get(
+  '/search',
+  [
+    artValidators.validateArtFilter,
+    artValidators.validateArtSortType,
+    artValidators.addArtPagination
+  ],
+  artcontroller.searchArt
+);
 
+module.exports = router;
