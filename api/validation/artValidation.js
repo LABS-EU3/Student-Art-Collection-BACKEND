@@ -44,7 +44,7 @@ module.exports = {
   },
   validatePagination(req, res, next) {
     req.query.page = !req.query.page ? 1 : req.query.page;
-    req.query.pagination = !req.query.pagination ? 10 : req.query.pagination;
+    req.query.pagination = !req.query.pagination ? 12 : req.query.pagination;
     return next();
   },
   validateSort(req, res, next) {

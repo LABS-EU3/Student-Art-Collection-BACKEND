@@ -70,7 +70,7 @@ module.exports = {
         .limit(pagination);
       const totalCount = await models.Products.find({
         [filter]: { $regex: searchQuery, $options: 'i' }
-      }).count();
+      }).countDocuments();
       return successResponse(res, 200, {
         totalCount,
         page,
