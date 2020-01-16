@@ -64,7 +64,7 @@ describe('test for Schoolart endpoint', () => {
         expect(retrieveTransaction.totalAmount).toBe(100);
         expect(response.status).toBe(200);
       } catch (error) {
-        expect(error).toHaveProperty('status', 403);
+        expect(error).toHaveProperty('status', 500);
       } finally {
         done();
       }
@@ -98,7 +98,7 @@ describe('test for Schoolart endpoint', () => {
         const response = await request(server)
           .delete(`/art/product/${retrieveProduct.id}`)
           .set("authorization", token);
-          expect(response.status).toBe(500);
+          expect(response.status).toBe(403);
       }catch(error){
         expect(error).toHaveProperty("status", 500)
       }finally{ done() }
