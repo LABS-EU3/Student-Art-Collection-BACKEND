@@ -35,7 +35,7 @@ module.exports = {
     }
   },
 
-  async uploadArt(req, res) {
+  async uploadArt(req, res, next) {
     const { id } = req.user;
     const { file } = req;
     try {
@@ -96,5 +96,16 @@ module.exports = {
     } catch (error) {
       return next(error);
     }
+  },
+  async editArt(req, res, next) {
+       const { id } = req.params
+       
+       try {
+         const art = await models.Products.findOneAndUpdate({_id: id}, req.body, {new: true})
+        
+         return id
+       } catch(error) {
+         return next(error)
+       }
   }
 };
