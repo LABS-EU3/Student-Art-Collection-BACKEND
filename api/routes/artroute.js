@@ -30,5 +30,15 @@ router.post(
 router.get('/', artcontroller.fetchArt);
 router.get('/sold/order/:id', [userValidator.validateUser],artcontroller.artSoldCollection)
 
-module.exports = router;
+// SEARCH ART
+router.get(
+  '/search',
+  [
+    artValidators.validateArtFilter,
+    artValidators.validateArtSortType,
+    artValidators.addArtPagination
+  ],
+  artcontroller.searchArt
+);
 
+module.exports = router;
