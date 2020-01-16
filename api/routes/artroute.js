@@ -43,6 +43,6 @@ router.get(
   artcontroller.searchArt
 );
 
-router.post('/buyart', [artValidators.validateProductQuantity],artcontroller.buyerBuyArt)
+router.post('/buyart', [userValidator.validateUser],[artValidators.validateProductQuantity],artcontroller.buyerBuyArt)
 
 module.exports = router;
