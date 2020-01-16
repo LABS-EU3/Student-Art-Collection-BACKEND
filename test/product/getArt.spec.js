@@ -37,7 +37,7 @@ describe('art model test', () => {
       const response = await request(server).get(`/art/selling/${userInfo._id}?status=pending`)
         .set("authorization", token)
       expect(response.status).toBe(200)
-      expect(response.body).toHaveLength(0)
+      expect(response.body).toBe('No products for sale')
       done()
     })
   })
