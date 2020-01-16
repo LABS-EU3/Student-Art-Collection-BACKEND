@@ -34,7 +34,7 @@ module.exports = {
     }
     return next();
   },
-  validateArtSortType(req, res, next) {
+  validateArtSortType(req, _, next) {
     const { sortType } = req.query;
     if (sortType !== 'asc' && sortType !== 'desc') {
       req.query.sortType = 'asc';
@@ -42,10 +42,23 @@ module.exports = {
     }
     return next();
   },
-  addArtPagination(req, res, next) {
+  addArtPagination(req, _, next) {
     // checks if page and pagination are set in the query params
     req.query.page = !req.query.page ? 1 : req.query.page;
     req.query.pagination = !req.query.pagination ? 10 : req.query.pagination;
     next();
+  },
+  async validateProductQuantity(req, res, next) {
+    try {
+      const product = await models.Products.findById(req.body.productId).exec();
+      if(!product) return errorHelper(res, 404, {message: 'no such product'})
+      if(req.body.quantity > product.quantity) {
+        return errorHelper(res, 403, {message: 'cannot buy such quantity'})
+      }
+      req.product = product
+      return next()
+    } catch (error) {
+      return next(error.message)
+    }
   }
 };

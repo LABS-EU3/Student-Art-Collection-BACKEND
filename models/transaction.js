@@ -4,20 +4,16 @@ const transactionSchema = new mongoose.Schema({
   
     productId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'product',
-        unique: true
+        ref: 'product'
     },
    buyerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "buyer",
-        unique: true
     },
     SchoolId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "school",
-        unique: true
+        ref: "school"
     },
-
     status: {
         type: String,
         required: true,

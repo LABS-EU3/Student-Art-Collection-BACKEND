@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const {merge} = require('lodash');
 const { successResponse, errorHelper } = require('../helpers/response');
 const models = require('../../models');
 const artMail = require('../helpers/artmail');
@@ -162,5 +163,19 @@ module.exports = {
     } catch (error) {
       return next(error.message);
     }
+  },
+
+  async buyerBuyArt(req, res, next) {
+    const {product} = req;
+    try {
+      const quantity = product.quantity - req.body.quantity
+      const artToBuy = await models.Transaction.create(req.body)
+      merge(product,{quantity}).save();
+      return successResponse(res, 201, artToBuy)
+    } catch (error) {
+      return next(error.message)
+    }
+  
+
   }
 };
