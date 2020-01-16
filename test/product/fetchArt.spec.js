@@ -76,7 +76,6 @@ describe('search art unit', () => {
       const response = await request(server).get(
         '/art/search?sortBy=name&sortType=desc'
       );
-      console.log(response.body.art);
       expect(response.body.art[0].name).toBe('art3');
       expect(response.body.art[2].name).toBe('art1');
       done();
