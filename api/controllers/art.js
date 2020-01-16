@@ -105,7 +105,7 @@ module.exports = {
       const objectId = mongoose.Types.ObjectId(id.toString());
       const isArt = await models.Transaction.findOne({ productId: objectId });
       if (isArt) {
-        return errorHelper(res, 500, "You cannot delete this product");
+        return errorHelper(res, 500, "You cannot delete this Art because there is a transaction linked to it");
       }
 
       const remove = await models.Products.deleteOne({ _id: objectId });
