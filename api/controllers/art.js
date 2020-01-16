@@ -36,7 +36,7 @@ module.exports = {
   },
 
   async uploadArt(req, res, next) {
-    const { id } = req.user;
+    const { id } = req.param;
     const { file } = req;
     try {
       const newArt = await models.Products.create({
@@ -103,6 +103,30 @@ module.exports = {
       return successResponse(res, 200, schoolOrders);
     } catch (error) {
       return next(error);
+    }
+  },
+
+  async searchArt(req, res, next) {
+    try {
+      const { searchQuery } = req.query;
+      const { filter, sortBy, page, pagination } = req.query;
+      let { sortType } = req.query;
+      sortType = sortType === 'asc' ? 1 : -1;
+      const art = await models.Products.find({
+        [filter]: { $regex: searchQuery, $options: 'i' }
+      })
+        .sort({ [sortBy]: sortType })
+        .skip((page - 1) * pagination)
+        .limit(pagination);
+      const totalCount = await models.Products.countDocuments({});
+      return successResponse(res, 200, {
+        totalCount,
+        page,
+        itemsInPage: pagination,
+        art
+      });
+    } catch (error) {
+      return next(error.message);
     }
   }
 };
