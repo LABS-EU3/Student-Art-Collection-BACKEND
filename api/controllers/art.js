@@ -101,8 +101,9 @@ module.exports = {
     const { id } = req.params;
 
     try {
+      const objectId = mongoose.Types.ObjectId(id.toString());
       const art = await models.Products.findOneAndUpdate(
-        { _id: id },
+        { _id: objectId },
         req.body,
         { new: true }
       );
