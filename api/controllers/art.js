@@ -98,6 +98,7 @@ module.exports = {
     }
   },
 
+  // eslint-disable-next-line consistent-return
   async deleteArt(req, res, next) {
     const { id } = req.params;
 
@@ -105,14 +106,14 @@ module.exports = {
       const objectId = mongoose.Types.ObjectId(id.toString());
       const isArt = await models.Transaction.findOne({ productId: objectId });
       if (isArt) {
-        return errorHelper(res, 500, "You cannot delete this Art because there is a transaction linked to it");
+        return errorHelper(res, 403, "You cannot delete this Art because there is a transaction linked to it");
       }
 
       const remove = await models.Products.deleteOne({ _id: objectId });
       if (remove) {
         return successResponse(res, 200, "Art has been deleted");
       }
-      return errorHelper(res, 500, "Internal server error");
+      
     } catch (error) {
       return next(error);
     }
