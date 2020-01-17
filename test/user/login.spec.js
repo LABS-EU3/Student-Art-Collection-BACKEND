@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const request = require("supertest");
 const UserModel = require("../../models/user");
 const server = require("../../api/routes/index");
