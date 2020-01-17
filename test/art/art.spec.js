@@ -8,6 +8,7 @@ const {
   createUser,
   createProduct,
   getUser,
+  getProduct,
   createTransaction,
   getTransaction,
   createOrders,
@@ -69,4 +70,38 @@ describe('test for Schoolart endpoint', () => {
       }
     });
   });
+  describe("PUT/art/quantity/:id", () => {
+    it("should reduce art quantity", async done => {
+      try {
+        const schoolInfo = await getUser();
+        const retrieveProduct = await getProduct();
+        const token = await generateToken(schoolInfo);
+        const response = await request(server)
+          .put(`/art/quantity/${retrieveProduct.id}`)
+          .set("authorization", token);
+          
+        expect(response.status).toBe(200);
+      } catch (error) {
+        expect(error).toHaveProperty("status", 404);
+      } finally {
+        done();
+      }
+    });
+  });
+
+  describe('DELETE/art/product/:id', () => {
+    it('should not delete the art if in transaction schema', async done =>{
+      try {
+        const schoolInfo = await getUser();
+        const retrieveProduct = await getProduct();
+        const token = await generateToken(schoolInfo);
+        const response = await request(server)
+          .delete(`/art/product/${retrieveProduct.id}`)
+          .set("authorization", token);
+          expect(response.status).toBe(403);
+      }catch(error){
+        expect(error).toHaveProperty("status", 500)
+      }finally{ done() }
+    })
+  })
 });

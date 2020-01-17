@@ -13,8 +13,8 @@ module.exports = {
       const objectId = mongoose.Types.ObjectId(id.toString());
 
       const transaction = await models.Transaction.findById(objectId)
-        .populate('buyerId')
-        .populate('productId');
+        .populate("buyerId")
+        .populate("productId");
 
       const order = await models.order.findOneAndUpdate(
         { transactionId: objectId },
@@ -106,6 +106,48 @@ module.exports = {
     }
   },
 
+  // eslint-disable-next-line consistent-return
+  async deleteArt(req, res, next) {
+    const { id } = req.params;
+
+    try {
+      const objectId = mongoose.Types.ObjectId(id.toString());
+      const isArt = await models.Transaction.findOne({ productId: objectId });
+      if (isArt) {
+        return errorHelper(res, 403, "You cannot delete this Art because there is a transaction linked to it");
+      }
+
+      const remove = await models.Products.deleteOne({ _id: objectId });
+      if (remove) {
+        return successResponse(res, 200, "Art has been deleted");
+      }
+      
+    } catch (error) {
+      return next(error);
+    }
+  },
+  async reduceArtQuantity(req, res, next) {
+    const { id } = req.params;
+    try {
+      let updatedModels = null
+      const objectId = mongoose.Types.ObjectId(id.toString());
+      const product = await models.Products.findById(objectId);
+      const quantity = product.quantity;
+     
+      if (quantity >= 1) {
+        updatedModels = await models.Products.findByIdAndUpdate(
+          objectId,
+          { quantity: quantity - 1 },
+          { new: true }
+        );
+      }else {
+        return errorHelper(res, 500, "Art is no longer for sale");
+      }
+      return successResponse(res, 200, updatedModels);
+    } catch (error) {
+      return next(error);
+    }
+  },
   async searchArt(req, res, next) {
     try {
       const { searchQuery } = req.query;

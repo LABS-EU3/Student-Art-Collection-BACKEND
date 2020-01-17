@@ -151,9 +151,10 @@ module.exports = {
   createBuyer,
   getBuyer,
   createProduct,
+  getProduct,
   createTransaction,
   getTransaction,
   createOrders,
   getOrders,
-  getProduct
+ 
 };
