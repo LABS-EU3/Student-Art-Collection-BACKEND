@@ -209,8 +209,8 @@ module.exports = {
   async fetchTransactions(req, res, next) {
     try {
       const { type } = req.user;
-      const typeId = req.params.id;
-      const objectId = mongoose.Types.ObjectId(typeId.toString());
+      const { userTypeId } = req.params;
+      const objectId = mongoose.Types.ObjectId(userTypeId.toString());
       const transactions = await models.Transaction.find({
         [type]: objectId
       }).populate('productId');

@@ -68,7 +68,7 @@ router.get(
 );
 
 router.get(
-  '/:id/transactions',
+  '/:userTypeId/transactions',
   [userValidator.validateUser],
   artcontroller.fetchTransactions
 );
