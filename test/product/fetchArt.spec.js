@@ -71,7 +71,7 @@ describe('search art unit', () => {
   afterAll(() => {
     return disconnectDB();
   });
-  describe('', () => {
+  xdescribe('', () => {
     it('returns sorted results when passing sort desc and filter by name params', async done => {
       const response = await request(server).get(
         '/art/search?sortBy=name&sortType=desc'

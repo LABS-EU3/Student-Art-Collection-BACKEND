@@ -21,7 +21,7 @@ describe('art model test', () => {
     return cleanDB()
   })
 
-  describe('Product route', () => {
+  xdescribe('Product route', () => {
     it('[GET /art/selling/:userId] - should return 401 because token was not provided', async done => {
       const expectedStatusCode = 401;
       const response = await request(server).get('/art/selling/1234');
