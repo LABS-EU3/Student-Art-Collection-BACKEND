@@ -1,5 +1,11 @@
+const express = require("express");
+const userValidators = require("../validation/userValidator");
+const { getArtById } = require('../controllers/art')
+
+const router = express.Router();
+
+module.exports = router
 // DEPENDENCIES
-const express = require('express');
 const cloudinary = require('../middleware/cloudinary');
 
 // MIDDLEWARE
@@ -9,7 +15,6 @@ const userValidator = require('../validation/userValidator');
 // CONTROLLERS
 const artcontroller = require('../controllers/art');
 
-const router = express.Router();
 router.use(express.json());
 // const upload = multer({ storage });
 
@@ -19,14 +24,49 @@ router.post(
   [cloudinary.uploadImage('image')],
   [
     userValidator.validateUser,
+
+    // COMMENTED OUT SIBCE IT WOULD CLASH WITH THE SCHOOL ID BEING PASSED AS PARAM IN THE ART UPLOAD IP CALL FROM FRONTEND
+    // userValidator.validateUserTokenRequest,
     artValidators.validateArtBody
   ],
   artcontroller.uploadArt
 );
 
-router.get('/sold/order/:id',artcontroller.artSoldCollection)
 
 router.get('/sold/order/buyer/:id',[userValidator.validateUser],artcontroller.artBoughtCollection)
+router.get(
+  '/sold/order/:id',
+  [userValidator.validateUser],
+  artcontroller.artSoldCollection
+);
+router.delete(
+  '/product/:id',
+  [userValidator.validateUser],
+  artcontroller.deleteArt
+);
+router.put(
+  '/quantity/:id',
+  [userValidator.validateUser],
+  artcontroller.reduceArtQuantity
+);
+
+router.get(
+  "/selling/:id",
+  [userValidators.validateUser],
+  getArtById
+)
+
+
+// SEARCH ART
+router.get(
+  '/search',
+  [
+    artValidators.validatePagination,
+    artValidators.validateSort,
+    artValidators.validateFilter,
+    artValidators.validateSearchQuery
+  ],
+  artcontroller.fetchArt
+);
 
 module.exports = router;
-
