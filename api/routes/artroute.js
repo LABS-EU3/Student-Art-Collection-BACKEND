@@ -68,7 +68,7 @@ router.get(
 
 router.get(
   '/transactions',
-  [userValidator.validateUser, userValidator.checkTypeOfuser],
+  [userValidator.validateUser],
   artcontroller.fetchTransactions
 );
 

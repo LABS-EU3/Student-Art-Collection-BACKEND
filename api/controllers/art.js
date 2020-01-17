@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
-const { Buyer, User, Products, School } = require("../../models");
-const { successResponse, errorHelper } = require("../helpers/response");
+const { Buyer, User, Products, School } = require('../../models');
+const { successResponse, errorHelper } = require('../helpers/response');
 
 // MODELS
 
 // HELPERS
 const artMail = require('../helpers/artmail');
-const models = require("../../models/index");
+const models = require('../../models/index');
 const secret = require('../../config/keys');
 
 module.exports = {
@@ -116,7 +116,7 @@ module.exports = {
       const { id } = req.params;
       const products = await Products.find({ userId: id }).exec();
       if (!products.length) {
-        return successResponse(res, 200, "No products for sale");
+        return successResponse(res, 200, 'No products for sale');
       }
       return successResponse(res, 200, products);
     } catch (error) {
@@ -194,13 +194,15 @@ module.exports = {
   },
   async fetchTransactions(req, res, next) {
     try {
-      const { id } = req.user;
       const { type } = req.user;
-      const objectId = mongoose.Types.ObjectId(id.toString());
-      const transactions = await models.Transaction.find({ [type]: objectId });
+      const typeId = req.params.id;
+      const objectId = mongoose.Types.ObjectId(typeId.toString());
+      const transactions = await models.Transaction.find({
+        [type]: objectId
+      }).populate('productId');
       return successResponse(res, 200, transactions);
     } catch (error) {
-      console.log(error);
+      return next(error);
     }
   }
 };

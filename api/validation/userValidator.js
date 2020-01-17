@@ -123,16 +123,5 @@ module.exports = {
       return errorHelper(res, 401, 'you cannot continue with this operation');
     }
     return next();
-  },
-  async checkTypeOfuser(req, res, next) {
-    try {
-      const { id } = req.user;
-      const objectId = mongoose.Types.ObjectId(id.toString());
-      const user = await models.findOne(objectId);
-      req.user.type = user.type === 'buyer' ? 'buyerId' : 'SchoolId';
-      return next();
-    } catch (error) {
-      return next(error);
-    }
   }
 };
