@@ -25,17 +25,27 @@ router.post(
   [
     userValidator.validateUser,
     // COMMENTED OUT SIBCE IT WOULD CLASH WITH THE SCHOOL ID BEING PASSED AS PARAM IN THE ART UPLOAD IP CALL FROM FRONTEND
-    // userValidator.validateUserTokenRequest, 
+    // userValidator.validateUserTokenRequest,
     artValidators.validateArtBody
   ],
   artcontroller.uploadArt
 );
 
-// FETCH ALL ART WITH PAGINATION INCLUDED
-router.get('/', artcontroller.fetchArt);
-router.get('/sold/order/:id', [userValidator.validateUser],artcontroller.artSoldCollection)
-router.delete('/product/:id', [userValidator.validateUser], artcontroller.deleteArt);
-router.put('/quantity/:id', [userValidator.validateUser], artcontroller.reduceArtQuantity)
+router.get(
+  '/sold/order/:id',
+  [userValidator.validateUser],
+  artcontroller.artSoldCollection
+);
+router.delete(
+  '/product/:id',
+  [userValidator.validateUser],
+  artcontroller.deleteArt
+);
+router.put(
+  '/quantity/:id',
+  [userValidator.validateUser],
+  artcontroller.reduceArtQuantity
+);
 
 router.get(
   "/selling/:id",
@@ -48,11 +58,12 @@ module.exports = router;
 router.get(
   '/search',
   [
-    artValidators.validateArtFilter,
-    artValidators.validateArtSortType,
-    artValidators.addArtPagination
+    artValidators.validatePagination,
+    artValidators.validateSort,
+    artValidators.validateFilter,
+    artValidators.validateSearchQuery
   ],
-  artcontroller.searchArt
+  artcontroller.fetchArt
 );
 
 module.exports = router;
