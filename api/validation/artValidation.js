@@ -11,10 +11,12 @@ module.exports = {
   validateArtBody(req, res, next) {
     const validator = new Validator(req.body, {
       name: 'required',
+      artistName: 'required',
       height: 'required',
       width: 'required',
       quantity: 'required',
-      price: 'required'
+      price: 'required',
+      description: 'required'
     });
     if (validator.fails()) {
       errorHelper(res, 401, { message: validator.errors.all() });

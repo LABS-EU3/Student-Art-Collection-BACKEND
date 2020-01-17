@@ -13,8 +13,8 @@ module.exports = {
       const objectId = mongoose.Types.ObjectId(id.toString());
 
       const transaction = await models.Transaction.findById(objectId)
-        .populate("buyerId")
-        .populate("productId");
+        .populate('buyerId')
+        .populate('productId');
 
       const order = await models.order.findOneAndUpdate(
         { transactionId: objectId },
@@ -36,7 +36,7 @@ module.exports = {
   },
 
   async uploadArt(req, res, next) {
-    const { id } = req.param;
+    const { id } = req.params;
     const { file } = req;
     try {
       const newArt = await models.Products.create({
@@ -106,14 +106,17 @@ module.exports = {
       const objectId = mongoose.Types.ObjectId(id.toString());
       const isArt = await models.Transaction.findOne({ productId: objectId });
       if (isArt) {
-        return errorHelper(res, 403, "You cannot delete this Art because there is a transaction linked to it");
+        return errorHelper(
+          res,
+          403,
+          'You cannot delete this Art because there is a transaction linked to it'
+        );
       }
 
       const remove = await models.Products.deleteOne({ _id: objectId });
       if (remove) {
-        return successResponse(res, 200, "Art has been deleted");
+        return successResponse(res, 200, 'Art has been deleted');
       }
-      
     } catch (error) {
       return next(error);
     }
@@ -121,19 +124,19 @@ module.exports = {
   async reduceArtQuantity(req, res, next) {
     const { id } = req.params;
     try {
-      let updatedModels = null
+      let updatedModels = null;
       const objectId = mongoose.Types.ObjectId(id.toString());
       const product = await models.Products.findById(objectId);
       const quantity = product.quantity;
-     
+
       if (quantity >= 1) {
         updatedModels = await models.Products.findByIdAndUpdate(
           objectId,
           { quantity: quantity - 1 },
           { new: true }
         );
-      }else {
-        return errorHelper(res, 500, "Art is no longer for sale");
+      } else {
+        return errorHelper(res, 500, 'Art is no longer for sale');
       }
       return successResponse(res, 200, updatedModels);
     } catch (error) {
@@ -161,6 +164,17 @@ module.exports = {
       });
     } catch (error) {
       return next(error.message);
+    }
+  },
+  async fetchTransactions(req, res, next) {
+    try {
+      const { id } = req.user;
+      const { type } = req.user;
+      const objectId = mongoose.Types.ObjectId(id.toString());
+      const transactions = await models.Transaction.find({ [type]: objectId });
+      return successResponse(res, 200, transactions);
+    } catch (error) {
+      console.log(error);
     }
   }
 };
