@@ -1,7 +1,12 @@
 const mongoose = require('mongoose');
-const { successResponse, errorHelper } = require('../helpers/response');
-const models = require('../../models');
+const { Buyer, User, Products, School } = require("../../models");
+const { successResponse, errorHelper } = require("../helpers/response");
+
+// MODELS
+
+// HELPERS
 const artMail = require('../helpers/artmail');
+const models = require("../../models/index");
 const secret = require('../../config/keys');
 
 module.exports = {
@@ -95,6 +100,19 @@ module.exports = {
       return successResponse(res, 200, schoolOrders);
     } catch (error) {
       return next(error);
+    }
+  },
+
+  async getArtById(req, res, next) {
+    try {
+      const { id } = req.params;
+      const products = await Products.find({ userId: id }).exec();
+      if (!products.length) {
+        return successResponse(res, 200, "No products for sale");
+      }
+      return successResponse(res, 200, products);
+    } catch (error) {
+      return next(error.message);
     }
   },
 

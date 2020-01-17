@@ -1,5 +1,11 @@
+const express = require("express");
+const userValidators = require("../validation/userValidator");
+const { getArtById } = require('../controllers/art')
+
+const router = express.Router();
+
+module.exports = router
 // DEPENDENCIES
-const express = require('express');
 const cloudinary = require('../middleware/cloudinary');
 
 // MIDDLEWARE
@@ -9,7 +15,6 @@ const userValidator = require('../validation/userValidator');
 // CONTROLLERS
 const artcontroller = require('../controllers/art');
 
-const router = express.Router();
 router.use(express.json());
 // const upload = multer({ storage });
 
@@ -32,6 +37,13 @@ router.get('/sold/order/:id', [userValidator.validateUser],artcontroller.artSold
 router.delete('/product/:id', [userValidator.validateUser], artcontroller.deleteArt);
 router.put('/quantity/:id', [userValidator.validateUser], artcontroller.reduceArtQuantity)
 
+router.get(
+  "/selling/:id",
+  [userValidators.validateUser],
+  getArtById
+)
+
+module.exports = router;
 // SEARCH ART
 router.get(
   '/search',
