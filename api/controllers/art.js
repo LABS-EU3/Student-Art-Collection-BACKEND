@@ -204,7 +204,7 @@ module.exports = {
       const quantity = product.quantity - req.body.quantity
       const artToBuy = await models.Transaction.create(req.body).then(async (art) => {
         if(art.status === 'completed') {
-           await models.order.create(req.body)
+           await models.order.create({...req.body, status: 'pending'})
         }
       })
       merge(product,{quantity}).save();
