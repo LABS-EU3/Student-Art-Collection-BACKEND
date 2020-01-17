@@ -24,6 +24,7 @@ router.post(
   [cloudinary.uploadImage('image')],
   [
     userValidator.validateUser,
+
     // COMMENTED OUT SIBCE IT WOULD CLASH WITH THE SCHOOL ID BEING PASSED AS PARAM IN THE ART UPLOAD IP CALL FROM FRONTEND
     // userValidator.validateUserTokenRequest,
     artValidators.validateArtBody
@@ -31,6 +32,8 @@ router.post(
   artcontroller.uploadArt
 );
 
+
+router.get('/sold/order/buyer/:id',[userValidator.validateUser],artcontroller.artBoughtCollection)
 router.get(
   '/sold/order/:id',
   [userValidator.validateUser],
@@ -53,7 +56,7 @@ router.get(
   getArtById
 )
 
-module.exports = router;
+
 // SEARCH ART
 router.get(
   '/search',
