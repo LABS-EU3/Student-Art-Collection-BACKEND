@@ -1,18 +1,24 @@
 /* eslint-disable no-underscore-dangle */
 const mongoose = require('mongoose');
 const db = require('../config/db');
-const User = require('../models/user');
-const { Products, Transaction, order, Buyer } = require('../models/index');
+// const User = require('../models/user');
+const {
+  Products,
+  Transaction,
+  order,
+  Buyer,
+  User
+} = require('../models/index');
 
 mongoose.Promise = global.Promise;
 
-const model = {
-  user: User
-};
+// const model = {
+//   user: User
+// };
 
 const cleanDB = async () => {
   // drop all database here
-  const deleteUser = await model.user.deleteMany({});
+  const deleteUser = await User.deleteMany({});
   const deleteBuyer = await Buyer.deleteMany({});
   const deleteProducts = await Products.deleteMany({});
   const deleteTransactions = await Transaction.deleteMany({});
@@ -58,11 +64,11 @@ const buyerData = {
 };
 
 const createUser = () => {
-  return model.user.create(userData);
+  return User.create(userData);
 };
 
 const createBuyer = () => {
-  return model.user.create(buyerData).then(response => {
+  return User.create(buyerData).then(response => {
     return Buyer.create({
       firstname: 'Test',
       lastname: 'scenerio',
@@ -72,19 +78,19 @@ const createBuyer = () => {
 };
 
 const getBuyer = async () => {
-  const buyer = await model.user.findOne({ email: 'user2@gmail.com' });
+  const buyer = await User.findOne({ email: 'user2@gmail.com' });
   return buyer;
 };
 const getUser = async () => {
-  const user = await model.user.findOne({ email: 'user1@gmail.com' }).exec();
+  const user = await User.findOne({ email: 'user1@gmail.com' }).exec();
   return user;
 };
 
 const createProduct = async () => {
   const artData = {
     name: 'art',
-    height: '30',
-    width: '30',
+    height: 30,
+    width: 30,
     quantity: 3,
     artistName: 'John bellion',
     description: 'A very beautiful art',

@@ -11,7 +11,6 @@ const ContactRoute = require('./contactRoute');
 const models = require('../../models')
 const {authCallbackStrategy} = require('../middleware/googleStrategy');
 
-
 const app = express();
 
 app.use(bodyParser.json());
