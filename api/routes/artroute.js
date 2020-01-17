@@ -1,5 +1,11 @@
+const express = require("express");
+const userValidators = require("../validation/userValidator");
+const { getArtById } = require('../controllers/art')
+
+const router = express.Router();
+
+module.exports = router
 // DEPENDENCIES
-const express = require('express');
 const cloudinary = require('../middleware/cloudinary');
 
 // MIDDLEWARE
@@ -9,7 +15,6 @@ const userValidator = require('../validation/userValidator');
 // CONTROLLERS
 const artcontroller = require('../controllers/art');
 
-const router = express.Router();
 router.use(express.json());
 // const upload = multer({ storage });
 
@@ -20,27 +25,45 @@ router.post(
   [
     userValidator.validateUser,
     // COMMENTED OUT SIBCE IT WOULD CLASH WITH THE SCHOOL ID BEING PASSED AS PARAM IN THE ART UPLOAD IP CALL FROM FRONTEND
-    // userValidator.validateUserTokenRequest, 
+    // userValidator.validateUserTokenRequest,
     artValidators.validateArtBody
   ],
   artcontroller.uploadArt
 );
 
-// FETCH ALL ART WITH PAGINATION INCLUDED
-router.get('/', artcontroller.fetchArt);
-router.get('/sold/order/:id', [userValidator.validateUser],artcontroller.artSoldCollection)
-router.delete('/product/:id', [userValidator.validateUser], artcontroller.deleteArt);
-router.put('/quantity/:id', [userValidator.validateUser], artcontroller.reduceArtQuantity)
+router.get(
+  '/sold/order/:id',
+  [userValidator.validateUser],
+  artcontroller.artSoldCollection
+);
+router.delete(
+  '/product/:id',
+  [userValidator.validateUser],
+  artcontroller.deleteArt
+);
+router.put(
+  '/quantity/:id',
+  [userValidator.validateUser],
+  artcontroller.reduceArtQuantity
+);
 
+router.get(
+  "/selling/:id",
+  [userValidators.validateUser],
+  getArtById
+)
+
+module.exports = router;
 // SEARCH ART
 router.get(
   '/search',
   [
-    artValidators.validateArtFilter,
-    artValidators.validateArtSortType,
-    artValidators.addArtPagination
+    artValidators.validatePagination,
+    artValidators.validateSort,
+    artValidators.validateFilter,
+    artValidators.validateSearchQuery
   ],
-  artcontroller.searchArt
+  artcontroller.fetchArt
 );
 
 router.put('/edit/:id', [userValidator.validateUser,artValidators.validateArtBody, artValidators.ValidateIfArtExists], artcontroller.editArt)
