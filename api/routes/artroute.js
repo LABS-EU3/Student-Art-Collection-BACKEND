@@ -69,4 +69,7 @@ router.get(
   artcontroller.fetchArt
 );
 
+router.put('/edit/:id', [userValidator.validateUser,artValidators.validateArtBody, artValidators.ValidateIfArtExists], artcontroller.editArt)
+
+
 module.exports = router;

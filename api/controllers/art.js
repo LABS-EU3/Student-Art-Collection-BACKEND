@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const { Buyer, User, Products, School } = require("../../models");
+const mongoose = require("mongoose");
+const { merge } = require("lodash");
 const { successResponse, errorHelper } = require("../helpers/response");
 const models = require("../../models");
 const orders = require('../../models/orders')
@@ -22,7 +22,7 @@ module.exports = {
 
       const order = await models.order.findOneAndUpdate(
         { transactionId: objectId },
-        { status: 'completed' },
+        { status: "completed" },
         { new: true }
       );
 
@@ -104,11 +104,22 @@ module.exports = {
       return next(error);
     }
   },
+  async editArt(req, res, next) {
+    const { product } = req;
+
+    try {
+      const art = await merge(product, req.body).save();
+
+      return successResponse(res, 200, art);
+    } catch (error) {
+      return next(error);
+    }
+  },
 
   async getArtById(req, res, next) {
     try {
       const { id } = req.params;
-      const products = await Products.find({ userId: id }).exec();
+      const products = await models.Products.find({ userId: id }).exec();
       if (!products.length) {
         return successResponse(res, 200, "No products for sale");
       }
@@ -126,14 +137,17 @@ module.exports = {
       const objectId = mongoose.Types.ObjectId(id.toString());
       const isArt = await models.Transaction.findOne({ productId: objectId });
       if (isArt) {
-        return errorHelper(res, 403, "You cannot delete this Art because there is a transaction linked to it");
+        return errorHelper(
+          res,
+          403,
+          "You cannot delete this Art because there is a transaction linked to it"
+        );
       }
 
       const remove = await models.Products.deleteOne({ _id: objectId });
       if (remove) {
         return successResponse(res, 200, "Art has been deleted");
       }
-      
     } catch (error) {
       return next(error);
     }
@@ -141,18 +155,18 @@ module.exports = {
   async reduceArtQuantity(req, res, next) {
     const { id } = req.params;
     try {
-      let updatedModels = null
+      let updatedModels = null;
       const objectId = mongoose.Types.ObjectId(id.toString());
       const product = await models.Products.findById(objectId);
       const quantity = product.quantity;
-     
+
       if (quantity >= 1) {
         updatedModels = await models.Products.findByIdAndUpdate(
           objectId,
           { quantity: quantity - 1 },
           { new: true }
         );
-      }else {
+      } else {
         return errorHelper(res, 500, "Art is no longer for sale");
       }
       return successResponse(res, 200, updatedModels);
@@ -165,9 +179,9 @@ module.exports = {
       const { searchQuery } = req.query;
       const { filter, sortBy, page, pagination } = req.query;
       let { sortType } = req.query;
-      sortType = sortType === 'asc' ? 1 : -1;
+      sortType = sortType === "asc" ? 1 : -1;
       const art = await models.Products.find({
-        [filter]: { $regex: searchQuery, $options: 'i' }
+        [filter]: { $regex: searchQuery, $options: "i" }
       })
         .sort({ [sortBy]: sortType })
         .skip((page - 1) * pagination)
