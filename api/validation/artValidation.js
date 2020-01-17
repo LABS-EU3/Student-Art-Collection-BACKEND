@@ -48,6 +48,17 @@ module.exports = {
     }
     return errorHelper(res, 404, 'Product does not exist')
   },
+  async validateProductQuantity(req, res, next) {
+    try {
+      const product = { req }
+      if(req.body.quantity > product.quantity) {
+        return errorHelper(res, 403, {message: 'cannot buy such quantity'})
+      }
+      return next()
+    } catch (error) {
+      return next(error.message)
+    }
+  },
   validateArtSortType(req, res, next) {
     const { sortType } = req.query;
     if (sortType !== 'asc' && sortType !== 'desc') {
@@ -61,19 +72,6 @@ module.exports = {
     req.query.page = !req.query.page ? 1 : req.query.page;
     req.query.pagination = !req.query.pagination ? 10 : req.query.pagination;
     next();
-  },
-  async validateProductQuantity(req, res, next) {
-    try {
-      const product = await models.Products.findById(req.body.productId).exec();
-      if(!product) return errorHelper(res, 404, {message: 'no such product'})
-      if(req.body.quantity > product.quantity) {
-        return errorHelper(res, 403, {message: 'cannot buy such quantity'})
-      }
-      req.product = product
-      return next()
-    } catch (error) {
-      return next(error.message)
-    }
   },
   validatePagination(req, res, next) {
     req.query.page = !req.query.page ? 1 : parseInt(req.query.page, 10);
