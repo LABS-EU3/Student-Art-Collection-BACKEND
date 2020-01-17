@@ -1,6 +1,6 @@
 // DEPENDENCIES
 const Validator = require('validatorjs');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 // MODELS
 const models = require('../../models/index');
@@ -12,13 +12,12 @@ module.exports = {
   validateArtBody(req, res, next) {
     const validator = new Validator(req.body, {
       name: 'required',
+      artistName: 'required',
       height: 'required',
       width: 'required',
       quantity: 'required',
       price: 'required',
-      description: 'required',
-      artistName: 'required'
-
+      description: 'required'
     });
     if (validator.fails()) {
       errorHelper(res, 401, { message: validator.errors.all() });
@@ -38,15 +37,15 @@ module.exports = {
     }
     return next();
   },
-   async ValidateIfArtExists(req, res, next){
-    const { id } = req.params
+  async ValidateIfArtExists(req, res, next) {
+    const { id } = req.params;
     const objectId = mongoose.Types.ObjectId(id.toString());
-    const product = await models.Products.findById(objectId)
-    if(product){
-      req.product = product
-      return next()
+    const product = await models.Products.findById(objectId);
+    if (product) {
+      req.product = product;
+      return next();
     }
-    return errorHelper(res, 404, 'Product does not exist')
+    return errorHelper(res, 404, 'Product does not exist');
   },
   validateArtSortType(req, res, next) {
     const { sortType } = req.query;
@@ -58,7 +57,9 @@ module.exports = {
   },
   validatePagination(req, res, next) {
     req.query.page = !req.query.page ? 1 : parseInt(req.query.page, 10);
-    req.query.pagination = !req.query.pagination ? 12 : parseInt(req.query.pagination, 10);
+    req.query.pagination = !req.query.pagination
+      ? 12
+      : parseInt(req.query.pagination, 10);
     return next();
   },
   validateSort(req, res, next) {

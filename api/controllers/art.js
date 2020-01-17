@@ -1,12 +1,11 @@
-const mongoose = require("mongoose");
-const { merge } = require("lodash");
-const { successResponse, errorHelper } = require("../helpers/response");
-const models = require("../../models");
-const orders = require('../../models/orders')
-const artMail = require("../helpers/artmail");
-const secret = require("../../config/keys");
+const mongoose = require('mongoose');
+const { merge } = require('lodash');
+const { successResponse, errorHelper } = require('../helpers/response');
+const models = require('../../models');
+const orders = require('../../models/orders');
+const artMail = require('../helpers/artmail');
+const secret = require('../../config/keys');
 const { getArtSold } = require('../helpers/artOrders');
-
 
 module.exports = {
   async markArtAsCollected(req, res, next) {
@@ -17,12 +16,12 @@ module.exports = {
       const objectId = mongoose.Types.ObjectId(id.toString());
 
       const transaction = await models.Transaction.findById(objectId)
-        .populate("buyerId")
-        .populate("productId");
+        .populate('buyerId')
+        .populate('productId');
 
       const order = await models.order.findOneAndUpdate(
         { transactionId: objectId },
-        { status: "completed" },
+        { status: 'completed' },
         { new: true }
       );
 
@@ -40,7 +39,7 @@ module.exports = {
   },
 
   async uploadArt(req, res, next) {
-    const { id } = req.param;
+    const { id } = req.params;
     const { file } = req;
     try {
       const newArt = await models.Products.create({
@@ -87,18 +86,28 @@ module.exports = {
   },
 
   async artSoldCollection(req, res, next) {
-    const schoolId  = req.params.id;
+    const schoolId = req.params.id;
     try {
-      const schoolOrders = await getArtSold(models.order, req, {schoolId}, 'buyerId')
+      const schoolOrders = await getArtSold(
+        models.order,
+        req,
+        { schoolId },
+        'buyerId'
+      );
       return successResponse(res, 200, schoolOrders);
     } catch (error) {
-      return next(error)
+      return next(error);
     }
   },
   async artBoughtCollection(req, res, next) {
-    const buyerId  = req.params.id;
+    const buyerId = req.params.id;
     try {
-      const buyerOrders = await getArtSold(models.order, req, {buyerId}, 'schoolId')
+      const buyerOrders = await getArtSold(
+        models.order,
+        req,
+        { buyerId },
+        'schoolId'
+      );
       return successResponse(res, 200, buyerOrders);
     } catch (error) {
       return next(error);
@@ -121,7 +130,7 @@ module.exports = {
       const { id } = req.params;
       const products = await models.Products.find({ userId: id }).exec();
       if (!products.length) {
-        return successResponse(res, 200, "No products for sale");
+        return successResponse(res, 200, 'No products for sale');
       }
       return successResponse(res, 200, products);
     } catch (error) {
@@ -140,13 +149,13 @@ module.exports = {
         return errorHelper(
           res,
           403,
-          "You cannot delete this Art because there is a transaction linked to it"
+          'You cannot delete this Art because there is a transaction linked to it'
         );
       }
 
       const remove = await models.Products.deleteOne({ _id: objectId });
       if (remove) {
-        return successResponse(res, 200, "Art has been deleted");
+        return successResponse(res, 200, 'Art has been deleted');
       }
     } catch (error) {
       return next(error);
@@ -167,7 +176,7 @@ module.exports = {
           { new: true }
         );
       } else {
-        return errorHelper(res, 500, "Art is no longer for sale");
+        return errorHelper(res, 500, 'Art is no longer for sale');
       }
       return successResponse(res, 200, updatedModels);
     } catch (error) {
@@ -179,9 +188,9 @@ module.exports = {
       const { searchQuery } = req.query;
       const { filter, sortBy, page, pagination } = req.query;
       let { sortType } = req.query;
-      sortType = sortType === "asc" ? 1 : -1;
+      sortType = sortType === 'asc' ? 1 : -1;
       const art = await models.Products.find({
-        [filter]: { $regex: searchQuery, $options: "i" }
+        [filter]: { $regex: searchQuery, $options: 'i' }
       })
         .sort({ [sortBy]: sortType })
         .skip((page - 1) * pagination)
@@ -195,6 +204,19 @@ module.exports = {
       });
     } catch (error) {
       return next(error.message);
+    }
+  },
+  async fetchTransactions(req, res, next) {
+    try {
+      const { type } = req.user;
+      const { userTypeId } = req.params;
+      const objectId = mongoose.Types.ObjectId(userTypeId.toString());
+      const transactions = await models.Transaction.find({
+        [type]: objectId
+      }).populate('productId');
+      return successResponse(res, 200, transactions);
+    } catch (error) {
+      return next(error);
     }
   }
 };
