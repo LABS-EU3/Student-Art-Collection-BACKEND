@@ -1,5 +1,6 @@
 // DEPENDENCIES
 const Validator = require('validatorjs');
+const mongoose = require('mongoose')
 
 // MODELS
 const models = require('../../models/index');
@@ -36,6 +37,16 @@ module.exports = {
       return errorHelper(res, 404, { message: 'This filter does not exist' });
     }
     return next();
+  },
+   async ValidateIfArtExists(req, res, next){
+    const { id } = req.params
+    const objectId = mongoose.Types.ObjectId(id.toString());
+    const product = await models.Products.findById(objectId)
+    if(product){
+      req.product = product
+      return next()
+    }
+    return errorHelper(res, 404, 'Product does not exist')
   },
   validateArtSortType(req, res, next) {
     const { sortType } = req.query;

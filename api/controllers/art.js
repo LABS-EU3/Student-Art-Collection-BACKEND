@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { merge } = require("lodash");
 const { successResponse, errorHelper } = require("../helpers/response");
 const models = require("../../models");
 const artMail = require("../helpers/artmail");
@@ -98,24 +99,12 @@ module.exports = {
     }
   },
   async editArt(req, res, next) {
-    const { id } = req.params;
+    const { product } = req;
 
     try {
-      const objectId = mongoose.Types.ObjectId(id.toString());
-      const art = await models.Products.findOneAndUpdate(
-        { _id: objectId },
-        req.body,
-        { new: true }
-      );
-      if (art) {
-        return successResponse(res, 200, art);
-      }
+      const art = await merge(product, req.body).save();
 
-      return errorHelper(
-        res,
-        500,
-        "There was an error while trying to update this product"
-      );
+      return successResponse(res, 200, art);
     } catch (error) {
       return next(error);
     }
@@ -129,14 +118,17 @@ module.exports = {
       const objectId = mongoose.Types.ObjectId(id.toString());
       const isArt = await models.Transaction.findOne({ productId: objectId });
       if (isArt) {
-        return errorHelper(res, 403, "You cannot delete this Art because there is a transaction linked to it");
+        return errorHelper(
+          res,
+          403,
+          "You cannot delete this Art because there is a transaction linked to it"
+        );
       }
 
       const remove = await models.Products.deleteOne({ _id: objectId });
       if (remove) {
         return successResponse(res, 200, "Art has been deleted");
       }
-      
     } catch (error) {
       return next(error);
     }
@@ -144,18 +136,18 @@ module.exports = {
   async reduceArtQuantity(req, res, next) {
     const { id } = req.params;
     try {
-      let updatedModels = null
+      let updatedModels = null;
       const objectId = mongoose.Types.ObjectId(id.toString());
       const product = await models.Products.findById(objectId);
       const quantity = product.quantity;
-     
+
       if (quantity >= 1) {
         updatedModels = await models.Products.findByIdAndUpdate(
           objectId,
           { quantity: quantity - 1 },
           { new: true }
         );
-      }else {
+      } else {
         return errorHelper(res, 500, "Art is no longer for sale");
       }
       return successResponse(res, 200, updatedModels);
