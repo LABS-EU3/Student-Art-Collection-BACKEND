@@ -74,7 +74,7 @@ router.get(
   artcontroller.fetchArt
 );
 
-router.post('/buyart', [userValidator.validateUser],[artValidators.ValidateIfArtExists, artValidators.validateProductQuantity],artcontroller.buyerBuyArt)
+router.post('/buyart/:id', [userValidator.validateUser],[artValidators.ValidateIfArtExists, artValidators.validateProductQuantity],artcontroller.buyerBuyArt)
 router.put('/edit/:id', [userValidator.validateUser,artValidators.validateArtBody, artValidators.ValidateIfArtExists], artcontroller.editArt)
 
 
