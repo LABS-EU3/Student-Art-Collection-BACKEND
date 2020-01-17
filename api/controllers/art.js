@@ -169,13 +169,15 @@ module.exports = {
     const {product} = req;
     try {
       const quantity = product.quantity - req.body.quantity
-      const artToBuy = await models.Transaction.create(req.body)
+      const artToBuy = await models.Transaction.create(req.body).then(async (art) => {
+        if(art.status === 'completed') {
+           await models.order.create(req.body)
+        }
+      })
       merge(product,{quantity}).save();
       return successResponse(res, 201, artToBuy)
     } catch (error) {
       return next(error.message)
     }
-  
-
   }
 };
