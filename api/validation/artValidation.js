@@ -1,5 +1,6 @@
 // DEPENDENCIES
 const Validator = require('validatorjs');
+const mongoose = require('mongoose');
 
 // MODELS
 const models = require('../../models/index');
@@ -36,6 +37,16 @@ module.exports = {
     }
     return next();
   },
+  async ValidateIfArtExists(req, res, next) {
+    const { id } = req.params;
+    const objectId = mongoose.Types.ObjectId(id.toString());
+    const product = await models.Products.findById(objectId);
+    if (product) {
+      req.product = product;
+      return next();
+    }
+    return errorHelper(res, 404, 'Product does not exist');
+  },
   validateArtSortType(req, res, next) {
     const { sortType } = req.query;
     if (sortType !== 'asc' && sortType !== 'desc') {
@@ -46,7 +57,9 @@ module.exports = {
   },
   validatePagination(req, res, next) {
     req.query.page = !req.query.page ? 1 : parseInt(req.query.page, 10);
-    req.query.pagination = !req.query.pagination ? 12 : parseInt(req.query.pagination, 10);
+    req.query.pagination = !req.query.pagination
+      ? 12
+      : parseInt(req.query.pagination, 10);
     return next();
   },
   validateSort(req, res, next) {

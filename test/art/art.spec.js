@@ -1,6 +1,6 @@
-const request = require('supertest');
-const { Transaction, User } = require('../../models/index');
-const server = require('../../api/routes/index');
+const request = require("supertest");
+const { Transaction, User } = require("../../models/index");
+const server = require("../../api/routes/index");
 const {
   connectDB,
   cleanDB,
@@ -13,11 +13,11 @@ const {
   getTransaction,
   createOrders,
   disconnectDB
-} = require('../db');
+} = require("../db");
 
-const { generateToken } = require('../../api/helpers/jwt');
+const { generateToken } = require("../../api/helpers/jwt");
 
-describe('test for Schoolart endpoint', () => {
+describe("test for Schoolart endpoint", () => {
   beforeAll(() => {
     return connectDB();
   });
@@ -37,21 +37,21 @@ describe('test for Schoolart endpoint', () => {
     return disconnectDB();
   });
 
-  describe('Get /profile/mark', () => {
-    it('Transaction not found', async done => {
+  describe("Get /profile/mark", () => {
+    it("Transaction not found", async done => {
       const userInfo = await getUser();
       const token = await generateToken(userInfo);
       const response = await request(server)
-        .get('/profile/mark')
-        .set('authorization', token);
+        .get("/profile/mark")
+        .set("authorization", token);
 
       expect(response.status).toBe(401);
       done();
     });
   });
 
-  describe('Mark Art as collected', () => {
-    it('Should return sucess', async done => {
+  describe("Mark Art as collected", () => {
+    it("Should return sucess", async done => {
       try {
         const schoolInfo = await getUser();
         const retrieveTransaction = await getTransaction();
@@ -59,12 +59,12 @@ describe('test for Schoolart endpoint', () => {
         const token = await generateToken(schoolInfo);
         const response = await request(server)
           .get(`/profile/mark/${retrieveTransaction.id}`)
-          .set('authorization', token);
-        expect(orders.status).toBe('pending');
+          .set("authorization", token);
+        expect(orders.status).toBe("pending");
         expect(retrieveTransaction.totalAmount).toBe(100);
         expect(response.status).toBe(200);
       } catch (error) {
-        expect(error).toHaveProperty('status', 500);
+        expect(error).toHaveProperty("status", 500);
       } finally {
         done();
       }
@@ -79,7 +79,7 @@ describe('test for Schoolart endpoint', () => {
         const response = await request(server)
           .put(`/art/quantity/${retrieveProduct.id}`)
           .set("authorization", token);
-          
+
         expect(response.status).toBe(200);
       } catch (error) {
         expect(error).toHaveProperty("status", 404);
@@ -89,8 +89,8 @@ describe('test for Schoolart endpoint', () => {
     });
   });
 
-  describe('DELETE/art/product/:id', () => {
-    it('should not delete the art if in transaction schema', async done =>{
+  describe("DELETE/art/product/:id", () => {
+    it("should not delete the art if in transaction schema", async done => {
       try {
         const schoolInfo = await getUser();
         const retrieveProduct = await getProduct();
@@ -98,10 +98,57 @@ describe('test for Schoolart endpoint', () => {
         const response = await request(server)
           .delete(`/art/product/${retrieveProduct.id}`)
           .set("authorization", token);
-          expect(response.status).toBe(403);
-      }catch(error){
-        expect(error).toHaveProperty("status", 500)
-      }finally{ done() }
-    })
-  })
+        expect(response.status).toBe(403);
+      } catch (error) {
+        expect(error).toHaveProperty("status", 500);
+      } finally {
+        done();
+      }
+    });
+  });
+
+  describe("PUT/edit/:id", () => {
+    it("should not edit art if body is missing", async done => {
+      try {
+        const schoolInfo = await getUser();
+        const retrieveProduct = await getProduct();
+        const token = await generateToken(schoolInfo);
+        const response = await request(server)
+          .put(`/art/edit/${retrieveProduct.id}`)
+          .set("authorization", token).send({});
+        expect(response.status).toBe(401);
+      } catch (error) {
+        expect(error).toHaveProperty("status", 500);
+      } finally {
+        done();
+      }
+    });
+  });
+  describe("PUT/edit/:id", () => {
+    it("should edit art and return success", async done => {
+      try {
+        const schoolInfo = await getUser();
+        const retrieveProduct = await getProduct();
+        const token = await generateToken(schoolInfo);
+        const response = await request(server)
+          .put(`/art/edit/${retrieveProduct.id}`)
+          .set("authorization", token).send({
+            name: 'art',
+            height: 30,
+            width: 30,
+            quantity: 3,
+            artistName: 'John doe',
+            description: 'A very beautiful art',
+            price: 500000,
+            public_picture_id: '12345',
+            picture: '123456'
+          });
+        expect(response.status).toBe(200);
+      } catch (error) {
+        expect(error).toHaveProperty("status", 500);
+      } finally {
+        done();
+      }
+    });
+  });
 });
