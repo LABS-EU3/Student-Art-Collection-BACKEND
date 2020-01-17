@@ -1,10 +1,10 @@
-const express = require("express");
-const userValidators = require("../validation/userValidator");
-const { getArtById } = require('../controllers/art')
+const express = require('express');
+const userValidators = require('../validation/userValidator');
+const { getArtById } = require('../controllers/art');
 
 const router = express.Router();
 
-module.exports = router
+module.exports = router;
 // DEPENDENCIES
 const cloudinary = require('../middleware/cloudinary');
 
@@ -32,8 +32,11 @@ router.post(
   artcontroller.uploadArt
 );
 
-
-router.get('/sold/order/buyer/:id',[userValidator.validateUser],artcontroller.artBoughtCollection)
+router.get(
+  '/sold/order/buyer/:id',
+  [userValidator.validateUser],
+  artcontroller.artBoughtCollection
+);
 router.get(
   '/sold/order/:id',
   [userValidator.validateUser],
@@ -50,12 +53,7 @@ router.put(
   artcontroller.reduceArtQuantity
 );
 
-router.get(
-  "/selling/:id",
-  [userValidators.validateUser],
-  getArtById
-)
-
+router.get('/selling/:id', [userValidators.validateUser], getArtById);
 
 // SEARCH ART
 router.get(
@@ -70,11 +68,18 @@ router.get(
 );
 
 router.get(
-  '/transactions',
+  '/:id/transactions',
   [userValidator.validateUser],
   artcontroller.fetchTransactions
 );
-router.put('/edit/:id', [userValidator.validateUser,artValidators.validateArtBody, artValidators.ValidateIfArtExists], artcontroller.editArt)
-
+router.put(
+  '/edit/:id',
+  [
+    userValidator.validateUser,
+    artValidators.validateArtBody,
+    artValidators.ValidateIfArtExists
+  ],
+  artcontroller.editArt
+);
 
 module.exports = router;
