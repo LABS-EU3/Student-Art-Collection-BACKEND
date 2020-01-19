@@ -21,7 +21,7 @@ module.exports = {
 
     });
     if (validator.fails()) {
-      errorHelper(res, 401, { message: validator.errors.all() });
+      errorHelper(res, 400, { message: validator.errors.all() });
     } else next();
   },
   validateArtFilter(req, res, next) {
@@ -106,5 +106,19 @@ module.exports = {
   validateSearchQuery(req, res, next) {
     req.query.searchQuery = !req.query.searchQuery ? '' : req.query.searchQuery;
     return next();
+  },
+
+  validateProductBuyItem(req, res, next) {
+    const validator = new Validator(req.body, {
+      buyerId: 'required',
+      SchoolId: 'required',
+      quantity: 'required',
+      totalAmount: 'required'
+    });
+
+    if(validator.fails()) {
+      return errorHelper(res, 400, validator.errors.all())
+    }
+    return next()
   }
 };

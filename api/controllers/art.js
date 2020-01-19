@@ -202,9 +202,9 @@ module.exports = {
     const {product} = req;
     try {
       const quantity = product.quantity - req.body.quantity
-      const artToBuy = await models.Transaction.create(req.body).then(async (art) => {
+      const artToBuy = await models.Transaction.create({...req.body, productId: req.params.id}).then(async (art) => {
         if(art.status === 'completed') {
-           await models.order.create({...req.body, status: 'pending'})
+           await models.order.create({...req.body, status: 'pending',productId: req.params.id})
         }
       })
       merge(product,{quantity}).save();
