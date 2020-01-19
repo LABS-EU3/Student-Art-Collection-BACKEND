@@ -1,16 +1,14 @@
 const request = require('supertest');
-const UserModel = require('../../models/user');
 const ProductModel = require('../../models/product');
 const server = require('../../api/routes/index');
 const {
   connectDB,
   disconnectDB,
   cleanDB,
-  createUser,
-  getUser
 } = require('../db');
 
 const createProduct = async () => {
+  const user = {id: "5e24d82e4976111d3c9835c8"};
   const artData1 = {
     name: 'art1',
     height: 30,
@@ -19,7 +17,7 @@ const createProduct = async () => {
     artistName: 'John bellion',
     description: 'A very beautiful art',
     price: 299,
-    userId: await (await getUser()).id,
+    userId: user.id,
     public_picture_id: '12345',
     picture: '123456'
   };
@@ -31,7 +29,7 @@ const createProduct = async () => {
     artistName: 'John bellion',
     description: 'A very beautiful art',
     price: 499,
-    userId: await (await getUser()).id,
+    userId: "5e24d82e4976111d3c9835c9",
     public_picture_id: '12345',
     picture: '123456'
   };
@@ -43,14 +41,18 @@ const createProduct = async () => {
     artistName: 'John bellion',
     description: 'A very beautiful art',
     price: 599,
-    userId: await (await getUser()).id,
+    userId: "5e24d82e4976111d3c9835c0",
     public_picture_id: '12345',
     picture: '123456'
   };
-  const newArt3 = await ProductModel.create(artData3);
-  const newArt1 = await ProductModel.create(artData1);
-  const newArt2 = await ProductModel.create(artData2);
-  return newArt3 && newArt1 && newArt2;
+  try {
+    const product = await  Promise.all([ProductModel.create(artData1), ProductModel.create(artData2), ProductModel.create(artData3)]);
+    return product;
+    
+  } catch (error) {
+    console.error(error, 'error')
+    return error
+  }
 };
 
 describe('search art unit', () => {
@@ -58,10 +60,8 @@ describe('search art unit', () => {
     return connectDB();
   });
 
-  beforeEach(async () => {
-    const user = await createUser();
-    const product = await createProduct();
-    return user && product;
+  beforeEach( () => {
+    return createProduct();
   });
 
   afterEach(() => {
@@ -71,7 +71,7 @@ describe('search art unit', () => {
   afterAll(() => {
     return disconnectDB();
   });
-  xdescribe('', () => {
+  describe('', () => {
     it('returns sorted results when passing sort desc and filter by name params', async done => {
       const response = await request(server).get(
         '/art/search?sortBy=name&sortType=desc'
@@ -90,8 +90,7 @@ describe('search art unit', () => {
     });
     it('returns results sorted by id when no sortby or filter params are passed', async done => {
       const response = await request(server).get('/art/search');
-      expect(response.body.art[0].name).toBe('art2');
-      expect(response.body.art[2].name).toBe('art3');
+      expect(response.body.art[0].name).toBe('art3');
       done();
     });
     it('returns 404 when an invalid sortby value is passed', async done => {
