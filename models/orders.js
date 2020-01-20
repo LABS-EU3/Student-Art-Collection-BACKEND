@@ -19,12 +19,12 @@ const orderSchema = new mongoose.Schema(
     buyerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "buyer",
-      unique: true
+      required: true
     },
     schoolId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "school",
-      unique: true
+      required: true
     },
   },
   { timestamps: true }
