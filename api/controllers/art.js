@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const mongoose = require("mongoose");
 const { merge } = require("lodash");
 const { successResponse, errorHelper } = require("../helpers/response");
@@ -201,7 +202,7 @@ module.exports = {
       const quantity = product.quantity - req.body.quantity
       const artToBuy = await models.Transaction.create({...req.body, productId: req.params.id}).then(async (art) => {
         if(art.status === 'completed') {
-           await models.order.create({...req.body, status: 'pending',productId: req.params.id})
+           await models.order.create({...req.body, status: 'pending',productId: req.params.id, transactionId: art._id})
         }
       })
       merge(product,{quantity}).save();
