@@ -107,10 +107,8 @@ module.exports = {
   },
   async editArt(req, res, next) {
     const { product } = req;
-
     try {
       const art = await merge(product, req.body).save();
-
       return successResponse(res, 200, art);
     } catch (error) {
       return next(error);

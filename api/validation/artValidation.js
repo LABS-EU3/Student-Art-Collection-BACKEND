@@ -111,7 +111,7 @@ module.exports = {
   validateProductBuyItem(req, res, next) {
     const validator = new Validator(req.body, {
       buyerId: 'required',
-      SchoolId: 'required',
+      schoolId: 'required',
       quantity: 'required',
       totalAmount: 'required'
     });
