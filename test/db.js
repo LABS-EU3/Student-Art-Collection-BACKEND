@@ -129,7 +129,7 @@ const createTransaction = async () => {
   const transactionData = {
     productId: await (await getProduct()).id,
     buyerId: buyer._id,
-    schoolId: await (await getUser()).id,
+    schoolId: '5e24d82e4976111d3c9835z2',
     status: 'completed',
     quantity: 1,
     totalAmount: 100

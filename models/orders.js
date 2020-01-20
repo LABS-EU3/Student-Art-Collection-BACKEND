@@ -19,12 +19,12 @@ const orderSchema = new mongoose.Schema(
     buyerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "buyer",
-      required: true
+      // required: true
     },
     schoolId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "school",
-      required: true
+      // required: true
     },
   },
   { timestamps: true }

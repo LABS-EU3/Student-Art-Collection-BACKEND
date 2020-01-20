@@ -64,6 +64,7 @@ describe("test for Schoolart endpoint", () => {
         expect(retrieveTransaction.totalAmount).toBe(100);
         expect(response.status).toBe(200);
       } catch (error) {
+        console.error(error)
         expect(error).toHaveProperty("status", 500);
       } finally {
         done();
