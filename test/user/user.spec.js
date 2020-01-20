@@ -34,7 +34,7 @@ describe("test for user endpoint", () => {
 
   describe("POST /uploade/:id", () => {
     it("should upload a user photo", async done => {
-      jest.setTimeout(20000);
+      jest.setTimeout(40000);
       jest
         .spyOn(cloudinary, "uploadImage")
         .mockResolvedValue({ success: true });
