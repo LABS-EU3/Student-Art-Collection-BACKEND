@@ -15,5 +15,7 @@ module.exports = {
     FRONTEND_BASE_URL: process.env.FRONTEND_BASE_URL,
     CLOUD_NAME: process.env.CLOUD_NAME,
 	API_KEY: process.env.API_KEY,
-	API_SECRET: process.env.API_SECRET,
+    API_SECRET: process.env.API_SECRET,
+    SENDGRID_USERNAME:process.env.SENDGRID_USERNAME,
+    SENDGRID_PASSWORD:process.env.SENDGRID_PASSWORD
 }
