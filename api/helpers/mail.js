@@ -3,17 +3,28 @@ const Mailgen = require('mailgen');
 const secret = require('../../config/keys');
 const { type, intro, instructions, button, outro, subject  } = require('./mailText')
 
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    requireTLS: true,
-    auth: {
-      type: type.FirstType,
-      user: secret.USER_MAIL,
-      pass: secret.PASSWORD_MAIL
-    }
-  });
+let transporter;
+if(process.env.NODE_ENV === "test") {
+  transporter = nodemailer.createTransport({
+     host: 'smtp.gmail.com',
+     port: 465,
+     secure: true,
+     requireTLS: true,
+     auth: {
+       type: type.FirstType,
+       user: secret.USER_MAIL,
+       pass: secret.PASSWORD_MAIL
+     }
+   });
+  } else {
+    transporter = nodemailer.createTransport({
+          service: 'SendGrid',
+          auth: {
+            user: secret.SENDGRID_USERNAME,
+            pass: secret.SENDGRID_PASSWORD
+          }
+        })
+  }
 async function sendEmailConfirmAccount(user, token, url) {
   
     const mailGenerator = new Mailgen({
