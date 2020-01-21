@@ -10,7 +10,6 @@ async function passwordResetMail(url, token, email, name) {
     product: {
       name: 'ArtFinder',
       link: `${url}`,
-    
     }
   });
   const mail = {

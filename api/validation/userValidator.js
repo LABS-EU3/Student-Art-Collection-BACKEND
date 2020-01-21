@@ -85,7 +85,7 @@ module.exports = {
       password: "required|min:8"
     });
     if (validator.fails()) {
-      return errorHelper(res, 400, "Password must be at least 5 characters");
+      return errorHelper(res, 400, "Password must be at least 8 characters");
     }
 
     return next();
