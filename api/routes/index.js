@@ -3,6 +3,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const passport = require('passport');
+const logger = require('morgan');
 
 // ROUTES
 const UserauthRoute = require('./authroute');
@@ -13,9 +14,10 @@ const {authCallbackStrategy} = require('../middleware/googleStrategy');
 
 const app = express();
 
-app.use(bodyParser.json());
 app.use(helmet());
 app.use(cors());
+app.use(logger('dev'));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 passport.serializeUser((user, done) => {

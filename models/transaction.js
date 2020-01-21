@@ -5,19 +5,18 @@ const transactionSchema = new mongoose.Schema({
     productId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'product',
-        unique: true
+        // required: [true, 'Transaction must have a product']
     },
    buyerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "buyer",
-        unique: true
+        // required: [true, 'Transaction must have a buyer']
     },
     SchoolId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "school",
-        unique: true
+        // required: [true, 'Transaction must have a school']
     },
-
     status: {
         type: String,
         required: true,

@@ -32,6 +32,11 @@ router.post(
   artcontroller.uploadArt
 );
 
+// FETCH ALL ART WITH PAGINATION INCLUDED
+router.get('/', artcontroller.fetchArt);
+router.get('/sold/order/:id',artcontroller.artSoldCollection)
+router.delete('/product/:id', [userValidator.validateUser], artcontroller.deleteArt);
+router.put('/quantity/:id', [userValidator.validateUser], artcontroller.reduceArtQuantity)
 
 router.get('/sold/order/buyer/:id',[userValidator.validateUser],artcontroller.artBoughtCollection)
 router.get(
@@ -69,6 +74,7 @@ router.get(
   artcontroller.fetchArt
 );
 
+router.post('/buyart/:id', [userValidator.validateUser],[artValidators.ValidateIfArtExists, artValidators.validateProductBuyItem,artValidators.validateProductQuantity],artcontroller.buyerBuyArt)
 router.put('/edit/:id', [userValidator.validateUser,artValidators.validateArtBody, artValidators.ValidateIfArtExists], artcontroller.editArt)
 
 

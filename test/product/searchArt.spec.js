@@ -1,14 +1,13 @@
 const request = require('supertest');
-const ProductModel = require('../../models/product');
 const server = require('../../api/routes/index');
 const {
   connectDB,
   disconnectDB,
   cleanDB,
   createProduct,
-  createUser,
   getProduct,
-  getUser
+  getUser,
+  createUser
 } = require('../db');
 
 describe('search art unit testing', () => {

@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const mongoose = require("mongoose");
 const { merge } = require("lodash");
 const { successResponse, errorHelper } = require("../helpers/response");
@@ -40,7 +41,7 @@ module.exports = {
   },
 
   async uploadArt(req, res, next) {
-    const { id } = req.param;
+    const { id } = req.params;
     const { file } = req;
     try {
       const newArt = await models.Products.create({
@@ -106,10 +107,8 @@ module.exports = {
   },
   async editArt(req, res, next) {
     const { product } = req;
-
     try {
       const art = await merge(product, req.body).save();
-
       return successResponse(res, 200, art);
     } catch (error) {
       return next(error);
@@ -120,9 +119,6 @@ module.exports = {
     try {
       const { id } = req.params;
       const products = await models.Products.find({ userId: id }).exec();
-      if (!products.length) {
-        return successResponse(res, 200, "No products for sale");
-      }
       return successResponse(res, 200, products);
     } catch (error) {
       return next(error.message);
@@ -195,6 +191,22 @@ module.exports = {
       });
     } catch (error) {
       return next(error.message);
+    }
+  },
+
+  async buyerBuyArt(req, res, next) {
+    const {product} = req;
+    try {
+      const quantity = product.quantity - req.body.quantity
+      const artToBuy = await models.Transaction.create({...req.body, productId: req.params.id}).then(async (art) => {
+        if(art.status === 'completed') {
+           await models.order.create({...req.body, status: 'pending',productId: req.params.id, transactionId: art._id})
+        }
+      })
+      merge(product,{quantity}).save();
+      return successResponse(res, 201, artToBuy)
+    } catch (error) {
+      return next(error.message)
     }
   }
 };

@@ -45,8 +45,7 @@ const productSchema = new mongoose.Schema(
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "school",
-    
+      ref: "school"
     },
     description: {
       type: String,
