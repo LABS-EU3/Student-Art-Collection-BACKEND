@@ -116,7 +116,7 @@ FRONTEND_BASE_URL
 
 ## Endpoints
 
-WIP
+https://documenter.getpostman.com/view/8733024/SWT7DL6j?version=latest
 
 ## Contributing
 
