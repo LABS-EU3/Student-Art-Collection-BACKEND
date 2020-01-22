@@ -27,19 +27,14 @@ async function sendContactMail({ name, email, message }) {
     
 
     const mailOption = {
-        from: secret.USER_MAIL,
+        from: "studentart-contactpage@art-funder.com",
         to: secret.USER_MAIL,
         subject: subject.third,
         html: emailBody,
         text: emailText
     };
-
-    try {
-        const passwordMail = await transporter().sendMail(mailOption);
-        return passwordMail;
-    } catch (error) {
-        return error.message;
-    }
+    const passwordMail = await transporter().sendMail(mailOption);
+    return passwordMail;
 }
 
 module.exports = { sendContactMail };

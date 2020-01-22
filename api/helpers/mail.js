@@ -41,12 +41,8 @@ async function sendEmailConfirmAccount(user, token, url) {
         html: emailBody,
         text: emailText
       };
-        try {
-          const confirmMail = await transporter().sendMail(mailOption);
-          return confirmMail;
-        } catch (error) {
-          return error.message
-        }
+        const confirmMail = await transporter().sendMail(mailOption);
+        return confirmMail;
 }
 
 module.exports = {sendEmailConfirmAccount}

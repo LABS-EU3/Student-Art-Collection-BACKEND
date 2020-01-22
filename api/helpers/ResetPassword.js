@@ -39,13 +39,8 @@ async function passwordResetMail(url, token, email, name) {
     html: emailBody,
     text: emailText
   };
-
-  try {
     const passwordMail = await transporter().sendMail(mailOption);
     return passwordMail;
-  } catch (error) {
-    return error.message;
-  }
 }
 
 module.exports = { passwordResetMail };
