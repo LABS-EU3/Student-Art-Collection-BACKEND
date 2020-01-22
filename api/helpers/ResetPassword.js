@@ -1,7 +1,6 @@
-const nodemailer = require('nodemailer');
 const Mailgen = require('mailgen');
-const secret = require('../../config/keys');
-const { type, intro, instructions, button, outro, subject  } = require('./mailText')
+const transporter = require('./transporter');
+const {  intro, instructions, button, outro, subject  } = require('./mailText')
 
 
 async function passwordResetMail(url, token, email, name) {
@@ -32,16 +31,6 @@ async function passwordResetMail(url, token, email, name) {
   const emailBody = mailGenerator.generate(mail);
 
   const emailText = mailGenerator.generatePlaintext(mail);
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    // requireTLS: true
-    auth: {
-      user: secret.USER_MAIL,
-      pass: secret.PASSWORD_MAIL
-    }
-  });
 
   const mailOption = {
     from: 'studentartcollectionlabseu3@gmail.com',
@@ -52,7 +41,7 @@ async function passwordResetMail(url, token, email, name) {
   };
 
   try {
-    const passwordMail = await transporter.sendMail(mailOption);
+    const passwordMail = await transporter().sendMail(mailOption);
     return passwordMail;
   } catch (error) {
     return error.message;

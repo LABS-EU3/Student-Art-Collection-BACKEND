@@ -1,7 +1,7 @@
-const nodemailer = require('nodemailer');
 const Mailgen = require('mailgen');
 const secret = require('../../config/keys');
-const { subject } = require('./mailText')
+const { subject } = require('./mailText');
+const transporter = require('./transporter');
 
 
 
@@ -24,16 +24,7 @@ async function sendContactMail({ name, email, message }) {
     const emailBody = mailGenerator.generate(mail);
 
     const emailText = mailGenerator.generatePlaintext(mail);
-    const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
-        // requireTLS: true
-        auth: {
-            user: secret.USER_MAIL,
-            pass: secret.PASSWORD_MAIL
-        }
-    });
+    
 
     const mailOption = {
         from: secret.USER_MAIL,
@@ -44,7 +35,7 @@ async function sendContactMail({ name, email, message }) {
     };
 
     try {
-        const passwordMail = await transporter.sendMail(mailOption);
+        const passwordMail = await transporter().sendMail(mailOption);
         return passwordMail;
     } catch (error) {
         return error.message;
