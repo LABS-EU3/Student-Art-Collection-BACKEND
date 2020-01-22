@@ -26,7 +26,7 @@ if(process.env.NODE_ENV === "test") {
         })
   }
 async function sendEmailConfirmAccount(user, token, url) {
-  
+    console.log('hellllloooooooo')
     const mailGenerator = new Mailgen({
         theme: 'default',
         product: {
@@ -64,8 +64,8 @@ async function sendEmailConfirmAccount(user, token, url) {
       };
         try {
           const confirmMail = await transporter.sendMail(mailOption);
+          console.log('Ezekielllllll')
           return confirmMail;
-          
         } catch (error) {
           console.error(error);
           return error
