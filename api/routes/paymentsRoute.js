@@ -9,7 +9,7 @@ const router = express.Router();
 router.use(express.json());
 
 router.post(
-  '/fetchcredentials',
+  '/fetchcredentials/:id',
   paymentscontroller.fetchConnectedAccountCredentials
 );
 
