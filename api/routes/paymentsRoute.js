@@ -6,6 +6,7 @@ const paymentscontroller = require('../controllers/payments');
 
 // VALIDATORS
 const userValidator = require('../validation/userValidator');
+const artValidators = require('../validation/artValidation');
 
 const router = express.Router();
 
@@ -18,8 +19,13 @@ router.post(
 );
 
 router.post(
-  '/paymentintent',
-  userValidator.validateUser,
+  '/:id/paymentintent',
+  [
+    userValidator.validateUser,
+    artValidators.ValidateIfArtExists,
+    artValidators.validateProductBuyItem,
+    artValidators.validateProductQuantity
+  ],
   paymentscontroller.createPaymentIntent
 );
 

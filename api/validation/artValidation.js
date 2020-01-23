@@ -1,6 +1,6 @@
 // DEPENDENCIES
 const Validator = require('validatorjs');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 // MODELS
 const models = require('../../models/index');
@@ -18,7 +18,6 @@ module.exports = {
       price: 'required',
       description: 'required',
       artistName: 'required'
-
     });
     if (validator.fails()) {
       errorHelper(res, 400, { message: validator.errors.all() });
@@ -38,25 +37,25 @@ module.exports = {
     }
     return next();
   },
-   async ValidateIfArtExists(req, res, next){
-    const { id } = req.params
+  async ValidateIfArtExists(req, res, next) {
+    const { id } = req.params;
     const objectId = mongoose.Types.ObjectId(id.toString());
-    const product = await models.Products.findById(objectId)
-    if(product){
-      req.product = product
-      return next()
+    const product = await models.Products.findById(objectId);
+    if (product) {
+      req.product = product;
+      return next();
     }
-    return errorHelper(res, 404, 'Product does not exist')
+    return errorHelper(res, 404, 'Product does not exist');
   },
   async validateProductQuantity(req, res, next) {
     try {
-      const product = { req }
-      if(req.body.quantity > product.quantity) {
-        return errorHelper(res, 403, {message: 'cannot buy such quantity'})
+      const product = { req };
+      if (req.body.quantity > product.quantity) {
+        return errorHelper(res, 403, { message: 'cannot buy such quantity' });
       }
-      return next()
+      return next();
     } catch (error) {
-      return next(error.message)
+      return next(error.message);
     }
   },
   validateArtSortType(req, res, next) {
@@ -75,7 +74,9 @@ module.exports = {
   },
   validatePagination(req, res, next) {
     req.query.page = !req.query.page ? 1 : parseInt(req.query.page, 10);
-    req.query.pagination = !req.query.pagination ? 12 : parseInt(req.query.pagination, 10);
+    req.query.pagination = !req.query.pagination
+      ? 12
+      : parseInt(req.query.pagination, 10);
     return next();
   },
   validateSort(req, res, next) {
@@ -116,9 +117,9 @@ module.exports = {
       totalAmount: 'required'
     });
 
-    if(validator.fails()) {
-      return errorHelper(res, 400, validator.errors.all())
+    if (validator.fails()) {
+      return errorHelper(res, 400, validator.errors.all());
     }
-    return next()
+    return next();
   }
 };

@@ -35,23 +35,28 @@ module.exports = {
   },
 
   async createPaymentIntent(req, res, next) {
-    const { price, currency, stripeUserId } = req.body;
+    const { totalAmount, currency, stripeUserId } = req.body;
     try {
       const paymentIntent = await stripe.paymentIntents.create(
         {
           payment_method_types: ['card'],
-          amount: price * 100,
+          amount: totalAmount * 100, // converts price in cents, as required by Stripe's API
           currency
         },
         {
           stripeAccount: stripeUserId
         }
       );
-
       const clientSecret = paymentIntent.client_secret;
+      const transaction = await models.Transaction.create({
+        ...req.body,
+        productId: req.params.id,
+        status: 'pending'
+      });
       successResponse(res, 200, {
-        message: 'Payment Intent created succesfully',
-        clientSecret
+        message: 'Payment Intent created successfully',
+        clientSecret,
+        transaction
       });
     } catch (error) {
       next(error.message);
