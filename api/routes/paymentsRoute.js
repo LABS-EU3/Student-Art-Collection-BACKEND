@@ -29,4 +29,6 @@ router.post(
   paymentscontroller.createPaymentIntent
 );
 
+router.post('/hooks', paymentscontroller.stripeWebhooks);
+
 module.exports = router;

@@ -61,5 +61,23 @@ module.exports = {
     } catch (error) {
       next(error.message);
     }
+  },
+  async stripeWebhooks(req, res, next) {
+    const event = req.body;
+    try {
+      switch (event.type) {
+        case 'charge.succeeded':
+          successResponse(res, 200, {});
+          break;
+        case 'payment_intent.succeeded':
+          const { client_secret } = event.data.object;
+          successResponse(res, 200, {});
+          break;
+        default:
+          res.status(400).end();
+      }
+    } catch (error) {
+      errorHelper(res, 500, error);
+    }
   }
 };
