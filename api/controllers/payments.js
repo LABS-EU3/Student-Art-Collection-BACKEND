@@ -1,11 +1,15 @@
-const config = require('../../config/keys');
-
 // DEPENDENCIES
-const stripe = require('stripe')(config.STRIPE_API_KEY);
+const stripeapi = require('stripe');
 const mongoose = require('mongoose');
 
 // MODELS
 const models = require('../../models/index');
+
+// HELPERS
+const config = require('../../config/keys');
+const { errorHelper, successResponse } = require('../helpers/response');
+
+const stripe = stripeapi(config.STRIPE_API_KEY);
 
 module.exports = {
   async fetchConnectedAccountCredentials(req, res, next) {
@@ -24,28 +28,33 @@ module.exports = {
         },
         { new: true }
       );
-      res.status(200).json(school);
+      successResponse(res, 200, school);
     } catch (error) {
-      res.status(500).json(error.message);
+      next(error.message);
+    }
+  },
+
+  async createPaymentIntent(req, res, next) {
+    const { price, currency, stripeUserId } = req.body;
+    try {
+      const paymentIntent = await stripe.paymentIntents.create(
+        {
+          payment_method_types: ['card'],
+          amount: price * 100,
+          currency
+        },
+        {
+          stripeAccount: stripeUserId
+        }
+      );
+
+      const clientSecret = paymentIntent.client_secret;
+      successResponse(res, 200, {
+        message: 'Payment Intent created succesfully',
+        clientSecret
+      });
+    } catch (error) {
+      next(error.message);
     }
   }
-
-  //   async makePaymentConnectedAccount(req, res, next) {
-  //     const { price, currency, stripeUserId } = req.body;
-  //     try {
-  //       const paymentIntent = stripe.paymentIntents.create(
-  //         {
-  //           payment_method_types: ['card'],
-  //           amount: price * 100,
-  //           currency
-  //         },
-  //         {
-  //           stripe_account: stripeUserId
-  //         }
-  //       );
-  //       res.status(200).json(paymentIntent);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
 };

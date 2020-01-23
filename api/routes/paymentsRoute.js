@@ -17,4 +17,10 @@ router.post(
   paymentscontroller.fetchConnectedAccountCredentials
 );
 
+router.post(
+  '/paymentintent',
+  userValidator.validateUser,
+  paymentscontroller.createPaymentIntent
+);
+
 module.exports = router;
