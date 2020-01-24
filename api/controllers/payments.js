@@ -8,6 +8,7 @@ const models = require('../../models/index');
 // HELPERS
 const config = require('../../config/keys');
 const { errorHelper, successResponse } = require('../helpers/response');
+const artMail = require('../helpers/artmail');
 
 const stripe = stripeapi(config.STRIPE_API_KEY);
 
@@ -78,14 +79,23 @@ module.exports = {
             { status: 'completed' },
             { new: true }
           );
-          await models.order.create({
-            transactionId: transaction.id,
-            productId: metadata.product.id,
-            buyerId: metadata.buyer.id,
-            SchoolId: metadata.school.id,
-            status: 'completed',
-            totalAmount: intent.amount / 100
-          });
+
+          if (transaction) {
+            await models.order.create({
+              transactionId: transaction.id,
+              productId: metadata.product.id,
+              buyerId: metadata.buyer.id,
+              SchoolId: metadata.school.id,
+              status: 'completed',
+              totalAmount: intent.amount / 100
+            });
+            artMail(
+              config.FRONTEND_BASE_URL,
+              metadata.user.email,
+              metadata.buyer.firstname,
+              transaction.productId
+            );
+          }
           break;
         }
         case 'payment_intent.payment_failed': {
