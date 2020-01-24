@@ -17,13 +17,12 @@ const schoolSchema = new mongoose.Schema(
     },
     location: {
       type: String
-    },
-    stripe_user_id: {
-      type: String
     }
   },
   { timestamps: true }
 );
+
+schoolSchema.add({ stripe_user_id: String });
 
 schoolSchema.indexes({ location: 1, name: 1 }, { unique: true });
 

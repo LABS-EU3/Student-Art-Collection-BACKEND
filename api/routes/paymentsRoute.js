@@ -13,13 +13,13 @@ const router = express.Router();
 router.use(express.json());
 
 router.post(
-  '/fetchcredentials/:id',
+  '/fetchcredentials',
   [userValidator.validateUser],
   paymentscontroller.fetchConnectedAccountCredentials
 );
 
 router.post(
-  '/:id/paymentintent',
+  '/paymentintent',
   [
     userValidator.validateUser,
     artValidators.ValidateIfArtExists,
