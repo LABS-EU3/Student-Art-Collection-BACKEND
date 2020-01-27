@@ -19,7 +19,7 @@ router.post(
 );
 
 router.post(
-  '/paymentintent',
+  '/:id/paymentintent',
   [
     userValidator.validateUser,
     artValidators.ValidateIfArtExists,

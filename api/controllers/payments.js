@@ -35,14 +35,13 @@ module.exports = {
   },
 
   async createPaymentIntent(req, res, next) {
-    const { totalAmount, stripeUserId, metadata } = req.body;
+    const { totalAmount, stripeUserId} = req.body;
     try {
       const paymentIntent = await stripe.paymentIntents.create(
         {
           payment_method_types: ['card'],
           amount: totalAmount * 100, // converts price in cents, as required by Stripe's API
-          currency: 'usd',
-          metadata
+          currency: 'usd'
         },
         {
           stripeAccount: stripeUserId
@@ -78,7 +77,10 @@ module.exports = {
             { paymentIntentId },
             { status: 'completed' },
             { new: true }
-          );
+          )
+            .populate('buyerId')
+            .populate('SchoolId')
+            .populate('productId');
 
           if (transaction) {
             await models.order.create({
