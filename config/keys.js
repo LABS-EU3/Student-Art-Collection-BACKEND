@@ -17,5 +17,7 @@ module.exports = {
 	API_KEY: process.env.API_KEY,
     API_SECRET: process.env.API_SECRET,
     SENDGRID_USERNAME:process.env.SENDGRID_USERNAME,
-    SENDGRID_PASSWORD:process.env.SENDGRID_PASSWORD
+    SENDGRID_PASSWORD:process.env.SENDGRID_PASSWORD,
+    GEO_API_KEY: process.env.GEOCODER_API_KEY,
+    GEO_PROVIDER: process.env.GEOCODER_PROVIDER
 }
