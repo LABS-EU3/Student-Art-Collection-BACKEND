@@ -47,7 +47,7 @@ module.exports = {
           stripeAccount: stripeUserId
         }
       );
-      const clientSecret = paymentIntent.client_secret;
+      const git = paymentIntent.client_secret;
       const paymentIntentId = paymentIntent.id;
       const transaction = await models.Transaction.create({
         ...req.body,
