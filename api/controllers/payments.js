@@ -35,14 +35,15 @@ module.exports = {
   },
 
   async createPaymentIntent(req, res, next) {
-    const { totalAmount, stripeUserId } = req.body;
+    const { totalAmount, stripeUserId, metadata } = req.body;
     const SchoolId = req.body.schoolId;
     try {
       const paymentIntent = await stripe.paymentIntents.create(
         {
           payment_method_types: ['card'],
           amount: totalAmount * 100, // converts price in cents, as required by Stripe's API
-          currency: 'usd'
+          currency: 'usd',
+          metadata
         },
         {
           stripeAccount: stripeUserId
@@ -70,6 +71,7 @@ module.exports = {
     const event = req.body;
     const intent = event.data.object;
     const paymentIntentId = intent.id;
+    const soldQuantity = intent.metadata.quantity;
     try {
       switch (event.type) {
         case 'payment_intent.succeeded': {
@@ -104,6 +106,11 @@ module.exports = {
                   status: 'pending',
                   totalAmount: intent.amount / 100
                 }),
+                models.Products.findOneAndUpdate(
+                  { _id: transaction.productId._id },
+                  { quantity: transaction.productId.quantity - soldQuantity },
+                  { new: true }
+                ),
                 paymentsMail.artPurchaseConfirmationMailBuyer(
                   config.FRONTEND_BASE_URL,
                   transaction.buyerId.userId.email,
