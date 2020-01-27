@@ -71,7 +71,13 @@ module.exports = {
       })
         .sort({ [sortBy]: sortType })
         .skip((page - 1) * pagination)
-        .limit(pagination);
+        .limit(pagination)
+        .populate({
+          path:'userId',
+          populate : {
+            path: 'userId'
+          }
+        });
       const totalCount = await models.Products.find({
         [filter]: { $regex: searchQuery, $options: 'i' }
       }).countDocuments();
