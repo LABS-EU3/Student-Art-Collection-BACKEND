@@ -24,7 +24,7 @@ module.exports = {
         first: 'If you did not signup to ArtFinder, no further action is required on your part.',
         second:  'If you did not request a password reset, no further action is required on your part.',
         third: "Thank You for your purchase. The school will get in touch with you shortly to arrange collection of the item purchased.",
-        fourth: "Your payment was nt succesful. Please try again."
+        fourth: "Your payment was not succesful. Please try again."
     },
     subject : {
         first: "Confirm your email",

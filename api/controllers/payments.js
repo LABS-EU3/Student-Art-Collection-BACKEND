@@ -8,7 +8,7 @@ const models = require('../../models/index');
 // HELPERS
 const config = require('../../config/keys');
 const { errorHelper, successResponse } = require('../helpers/response');
-const artMail = require('../helpers/artmail');
+const paymentsMail = require('../helpers/paymentsmail');
 
 const stripe = stripeapi(config.STRIPE_API_KEY);
 
@@ -35,7 +35,8 @@ module.exports = {
   },
 
   async createPaymentIntent(req, res, next) {
-    const { totalAmount, stripeUserId} = req.body;
+    const { totalAmount, stripeUserId } = req.body;
+    const SchoolId = req.body.schoolId;
     try {
       const paymentIntent = await stripe.paymentIntents.create(
         {
@@ -47,10 +48,11 @@ module.exports = {
           stripeAccount: stripeUserId
         }
       );
-      const git = paymentIntent.client_secret;
+      const clientSecret = paymentIntent.client_secret;
       const paymentIntentId = paymentIntent.id;
       const transaction = await models.Transaction.create({
         ...req.body,
+        SchoolId,
         productId: req.params.id,
         status: 'pending',
         paymentIntentId
@@ -68,7 +70,6 @@ module.exports = {
     const event = req.body;
     const intent = event.data.object;
     const paymentIntentId = intent.id;
-    const metadata = intent.metadata;
     try {
       switch (event.type) {
         case 'payment_intent.succeeded': {
@@ -78,34 +79,102 @@ module.exports = {
             { status: 'completed' },
             { new: true }
           )
-            .populate('buyerId')
-            .populate('SchoolId')
+            .populate({
+              path: 'buyerId',
+              populate: {
+                path: 'userId'
+              }
+            })
+            .populate({
+              path: 'SchoolId',
+              populate: {
+                path: 'userId'
+              }
+            })
             .populate('productId');
 
           if (transaction) {
-            await models.order.create({
-              transactionId: transaction.id,
-              productId: metadata.product.id,
-              buyerId: metadata.buyer.id,
-              SchoolId: metadata.school.id,
-              status: 'completed',
-              totalAmount: intent.amount / 100
-            });
-            artMail(
-              config.FRONTEND_BASE_URL,
-              metadata.user.email,
-              metadata.buyer.firstname,
-              transaction.productId
-            );
+            try {
+              await Promise.all([
+                models.order.create({
+                  transactionId: transaction._id,
+                  productId: transaction.productId._id,
+                  buyerId: transaction.buyerId._id,
+                  SchoolId: transaction.SchoolId._id,
+                  status: 'pending',
+                  totalAmount: intent.amount / 100
+                }),
+                paymentsMail.artPurchaseConfirmationMailBuyer(
+                  config.FRONTEND_BASE_URL,
+                  transaction.buyerId.userId.email,
+                  transaction.buyerId.firstname,
+                  transaction.productId
+                ),
+                paymentsMail.artPurchaseConfirmationMailSchool(
+                  config.FRONTEND_BASE_URL,
+                  transaction.SchoolId.userId.email,
+                  transaction.SchoolId.name,
+                  transaction.productId
+                )
+              ]);
+              // await models.order.create({
+              //   transactionId: transaction._id,
+              //   productId: transaction.productId._id,
+              //   buyerId: transaction.buyerId._id,
+              //   SchoolId: transaction.SchoolId._id,
+              //   status: 'pending',
+              //   totalAmount: intent.amount / 100
+              // });
+              // await paymentsMail.artPurchaseConfirmationMail(
+              //   config.FRONTEND_BASE_URL,
+              //   transaction.buyerId.userId.email,
+              //   transaction.buyerId.firstname,
+              //   transaction.productId
+              // );
+              // await paymentsMail.artPurchaseConfirmationMail(
+              //   config.FRONTEND_BASE_URL,
+              //   transaction.SchoolId.userId.email,
+              //   transaction.SchoolId.name,
+              //   transaction.productId
+              // );
+            } catch (error) {
+              console.log(error.message);
+            }
           }
           break;
         }
         case 'payment_intent.payment_failed': {
           successResponse(res, 200, {});
-          await models.Transaction.findOneAndUpdate(
+          const transaction = await models.Transaction.findOneAndUpdate(
             { paymentIntentId },
-            { status: 'failed' }
-          );
+            { status: 'failed' },
+            { new: true }
+          )
+            .populate({
+              path: 'buyerId',
+              populate: {
+                path: 'userId'
+              }
+            })
+            .populate({
+              path: 'SchoolId',
+              populate: {
+                path: 'userId'
+              }
+            })
+            .populate('productId');
+          if (transaction) {
+            try {
+              await paymentsMail.artPurchaseFailureMail(
+                config.FRONTEND_BASE_URL,
+                transaction.buyerId.userId.email,
+                transaction.buyerId.firstname,
+                transaction.productId
+              );
+            } catch (error) {
+              console.log(error);
+            }
+          }
           break;
         }
         default: {
