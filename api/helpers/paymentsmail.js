@@ -79,7 +79,13 @@ module.exports = {
     const passwordMail = await transporter().sendMail(mailOption);
     return passwordMail;
   },
-  async artPurchaseConfirmationMailSchool(url, email, name, product) {
+  async artPurchaseConfirmationMailSchool(
+    url,
+    schoolEmail,
+    buyerEmail,
+    name,
+    product
+  ) {
     const mailGenerator = new Mailgen({
       theme: 'default',
       product: {
@@ -90,7 +96,7 @@ module.exports = {
     const mail = {
       body: {
         name,
-        intro: intro.third,
+        intro: intro.fifth,
         table: {
           data: [
             {
@@ -111,11 +117,10 @@ module.exports = {
           }
         },
 
-        outro: outro.third
+        outro: `${outro.fifth}: ${buyerEmail}.`
       }
     };
     const emailBody = mailGenerator.generate(mail);
-    console.log(email, '<< email of buyer');
 
     const emailText = mailGenerator.generatePlaintext(mail);
     // const transporter = nodemailer.createTransport({
@@ -145,8 +150,8 @@ module.exports = {
     // }
     const mailOption = {
       from: 'studentart-contactpage@art-funder.com',
-      to: email,
-      subject: subject.third,
+      to: schoolEmail,
+      subject: subject.sixth,
       html: emailBody,
       text: emailText
     };

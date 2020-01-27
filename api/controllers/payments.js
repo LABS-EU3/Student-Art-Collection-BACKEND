@@ -113,32 +113,13 @@ module.exports = {
                 paymentsMail.artPurchaseConfirmationMailSchool(
                   config.FRONTEND_BASE_URL,
                   transaction.SchoolId.userId.email,
+                  transaction.buyerId.userId.email,
                   transaction.SchoolId.name,
                   transaction.productId
                 )
               ]);
-              // await models.order.create({
-              //   transactionId: transaction._id,
-              //   productId: transaction.productId._id,
-              //   buyerId: transaction.buyerId._id,
-              //   SchoolId: transaction.SchoolId._id,
-              //   status: 'pending',
-              //   totalAmount: intent.amount / 100
-              // });
-              // await paymentsMail.artPurchaseConfirmationMail(
-              //   config.FRONTEND_BASE_URL,
-              //   transaction.buyerId.userId.email,
-              //   transaction.buyerId.firstname,
-              //   transaction.productId
-              // );
-              // await paymentsMail.artPurchaseConfirmationMail(
-              //   config.FRONTEND_BASE_URL,
-              //   transaction.SchoolId.userId.email,
-              //   transaction.SchoolId.name,
-              //   transaction.productId
-              // );
             } catch (error) {
-              console.log(error.message);
+              next(error.message);
             }
           }
           break;
@@ -172,7 +153,7 @@ module.exports = {
                 transaction.productId
               );
             } catch (error) {
-              console.log(error);
+              next(error.message);
             }
           }
           break;
