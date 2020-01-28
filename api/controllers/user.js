@@ -27,7 +27,6 @@ module.exports = {
   async createUser(req, res, next) {
     try {
       const user = await models.User.create(req.body);
-      console.log({user});
       if (user) {
         const newUserType = { ...req.body, userId: user.id };
         // this checks the user type and create that user type
