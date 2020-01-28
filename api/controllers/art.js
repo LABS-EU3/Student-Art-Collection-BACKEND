@@ -2,11 +2,10 @@ const mongoose = require("mongoose");
 const { merge } = require("lodash");
 const { successResponse, errorHelper } = require("../helpers/response");
 const models = require("../../models");
-const orders = require('../../models/orders')
+const orders = require("../../models/orders");
 const artMail = require("../helpers/artmail");
 const secret = require("../../config/keys");
-const { getArtSold } = require('../helpers/artOrders');
-
+const { getArtSold } = require("../helpers/artOrders");
 
 module.exports = {
   async markArtAsCollected(req, res, next) {
@@ -67,13 +66,13 @@ module.exports = {
         filter
       } = req.query;
       const art = await models.Products.find({
-        [filter]: { $regex: searchQuery, $options: 'i' }
+        [filter]: { $regex: searchQuery, $options: "i" }
       })
         .sort({ [sortBy]: sortType })
         .skip((page - 1) * pagination)
         .limit(pagination);
       const totalCount = await models.Products.find({
-        [filter]: { $regex: searchQuery, $options: 'i' }
+        [filter]: { $regex: searchQuery, $options: "i" }
       }).countDocuments();
       return successResponse(res, 200, {
         totalCount,
@@ -87,30 +86,45 @@ module.exports = {
   },
 
   async artSoldCollection(req, res, next) {
-    const schoolId  = req.params.id;
+    const schoolId = req.params.id;
     try {
-      const schoolOrders = await getArtSold(models.order, req, {schoolId}, 'buyerId')
+      const schoolOrders = await getArtSold(
+        models.order,
+        req,
+        { schoolId },
+        "buyerId"
+      );
       return successResponse(res, 200, schoolOrders);
     } catch (error) {
-      return next(error)
+      return next(error);
     }
   },
   async artBoughtCollection(req, res, next) {
-    const buyerId  = req.params.id;
+    const buyerId = req.params.id;
     try {
-      const buyerOrders = await getArtSold(models.order, req, {buyerId}, 'schoolId')
+      const buyerOrders = await getArtSold(
+        models.order,
+        req,
+        { buyerId },
+        "schoolId"
+      );
       return successResponse(res, 200, buyerOrders);
     } catch (error) {
       return next(error);
     }
   },
   async editArt(req, res, next) {
+    const { id } = req.params
     const { product } = req;
 
     try {
-      const art = await merge(product, req.body).save();
-
-      return successResponse(res, 200, art);
+      const objectId = mongoose.Types.ObjectId(id.toString());
+      const transaction = await models.Transaction.findOne({productId: objectId});
+      if (transaction) {
+        const art = await merge(product, req.body).save();
+        return successResponse(res, 200, art);
+      }
+      return errorHelper(res, 400, `You can't edit this art because it has a transaction attached to it`)
     } catch (error) {
       return next(error);
     }
