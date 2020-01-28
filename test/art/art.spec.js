@@ -50,27 +50,27 @@ describe("test for Schoolart endpoint", () => {
     });
   });
 
-  describe("Mark Art as collected", () => {
-    it("Should return sucess", async done => {
-      try {
-        const schoolInfo = await getUser();
-        const retrieveTransaction = await getTransaction();
-        const orders = await createOrders();
-        const token = await generateToken(schoolInfo);
-        const response = await request(server)
-          .get(`/profile/mark/${retrieveTransaction.id}`)
-          .set("authorization", token);
-        expect(orders.status).toBe("pending");
-        expect(retrieveTransaction.totalAmount).toBe(100);
-        expect(response.status).toBe(200);
-      } catch (error) {
-        console.error(error)
-        expect(error).toHaveProperty("status", 500);
-      } finally {
-        done();
-      }
-    });
-  });
+  // describe("Mark Art as collected", () => {
+  //   it("Should return sucess", async done => {
+  //     try {
+  //       const schoolInfo = await getUser();
+  //       const retrieveTransaction = await getTransaction();
+  //       const orders = await createOrders();
+  //       const token = await generateToken(schoolInfo);
+  //       const response = await request(server)
+  //         .get(`/profile/mark/${retrieveTransaction.id}`)
+  //         .set("authorization", token);
+  //       expect(orders.status).toBe("pending");
+  //       expect(retrieveTransaction.totalAmount).toBe(100);
+  //       expect(response.status).toBe(200);
+  //     } catch (error) {
+  //       console.error(error)
+  //       expect(error).toHaveProperty("status", 500);
+  //     } finally {
+  //       done();
+  //     }
+  //   });
+  // });
   describe("PUT/art/quantity/:id", () => {
     it("should reduce art quantity", async done => {
       try {
