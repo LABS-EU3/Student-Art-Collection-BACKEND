@@ -1,11 +1,12 @@
-const mongoose = require("mongoose");
-const { merge } = require("lodash");
-const { successResponse, errorHelper } = require("../helpers/response");
-const models = require("../../models");
-const orders = require("../../models/orders");
-const artMail = require("../helpers/artmail");
-const secret = require("../../config/keys");
-const { getArtSold } = require("../helpers/artOrders");
+/* eslint-disable no-underscore-dangle */
+const mongoose = require('mongoose');
+const { merge } = require('lodash');
+const { successResponse, errorHelper } = require('../helpers/response');
+const models = require('../../models');
+const orders = require('../../models/orders');
+const artMail = require('../helpers/artmail');
+const secret = require('../../config/keys');
+const { getArtSold } = require('../helpers/artOrders');
 
 module.exports = {
   async markArtAsCollected(req, res, next) {
@@ -16,12 +17,12 @@ module.exports = {
       const objectId = mongoose.Types.ObjectId(id.toString());
 
       const transaction = await models.Transaction.findById(objectId)
-        .populate("buyerId")
-        .populate("productId");
+        .populate('buyerId')
+        .populate('productId');
 
       const order = await models.order.findOneAndUpdate(
         { transactionId: objectId },
-        { status: "completed" },
+        { status: 'completed' },
         { new: true }
       );
 
@@ -39,7 +40,7 @@ module.exports = {
   },
 
   async uploadArt(req, res, next) {
-    const { id } = req.param;
+    const { id } = req.params;
     const { file } = req;
     try {
       const newArt = await models.Products.create({
@@ -70,7 +71,13 @@ module.exports = {
       })
         .sort({ [sortBy]: sortType })
         .skip((page - 1) * pagination)
-        .limit(pagination);
+        .limit(pagination)
+        .populate({
+          path:'userId',
+          populate : {
+            path: 'userId'
+          }
+        });
       const totalCount = await models.Products.find({
         [filter]: { $regex: searchQuery, $options: "i" }
       }).countDocuments();
@@ -92,7 +99,7 @@ module.exports = {
         models.order,
         req,
         { schoolId },
-        "buyerId"
+        'buyerId'
       );
       return successResponse(res, 200, schoolOrders);
     } catch (error) {
@@ -106,7 +113,7 @@ module.exports = {
         models.order,
         req,
         { buyerId },
-        "schoolId"
+        'schoolId'
       );
       return successResponse(res, 200, buyerOrders);
     } catch (error) {
@@ -116,15 +123,9 @@ module.exports = {
   async editArt(req, res, next) {
     const { id } = req.params
     const { product } = req;
-
     try {
-      const objectId = mongoose.Types.ObjectId(id.toString());
-      const transaction = await models.Transaction.findOne({productId: objectId});
-      if (transaction) {
-        const art = await merge(product, req.body).save();
-        return successResponse(res, 200, art);
-      }
-      return errorHelper(res, 400, `You can't edit this art because it has a transaction attached to it`)
+      const art = await merge(product, req.body).save();
+      return successResponse(res, 200, art);
     } catch (error) {
       return next(error);
     }
@@ -134,9 +135,6 @@ module.exports = {
     try {
       const { id } = req.params;
       const products = await models.Products.find({ userId: id }).exec();
-      if (!products.length) {
-        return successResponse(res, 200, "No products for sale");
-      }
       return successResponse(res, 200, products);
     } catch (error) {
       return next(error.message);
@@ -154,13 +152,13 @@ module.exports = {
         return errorHelper(
           res,
           403,
-          "You cannot delete this Art because there is a transaction linked to it"
+          'You cannot delete this Art because there is a transaction linked to it'
         );
       }
 
       const remove = await models.Products.deleteOne({ _id: objectId });
       if (remove) {
-        return successResponse(res, 200, "Art has been deleted");
+        return successResponse(res, 200, 'Art has been deleted');
       }
     } catch (error) {
       return next(error);
@@ -181,7 +179,7 @@ module.exports = {
           { new: true }
         );
       } else {
-        return errorHelper(res, 500, "Art is no longer for sale");
+        return errorHelper(res, 500, 'Art is no longer for sale');
       }
       return successResponse(res, 200, updatedModels);
     } catch (error) {
@@ -193,9 +191,9 @@ module.exports = {
       const { searchQuery } = req.query;
       const { filter, sortBy, page, pagination } = req.query;
       let { sortType } = req.query;
-      sortType = sortType === "asc" ? 1 : -1;
+      sortType = sortType === 'asc' ? 1 : -1;
       const art = await models.Products.find({
-        [filter]: { $regex: searchQuery, $options: "i" }
+        [filter]: { $regex: searchQuery, $options: 'i' }
       })
         .sort({ [sortBy]: sortType })
         .skip((page - 1) * pagination)
@@ -207,6 +205,30 @@ module.exports = {
         itemsInPage: pagination,
         art
       });
+    } catch (error) {
+      return next(error.message);
+    }
+  },
+
+  async buyerBuyArt(req, res, next) {
+    const { product } = req;
+    try {
+      const quantity = product.quantity - req.body.quantity;
+      const artToBuy = await models.Transaction.create({
+        ...req.body,
+        productId: req.params.id
+      }).then(async art => {
+        if (art.status === 'completed') {
+          await models.order.create({
+            ...req.body,
+            status: 'pending',
+            productId: req.params.id,
+            transactionId: art._id
+          });
+        }
+      });
+      merge(product, { quantity }).save();
+      return successResponse(res, 201, artToBuy);
     } catch (error) {
       return next(error.message);
     }

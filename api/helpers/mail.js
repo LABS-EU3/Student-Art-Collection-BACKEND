@@ -1,21 +1,11 @@
-const nodemailer = require('nodemailer');
-const Mailgen = require('mailgen');
-const secret = require('../../config/keys');
-const { type, intro, instructions, button, outro, subject  } = require('./mailText')
 
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    requireTLS: true,
-    auth: {
-      type: type.FirstType,
-      user: secret.USER_MAIL,
-      pass: secret.PASSWORD_MAIL
-    }
-  });
+const Mailgen = require('mailgen');
+const transporter = require('./transporter');
+const { intro, instructions, button, outro, subject  } = require('./mailText')
+
+
+
 async function sendEmailConfirmAccount(user, token, url) {
-  
     const mailGenerator = new Mailgen({
         theme: 'default',
         product: {
@@ -51,8 +41,7 @@ async function sendEmailConfirmAccount(user, token, url) {
         html: emailBody,
         text: emailText
       };
-
-        const confirmMail = await transporter.sendMail(mailOption);
+        const confirmMail = await transporter().sendMail(mailOption);
         return confirmMail;
 }
 

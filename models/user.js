@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
@@ -43,6 +44,14 @@ const userSchema = new Schema({
 }, {timestamps: true});
 
 
+userSchema.add({userLocation: {
+    name: String,
+    administrative: String,
+    country: String,
+    latitude: Number,
+    longitude: Number,
+    postCode: String
+}})
 userSchema.methods.comparePassword = function(password) {
 	const user = bcrypt.compareSync(password, this.password);
 	return user ? this : null;

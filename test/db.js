@@ -7,7 +7,8 @@ const {
   Transaction,
   order,
   Buyer,
-  User
+  User,
+  School
 } = require('../models/index');
 
 mongoose.Promise = global.Promise;
@@ -20,6 +21,7 @@ const cleanDB = async () => {
   // drop all database here
   const deleteUser = await User.deleteMany({});
   const deleteBuyer = await Buyer.deleteMany({});
+  const deleteSchool = await School.deleteMany({});
   const deleteProducts = await Products.deleteMany({});
   const deleteTransactions = await Transaction.deleteMany({});
   const deleteOrders = await order.deleteMany({});
@@ -28,7 +30,7 @@ const cleanDB = async () => {
     deleteProducts &&
     deleteTransactions &&
     deleteOrders &&
-    deleteBuyer
+    deleteBuyer && deleteSchool
   );
 };
 
@@ -63,6 +65,12 @@ const buyerData = {
   type: 'buyer'
 };
 
+const schoolData = {
+  email: 'user3@gmail.com',
+  password: '123456789',
+  type: 'school'
+};
+
 const createUser = () => {
   return User.create(userData);
 };
@@ -76,6 +84,15 @@ const createBuyer = () => {
     });
   });
 };
+
+const createSchool = () => {
+  return User.create(schoolData).then(res => {
+    return School.create({
+      name: 'mySchool',
+      userId: res._id
+    });
+  });
+}
 
 const getBuyer = async () => {
   const buyer = await User.findOne({ email: 'user2@gmail.com' });
@@ -112,7 +129,7 @@ const createTransaction = async () => {
   const transactionData = {
     productId: await (await getProduct()).id,
     buyerId: buyer._id,
-    schoolId: await (await getUser()).id,
+    schoolId: '5e24d82e4976111d3c9835z2',
     status: 'completed',
     quantity: 1,
     totalAmount: 100
@@ -156,5 +173,5 @@ module.exports = {
   getTransaction,
   createOrders,
   getOrders,
- 
+  createSchool
 };
