@@ -49,17 +49,17 @@ userSchema.add({
     name: String,
     administrative: String,
     country: String,
+    latitude: Number,
+    longitude: Number,
 
     postCode: String,
     location: {
       type: {
         type: String,
-        enum: ["Point"],
-        required: true
+        enum: ["Point"]
       },
       coordinates: {
-        type: [Number],
-        required: true
+        type: [Number]
       }
     }
   }
