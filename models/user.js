@@ -59,11 +59,13 @@ userSchema.add({
         enum: ["Point"]
       },
       coordinates: {
-        type: [Number]
+        type: [Number],
+        index: "2dsphere"
       }
     }
   }
 });
+
 
 userSchema.methods.comparePassword = function(password) {
   const user = bcrypt.compareSync(password, this.password);

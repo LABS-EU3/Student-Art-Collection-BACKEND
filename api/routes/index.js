@@ -10,6 +10,7 @@ const UserauthRoute = require('./authroute');
 const ArtRoute = require('./artroute');
 const ContactRoute = require('./contactRoute');
 const paymentsRoute = require('./paymentsRoute');
+const schoolRoute = require('./schoolRoute')
 const models = require('../../models');
 const { authCallbackStrategy } = require('../middleware/googleStrategy');
 
@@ -39,6 +40,7 @@ app.use('/', UserauthRoute);
 app.use('/art', ArtRoute);
 app.use('/contact', ContactRoute);
 app.use('/payments', paymentsRoute);
+app.use('/schools', schoolRoute)
 
 app.use(function errors(err, req, res, next) {
   return res.status(500).json({ err });
