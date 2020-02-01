@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 
 const Schema = mongoose.Schema;
 
+
 const userSchema = new Schema(
   {
     email: {
@@ -23,9 +24,7 @@ const userSchema = new Schema(
       type: String,
       trim: true
     },
-    location: {
-      type: String
-    },
+  
     type: {
       type: String,
       required: true,
@@ -52,19 +51,22 @@ userSchema.add({
     latitude: Number,
     longitude: Number,
 
-    postCode: String,
-    location: {
-      type: {
-        type: String,
-        enum: ["Point"]
-      },
-      coordinates: {
-        type: [Number],
-        index: "2dsphere"
-      }
+    postCode: String
+  }
+});
+userSchema.add({
+  location: {
+    type: {
+      type: String,
+      enum: ["Point"]
+    },
+    coordinates: {
+      type: [Number],
+      index: { type: "2dsphere", sparse: true }
     }
   }
 });
+
 
 
 userSchema.methods.comparePassword = function(password) {

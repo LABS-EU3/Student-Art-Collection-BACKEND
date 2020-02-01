@@ -15,15 +15,14 @@ const schoolSchema = new mongoose.Schema(
     description: {
       type: String
     },
-    location: {
-      type: String
-    }
+    
   },
   { timestamps: true }
 );
 
 schoolSchema.add({ stripe_user_id: String });
 
-schoolSchema.indexes({ location: 1, name: 1 }, { unique: true });
+
+// schoolSchema.indexes({ location: 1, name: 1 }, { unique: true });
 
 module.exports = mongoose.model('school', schoolSchema);
