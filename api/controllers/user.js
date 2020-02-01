@@ -35,6 +35,7 @@ module.exports = {
         } else {
           await models.Buyer.create(newUserType);
         }
+      
         const token = await generateToken(user);
         sendEmailConfirmAccount(user, token, `${secret.FRONTEND}/success`);
        

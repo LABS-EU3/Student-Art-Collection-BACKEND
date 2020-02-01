@@ -20,4 +20,5 @@ const buyerSchema = new mongoose.Schema({
 
 buyerSchema.add({billingAddress: String, shippingAddress: String})
 
+
 module.exports = mongoose.model('buyer', buyerSchema)
