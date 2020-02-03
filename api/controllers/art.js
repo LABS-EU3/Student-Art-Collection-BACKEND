@@ -238,7 +238,7 @@ module.exports = {
     const { id } = req.params;
     try {
       const objectId = mongoose.Types.ObjectId(id.toString());
-      const school = await models.User.findOne({userId: objectId})
+      const school = await models.School.findOne({userId: objectId})
       const art = await models.Products.find({userId: school._id})
       if(art.length > 0){
         return successResponse(res, 200, art)
