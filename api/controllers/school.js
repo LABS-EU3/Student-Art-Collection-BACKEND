@@ -6,10 +6,10 @@ module.exports = {
   async FetchSchoolsByLocation(req, res) {
     const { user } = req;
     try {
-      const buyerLocation = user.location.coordinates;
+      // const buyerLocation = user.location.coordinates;
       const schoolCloseBy = await models.User.aggregate()
         .near({
-          near: buyerLocation,
+          near: [3,6],
           distanceField: "dist.calculated",
           maxDistance: 1000000,
           spherical: true

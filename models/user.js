@@ -38,6 +38,10 @@ const userSchema = new Schema(
     },
     auth_id: {
       type: String
+    },
+    school: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'school'
     }
   },
   { timestamps: true }

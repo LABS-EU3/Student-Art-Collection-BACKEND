@@ -232,5 +232,20 @@ module.exports = {
     } catch (error) {
       return next(error.message);
     }
+  },
+
+  async FetchArtBySchool(req, res, next) {
+    const { id } = req.params;
+    try {
+      const objectId = mongoose.Types.ObjectId(id.toString());
+      const art = await models.Products.find({userId: objectId})
+      if(art.length > 0){
+        return successResponse(res, 200, art)
+      }
+      return successResponse(res, 200, "No Art for this school at the moment")
+     
+    }catch(error){
+      return next(error.message);
+    }
   }
 };
