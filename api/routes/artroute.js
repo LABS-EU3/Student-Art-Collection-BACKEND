@@ -55,6 +55,7 @@ router.put(
   artcontroller.reduceArtQuantity
 );
 
+router.get('/school/art/:id', artcontroller.FetchArtBySchool)
 router.get(
   "/selling/:id",
   [userValidators.validateUser],
