@@ -33,7 +33,7 @@ describe("test for user endpoint", () => {
   });
 
   describe("POST /uploade/:id", () => {
-    xit("should upload a user photo", async done => {
+    it("should upload a user photo", async done => {
       jest.setTimeout(40000);
       jest
         .spyOn(cloudinary, "uploadImage")

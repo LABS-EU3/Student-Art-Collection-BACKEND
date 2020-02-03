@@ -27,7 +27,7 @@ describe("# Auth", () => {
     });
 
     describe("/login", () =>{
-         xit('should return a 400 since body is not provided', async (done) =>{
+         it('should return a 400 since body is not provided', async (done) =>{
              try {
                  const errorUser = await request(server).post('/login');
                  expect(errorUser.status).toEqual(400)
