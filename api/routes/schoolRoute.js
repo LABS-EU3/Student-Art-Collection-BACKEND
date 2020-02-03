@@ -11,7 +11,8 @@ router.get(
 );
 router.get(
   "/location/:id",
- 
+  [userValidation.validateUser],
+
   schoolController.FetchSchoolsByLocation
 );
 
