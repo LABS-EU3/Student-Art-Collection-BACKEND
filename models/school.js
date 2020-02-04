@@ -15,9 +15,7 @@ const schoolSchema = new mongoose.Schema(
     description: {
       type: String
     },
-    location: {
-      type: String
-    }
+    
   },
   { timestamps: true }
 );
