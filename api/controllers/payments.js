@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 // DEPENDENCIES
 const stripeapi = require('stripe');
 const mongoose = require('mongoose');
