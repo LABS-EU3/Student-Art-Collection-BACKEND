@@ -239,7 +239,7 @@ module.exports = {
     try {
       const objectId = mongoose.Types.ObjectId(id.toString());
       const school = await models.School.findOne({userId: objectId})
-      const art = await models.Products.find({userId: school._id})
+      const art = await models.Products.find({userId: school._id}).populate('userId');
       if(art.length > 0){
         return successResponse(res, 200, art)
       }
