@@ -82,16 +82,7 @@ describe('art model test', () => {
       done()
     });
 
-    it('should return an empty art', async (done) =>{
-      const userInfo = await getUser();
-      const token = await generateToken(userInfo);
-      const response = await request(server).get(`/art/sold/order/buyer/${userInfo._id}?status=pending`)
-        .set("authorization", token)
-      expect(response.status).toBe(200)
-      expect(response.body).toHaveLength(0)
-      done()
-    });
-
+   
   })
 
   afterAll(() => {
