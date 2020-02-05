@@ -37,7 +37,6 @@ describe('art model test', () => {
         const savedArt = await ProductModel.create(artData);
         // eslint-disable-next-line no-underscore-dangle
         expect(savedArt._id).toBeDefined();
-        console.log(savedArt);
         expect(savedArt.name).toBe(artData.name);
         expect(savedArt.quantity).toBe(artData.quantity);
         expect(savedArt.price).toBe(artData.price);

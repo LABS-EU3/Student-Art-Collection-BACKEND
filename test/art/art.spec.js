@@ -152,4 +152,53 @@ describe("test for Schoolart endpoint", () => {
       }
     });
   });
+  describe("PUT/edit/:id", () => {
+    it("should not edit art and return 400", async done => {
+      try {
+        const schoolInfo = await getUser();
+        const retrieveProduct = await getProduct();
+        const token = await generateToken(schoolInfo);
+        const response = await request(server)
+          .put(`/art/edit/${retrieveProduct.id}`)
+          .set("authorization", token).send({
+            name: 'art',
+            height: 30,
+            width: 30,
+            quantity: 3,
+            artistName: 'John doe',
+            price: 500000,
+            public_picture_id: '12345',
+            picture: '123456'
+          });
+        expect(response.status).toBe(400);
+        expect(response.body.message.description).toStrictEqual(["The description field is required."])
+      } catch (error) {
+        expect(error).toHaveProperty("status", 500);
+      } finally {
+        done();
+      }
+    });
+  });
+  describe("POST/buyart/:id", () => {
+    it("should buy art", async done => {
+      try {
+        const schoolInfo = await getUser();
+        const retrieveProduct = await getProduct();
+        const token = await generateToken(schoolInfo);
+        const response = await request(server)
+          .post(`/art/buyart/${retrieveProduct.id}`)
+          .set("authorization", token)
+         
+        expect(response.status).toBe(400);
+        expect(response.body.buyerId).toStrictEqual(["The buyerId field is required."])
+        expect(response.body.schoolId).toStrictEqual(["The schoolId field is required."])
+        expect(response.body.quantity).toStrictEqual(["The quantity field is required."])
+        expect(response.body.totalAmount).toStrictEqual(["The totalAmount field is required."])
+      } catch (error) {
+        expect(error).toHaveProperty("status", 500);
+      } finally {
+        done();
+      }
+    });
+  });
 });

@@ -10,7 +10,7 @@ router.get(
   schoolController.FetchAllSchools
 );
 router.get(
-  "/location/:id",
+  "/location",
   [userValidation.validateUser],
 
   schoolController.FetchSchoolsByLocation

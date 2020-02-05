@@ -56,7 +56,40 @@ const userData = {
   name: 'user1',
   email: `user1@gmail.com`,
   password: '123456789',
-  type: 'school'
+  type: 'school',
+  userLocation: {
+    name: '12th',
+    administrative: "Lagos",
+    country: "Nigeria",
+    latitude: 3.678,
+    longitude: 7.689,
+    postCode: "23456"
+    
+  },
+  location: {
+    type: "Point",
+    coordinates: [3.678, 7.689]
+  }
+};
+
+const user2Data = {
+  name: 'user2',
+  email: `user1000@gmail.com`,
+  password: '123456789',
+  type: 'buyer',
+  userLocation: {
+    name: '12th',
+    administrative: "Lagos",
+    country: "Nigeria",
+    latitude: 3.678,
+    longitude: 7.689,
+    postCode: "23456"
+    
+  },
+  location: {
+    type: "Point",
+    coordinates: [3.678, 7.689]
+  }
 };
 
 const buyerData = {
@@ -74,6 +107,12 @@ const schoolData = {
 const createUser = () => {
   return User.create(userData);
 };
+
+
+const createUser2 = () => {
+  return User.create(user2Data);
+};
+
 
 const createBuyer = () => {
   return User.create(buyerData).then(response => {
@@ -100,6 +139,10 @@ const getBuyer = async () => {
 };
 const getUser = async () => {
   const user = await User.findOne({ email: 'user1@gmail.com' }).exec();
+  return user;
+};
+const getUser2 = async () => {
+  const user = await User.findOne({ email: 'user1000@gmail.com' }).exec();
   return user;
 };
 
@@ -173,5 +216,7 @@ module.exports = {
   getTransaction,
   createOrders,
   getOrders,
-  createSchool
+  createSchool,
+  createUser2,
+  getUser2
 };
