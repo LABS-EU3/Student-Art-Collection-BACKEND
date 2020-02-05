@@ -67,19 +67,19 @@ module.exports = {
         filter
       } = req.query;
       const art = await models.Products.find({
-        [filter]: { $regex: searchQuery, $options: "i" }
+        [filter]: { $regex: searchQuery, $options: 'i' }
       })
         .sort({ [sortBy]: sortType })
         .skip((page - 1) * pagination)
         .limit(pagination)
         .populate({
-          path:'userId',
-          populate : {
+          path: 'userId',
+          populate: {
             path: 'userId'
           }
         });
       const totalCount = await models.Products.find({
-        [filter]: { $regex: searchQuery, $options: "i" }
+        [filter]: { $regex: searchQuery, $options: 'i' }
       }).countDocuments();
       return successResponse(res, 200, {
         totalCount,
@@ -121,7 +121,7 @@ module.exports = {
     }
   },
   async editArt(req, res, next) {
-    const { id } = req.params
+    const { id } = req.params;
     const { product } = req;
     try {
       const art = await merge(product, req.body).save();
@@ -238,14 +238,18 @@ module.exports = {
     const { id } = req.params;
     try {
       const objectId = mongoose.Types.ObjectId(id.toString());
-      const school = await models.School.findOne({userId: objectId})
-      const art = await models.Products.find({userId: school._id}).populate('userId');
-      if(art.length > 0){
-        return successResponse(res, 200, art)
+      const school = await models.School.findOne({ userId: objectId });
+      const art = await models.Products.find({ userId: school._id }).populate({
+        path: 'userId',
+        populate: {
+          path: 'userId'
+        }
+      });
+      if (art.length > 0) {
+        return successResponse(res, 200, art);
       }
-      return successResponse(res, 200, "No Art for this school at the moment")
-     
-    }catch(error){
+      return successResponse(res, 200, 'No Art for this school at the moment');
+    } catch (error) {
       return next(error.message);
     }
   }
