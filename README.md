@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/LABS-EU3/Student-Art-Collection-BACKEND.svg?branch=master)](https://travis-ci.org/LABS-EU3/Student-Art-Collection-BACKEND)
+
 #### Link to frontend documentation https://github.com/LABS-EU3/Student-Art-Collection-FRONTEND
 
 # Art-funder
