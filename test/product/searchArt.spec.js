@@ -30,7 +30,7 @@ describe('search art unit testing', () => {
   });
 
   describe('', () => {
-    xit('returns the product in the database when we call the searchArt endpoint', async done => {
+    it('returns the product in the database when we call the searchArt endpoint', async done => {
       const art = await getProduct();
       const school = await getUser();
       const response = await request(server).get(

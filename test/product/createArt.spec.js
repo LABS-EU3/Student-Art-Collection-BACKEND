@@ -36,8 +36,8 @@ describe('art model test', () => {
       try {
         const savedArt = await ProductModel.create(artData);
         // eslint-disable-next-line no-underscore-dangle
+        console.log(savedArt)
         expect(savedArt._id).toBeDefined();
-        console.log(savedArt);
         expect(savedArt.name).toBe(artData.name);
         expect(savedArt.quantity).toBe(artData.quantity);
         expect(savedArt.price).toBe(artData.price);
@@ -83,16 +83,7 @@ describe('art model test', () => {
       done()
     });
 
-    it('should return an empty art', async (done) =>{
-      const userInfo = await getUser();
-      const token = await generateToken(userInfo);
-      const response = await request(server).get(`/art/sold/order/buyer/${userInfo._id}?status=pending`)
-        .set("authorization", token)
-      expect(response.status).toBe(200)
-      expect(response.body).toHaveLength(0)
-      done()
-    });
-
+   
   })
 
   afterAll(() => {
