@@ -60,7 +60,7 @@
     "express": "^4.17.1",
     "helmet": "^3.21.2",
     "jest": "^24.9.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.15",
     "mailgen": "^2.0.10",
     "mongoose": "^5.8.1",
